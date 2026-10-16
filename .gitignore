@@ -1,0 +1,61 @@
+# ==============================================================================
+# PATEN (Pemantauan Transaksi & Efektivitas Niaga) - Git Ignore Configuration
+# ==============================================================================
+
+# --- Secrets, Credentials & Environment Configurations ---
+.env
+.env.*
+!.env.example
+docs/references/credential.md
+credential.md
+*.pem
+*.key
+*.crt
+auth.json
+
+# --- Dependency Directories ---
+/vendor
+/node_modules
+
+# --- Build & Compiled Assets ---
+/public/build
+/public/hot
+/public/storage
+/public/fonts-manifest.dev.json
+
+# --- Storage & Caches ---
+*.log
+.phpunit.result.cache
+/.phpunit.cache
+/storage/pail
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+!/storage/framework/cache/.gitignore
+!/storage/framework/sessions/.gitignore
+!/storage/framework/views/.gitignore
+
+# --- Python & ML Pipeline ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.ipynb_checkpoints/
+.venv/
+venv/
+env/
+ENV/
+
+# --- IDEs, Editors & OS Metadata ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.nova/
+.zed/
+.cursor/
+.codex/
+.fleet/
+.phpactor.json
+_ide_helper.php
+Homestead.json
+Homestead.yaml
