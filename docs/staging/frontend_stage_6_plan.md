@@ -1,11 +1,11 @@
-# Frontend Technical Staging Plan: STAGE 6 (Cobalt Edition)
+# Frontend Technical Staging Plan: STAGE 6 (Triad Color Edition)
 **Nama Tahapan:** Modul 4 – SPK & ML Instrument Panel Dashboard, Perbup Guardrail Inspector & 5-Program Aid Allocation Matrix  
 **Target Modul:** Dashboard Analisis Keputusan SPK & ML (`/cms/{slug}/evaluations`), Inspektur Guardrail Regulasi Perbup Kutim, Matriks Pembobotan SAW 5 Kriteria, Pemetaan 5 Program Bantuan (Highlight Kuota 200 APBD), dan Lembar Laporan Eksekutif  
-**Standar Hallmark:** Tampilan Meja Kerja Instrumen (Workbench Register), Lencana Guardrail Teknis (Mono Status), Matriks Data Bergaris Rambut 1px, dan Cetak Rekap Resmi  
+**Standar Hallmark:** Tampilan Meja Kerja Instrumen (Workbench Register), Lencana Guardrail Teknis (Mono Status), Matriks Data Bergaris Rambut 1px, Palet Triad (#132952, #00B262, #FAA21B), dan Cetak Rekap Resmi  
 
 ---
 
-## 1. Analisis Kebutuhan & Spesifikasi Desain Cobalt
+## 1. Analisis Kebutuhan & Spesifikasi Desain Triad
 
 ### A. Dashboard Analisis SPK Berkarakter Meja Kerja (*Workbench*) (FR-4.1 & FR-4.2)
 Halaman `/cms/{slug}/evaluations` diakses oleh pengelola acara dan tim penilai Dinas Koperasi & UKM Kutai Timur:
@@ -13,12 +13,12 @@ Halaman `/cms/{slug}/evaluations` diakses oleh pengelola acara dan tim penilai D
   - *Eyebrow Mono:* `04 / SISTEM PENDUKUNG KEPUTUSAN & PIPELINE ML KUTIM`.
   - *Title:* *"Matriks Evaluasi Performa Niaga & Rekomendasi Program Bantuan"* dalam `Space Grotesk`.
   - *Metrik Ringkas:* Total Stan Dinilai, Total Lolos Syarat Perbup, dan Alokasi Kuota Prioritas 200 Hibah APBD yang terisi.
-  - **Tombol Eksekusi Terpadu:** "Jalankan Evaluasi SPK & Guardrail Perbup" (Solid Cobalt 6px) dengan indikator kalkulasi instan.
+  - **Tombol Eksekusi Terpadu:** "Jalankan Evaluasi SPK & Guardrail Perbup" (Solid Deep Navy #132952 6px) dengan indikator kalkulasi instan.
 
 ### B. Inspektur Guardrail Regulasi Perbup Kutim (FR-4.1)
 Verifikasi kepatuhan terhadap 4 aturan mutlak Perbup Kutai Timur disajikan melalui lencana status monospace:
 - **Lencana Lolos:**
-  - `[✓ LOLOS PERBUP]` dengan aksen hijau sinyal *Emerald* dan garis rambut 1px.
+  - `[✓ LOLOS PERBUP]` dengan aksen hijau sinyal *Vibrant Emerald Green* (`#00B262`) dan garis rambut 1px.
 - **Lencana Diskualifikasi dengan Alasan Spesifik (Zero Ambiguity):**
   - `[✗ DISKUALIFIKASI: DUPLIKASI NO KK]` — Aturan 1 KK = 1 Usaha; UMKM lain dalam KK yang sama dengan skor lebih rendah dialihkan ke program non-hibah APBD.
   - `[✗ DISKUALIFIKASI: NIB < 6 BULAN]` — Masa aktif NIB belum memenuhi syarat minimal 6 bulan.
@@ -35,12 +35,12 @@ Tabel instrumen data lebar penuh (*full-width data table*) dengan batas sel 1px:
 - **Skor Akhir SPK ($0 - 100$):** Angka tabular tebal didukung bar visual mini bergaris rambut.
 
 ### D. Pemetaan 5 Jalur Program Bantuan Kutai Timur (BRD Bab 4 & PRD FR-4.2)
-Setiap UMKM dikelompokkan ke dalam satu rekomendasi intervensi resmi dengan kode warna teknis:
-1. `Fasilitasi Legalitas Usaha (NIB/Halal/PIRT/HKI)` — Border biru muda.
-2. `Bantuan Modal Awal BAZNAS & TKM (Rp 5 Juta)` — Border ungu.
-3. `Hibah Peralatan Produksi Pemkab / CSR` — Border oranye.
-4. `Hibah Permodalan APBD Kutim (Rp 5 - 25 Juta)` — **Highlight Keemasan & Lencana Emas Kuota 200 Prioritas**.
-5. `Kredit Usaha BPR Kutim / KUR Bankaltimtara & Inkubasi KPC` — Border hijau zamrud.
+Setiap UMKM dikelompokkan ke dalam satu rekomendasi intervensi resmi dengan palet warna Triad terpadu:
+1. `Fasilitasi Legalitas Usaha (NIB/Halal/PIRT/HKI)` — Border Deep Navy Blue (`#132952`).
+2. `Bantuan Modal Awal BAZNAS & TKM (Rp 5 Juta)` — Border Slate Netral (`#CBD5E1`).
+3. `Hibah Peralatan Produksi Pemkab / CSR` — Border Warm Amber Orange (`#FAA21B`).
+4. `Hibah Permodalan APBD Kutim (Rp 5 - 25 Juta)` — **Highlight Warm Amber Orange (#FAA21B) & Lencana Prioritas Kuota 200 APBD**.
+5. `Kredit Usaha BPR Kutim / KUR Bankaltimtara & Inkubasi KPC` — Border Vibrant Emerald Green (`#00B262`).
 
 ### E. Toolbar Penyaring Interaktif & Laporan Eksekutif
 - **Filter Cepat:**

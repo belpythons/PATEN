@@ -1,24 +1,24 @@
-# Frontend Technical Staging Plan: STAGE 4 (Cobalt Edition)
+# Frontend Technical Staging Plan: STAGE 4 (Triad Color Edition)
 **Nama Tahapan:** Modul 2 – CMS Hidden URL Console, ⌘K Integration, Batch Stand Provisioning, Gate Terminal & Kinetic Doorprize Machine  
 **Target Modul:** Dashboard Pengelola Acara via Token Rahasia (`/cms/{slug}?token=...`), 4 Kartu KPI Instrumen, CRUD Rundown, Penyediaan Slot Stand Massal & PIN Kasir, Terminal Gate, dan Pengundian Doorprize Kinetik  
-**Standar Hallmark:** Bilah Kontrol Token Presisi, 4 Kartu KPI Instrumen Bergaris Rambut, Animasi Slot Kinetik (No Gimmick), dan 1-Klik Salin Tautan  
+**Standar Hallmark:** Bilah Kontrol Token Presisi, 4 Kartu KPI Instrumen Bergaris Rambut, Palet Triad (#132952, #00B262, #FAA21B), Animasi Slot Kinetik (No Gimmick), dan 1-Klik Salin Tautan  
 
 ---
 
-## 1. Analisis Kebutuhan & Spesifikasi Desain Cobalt
+## 1. Analisis Kebutuhan & Spesifikasi Desain Triad
 
 ### A. Secret Token Bar & Dashboard Instrumen (FR-2.1)
 Dashboard pengelola acara dilindungi oleh `VerifyCmsTokenMiddleware`:
 - **Bilah Manajemen Token 64-Karakter:**
   - Header presisi di bagian atas dengan lencana `JetBrains Mono`: `ENCRYPTED SESSION // TOKEN: {masked_token}`.
-  - Tombol aksi 6px radius: "Salin Link CMS Rahasia" (1-klik copy ke clipboard dengan toast notifikasi Cobalt).
+  - Tombol aksi 6px radius: "Salin Link CMS Rahasia" (1-klik copy ke clipboard dengan toast notifikasi Deep Navy).
   - Tombol pintas: "Buka Portal Publik Acara" (`/e/{slug}`) dan tombol `⌘K Perintah`.
 - **4 Kartu KPI Instrumen (Instrument KPI Cards):**
   - Menggunakan font `Space Grotesk` untuk angka metrik dengan kelas tabular numbers (`tnum`):
-    1. *Total Agregat Perputaran Uang (GMV):* Format rupiah rapi (misal: `Rp 48.750.000`).
-    2. *Total Transaksi Kasir:* Akumulasi transaksi dari seluruh stand yang tercatat.
-    3. *Total Kehadiran Gate:* Jumlah tiket ter-scan di pintu masuk lapangan.
-    4. *Stand Terdaftar / Aktif:* Jumlah slot pedagang yang telah diasosiasikan.
+    1. *Total Agregat Perputaran Uang (GMV):* Format rupiah rapi (misal: `Rp 48.750.000`) dengan aksen Emerald (`#00B262`).
+    2. *Total Transaksi Kasir:* Akumulasi transaksi dari seluruh stand yang tercatat dengan aksen Navy (`#132952`).
+    3. *Total Kehadiran Gate:* Jumlah tiket ter-scan di pintu masuk lapangan dengan aksen Amber (`#FAA21B`).
+    4. *Stand Terdaftar / Aktif:* Jumlah slot pedagang yang telah diasosiasikan dengan aksen Navy (`#132952`).
   - Setiap kartu dikelilingi border 1px `var(--color-rule)` dengan sudut 10px radius (tanpa drop-shadow tebal).
 
 ### B. Rundown Management Studio (FR-2.2)
@@ -39,9 +39,9 @@ Dashboard pengelola acara dilindungi oleh `VerifyCmsTokenMiddleware`:
 ### D. Gate Check-in Terminal & Kinetic Doorprize Machine (FR-2.4)
 - **Terminal Scanner Tiket di Pintu Masuk:**
   - Kotak input cepat kode tiket / kupon dengan autofocus.
-  - Log kehadiran *realtime stream* dengan indikator status: Hijau (Valid) atau Merah (Kupon Salah / Sudah Pernah Masuk).
+  - Log kehadiran *realtime stream* dengan indikator status: Emerald (Valid) atau Amber/Merah (Kupon Salah / Sudah Pernah Masuk).
 - **Kinetic Doorprize Machine (Pengundian Acak):**
-  - Tombol pemicu: "Putar Undian Doorprize" (Solid Cobalt 6px).
+  - Tombol pemicu: "Putar Undian Doorprize" (Solid Amber #FAA21B / Navy #132952 6px).
   - **Animasi Pengacak Kinetik:** Mengacak daftar nama pengunjung hadir dengan efek interval teks yang melompat cepat sebelum berhenti pada nama pemenang resmi dari API `POST /cms/{slug}/draw-doorprize`.
   - **Modal Pemenang Doorprize:** Menampilkan nama lengkap, nomor tiket kupon, kecamatan, dan tombol cetak berita acara pemenang.
 

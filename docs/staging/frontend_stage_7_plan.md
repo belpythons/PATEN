@@ -1,22 +1,22 @@
-# Frontend Technical Staging Plan: STAGE 7 (Cobalt Edition)
+# Frontend Technical Staging Plan: STAGE 7 (Triad Color Edition)
 **Nama Tahapan:** Cross-Cutting Integration, Mobile Field Ergonomics, Hallmark Slop-Test Audit & Production Vite Build  
 **Target Modul:** Uji Responsivitas Layar Ponsel Lapangan (360px–414px), Audit Anti-AI-Slop Hallmark, Aksesibilitas WCAG AA, Ketahanan Koneksi Lapangan Terbuka, dan Kompilasi Produksi Vite Bebas Warning  
-**Standar Hallmark:** Lolos 100% Slop-Test Gate (Anti-Pattern Checklist), Dukungan Penuh `prefers-reduced-motion`, Zero Console Errors, dan Sukses Manifes Produksi  
+**Standar Hallmark:** Lolos 100% Slop-Test Gate (Anti-Pattern Checklist), Palet Triad (#132952, #00B262, #FAA21B), Dukungan Penuh `prefers-reduced-motion`, Zero Console Errors, dan Sukses Manifes Produksi  
 
 ---
 
-## 1. Analisis Kebutuhan & Spesifikasi Desain Cobalt
+## 1. Analisis Kebutuhan & Spesifikasi Desain Triad
 
 ### A. Audit 5 Anti-Pattern Hallmark (Slop-Test Gates)
 Seluruh halaman frontend diuji secara ketat terhadap 5 *anti-patterns* Hallmark:
 
-| No | Anti-Pattern AI-Slop Umum | Hallmark Cobalt Fix yang Diterapkan di PATEN | Status Audit |
+| No | Anti-Pattern AI-Slop Umum | Hallmark Triad Fix yang Diterapkan di PATEN | Status Audit |
 | :-: | :--- | :--- | :---: |
-| **01** | *The purple-gradient hero* (Gradien ungu ke biru/pink latar belakang). | Latar kanvas sejuk `oklch(98.5% 0.004 250)` + satu aksen Electric Cobalt (< 5% viewport). | **COMPLIANT** |
+| **01** | *The purple-gradient hero* (Gradien ungu ke biru/pink latar belakang). | Latar kanvas sejuk `#F8FAFC` + Palet Triad disiplin (Deep Navy #132952, Emerald #00B262, Amber #FAA21B). | **COMPLIANT** |
 | **02** | *Inter as display* (Satu font tunggal dipakai untuk judul dan isi). | Pasangan berkarakter: `Space Grotesk` (Display) + `Inter` (Body) + `JetBrains Mono` (Labels/Kbd). | **COMPLIANT** |
 | **03** | *Centred-everything* (Semua teks, tombol, dan kolom di-center simetris). | Ritme asimetris (Left-biased display & Right-aligned live instrument card / terminal demo). | **COMPLIANT** |
 | **04** | *The icon-tile feature card* (Kartu berulang dengan kotak ikon warna-warni). | Kartu instrumen bergaris rambut 1px (`var(--color-rule)`), tipografi memimpin, tanpa ikon generic tile. | **COMPLIANT** |
-| **05** | *The floating pill CTA* (Tombol kapsul mengambang dengan gradien warna). | Tombol kontrol geometris presisi radius 6px dengan warna solid tegas Electric Cobalt. | **COMPLIANT** |
+| **05** | *The floating pill CTA* (Tombol kapsul mengambang dengan gradien warna). | Tombol kontrol geometris presisi radius 6px dengan warna solid tegas Deep Navy / Emerald / Amber. | **COMPLIANT** |
 
 ### B. Ergonomi Ponsel Bazar Lapangan Terbuka (Outdoor Viewport 360px - 414px)
 - **Kondisi Lapangan:** Kasir stan bazar UMKM menggunakan smartphone pribadi di bawah terik matahari tenda bazar.

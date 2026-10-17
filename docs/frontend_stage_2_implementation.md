@@ -1,26 +1,26 @@
 # Laporan Implementasi Teknis: FRONTEND STAGE 2
-**Nama Tahapan:** Modul 1 – Asymmetric Event Generator, Cobalt Theme Preview, Lock Confirmation Modal & Ruler-Drawn Poster Export  
+**Nama Tahapan:** Modul 1 – Asymmetric Event Generator, Triad Theme Preview, Lock Confirmation Modal & Ruler-Drawn Poster Export  
 **Status Eksekusi:** SELESAI (100% PASS)  
 **Tanggal Verifikasi:** 17 Oktober 2026  
-**Standar Desain:** [Hallmark Anti-AI-Slop Consensus](file:///c:/Users/Crush/Downloads/PATEN/.agents/skills/hallmark/SKILL.md) — [Tema Cobalt](file:///c:/Users/Crush/Downloads/PATEN/.agents/skills/hallmark/references/themes/cobalt.md)  
+**Standar Desain:** [Hallmark Anti-AI-Slop Consensus](file:///c:/Users/Crush/Downloads/PATEN/.agents/skills/hallmark/SKILL.md) — Triad Color System: Deep Navy Blue (`#132952`), Vibrant Emerald Green (`#00B262`), Warm Amber Orange (`#FAA21B`)  
 
 ---
 
 ## 1. Ringkasan Eksekusi Frontend Stage 2
 
-Pada Stage 2, antarmuka Modul 1 untuk pembuatan event dan generator poster telah berhasil diimplementasikan secara utuh mengikuti filosofi desain Hallmark Cobalt:
+Pada Stage 2, antarmuka Modul 1 untuk pembuatan event dan generator poster telah berhasil diimplementasikan secara utuh mengikuti filosofi desain Hallmark Triad:
 - **Asymmetric Form Wizard (`resources/js/Pages/Events/Create.vue`):**
-  - Mengeliminasi layout serba-di-tengah (*centred-everything*). Halaman dibagi menjadi dua kolom: kolom kiri memuat 5 seksi input terstruktur, kolom kanan memuat *The Live Cobalt Theme Card* yang melekat (*sticky*).
+  - Mengeliminasi layout serba-di-tengah (*centred-everything*). Halaman dibagi menjadi dua kolom: kolom kiri memuat 5 seksi input terstruktur, kolom kanan memuat *The Live Triad Theme Card* yang melekat (*sticky*).
   - 5 Seksi Form: Identitas Resmi Acara, Waktu & Lokasi Venue, Skema Warna & Tema Tampilan (Mono vs Duo), Gamifikasi Kehadiran Pengunjung & Sakelar Awarding UMKM, serta Initial Rundown Builder.
-  - Palet Cepat: Tombol swatch warna Electric Cobalt (`#2563EB`), Kutim Deep Teal (`#0F766E`), Amber Gold (`#F59E0B`), Obsidian Slate (`#1E293B`), dan Emerald Trust (`#10B981`) plus input hex manual.
-- **The Live Cobalt Theme Card (`resources/js/Components/Events/LiveThemeCard.vue`):**
+  - Palet Triad Wajib: Tombol swatch warna eksklusif Deep Navy Blue (`#132952`), Vibrant Emerald Green (`#00B262`), dan Warm Amber Orange (`#FAA21B`) plus input hex manual.
+- **The Live Triad Theme Card (`resources/js/Components/Events/LiveThemeCard.vue`):**
   - Kartu instrumen 10px radius dengan border 1px hairline yang merefleksikan perubahan warna primer, sekunder, nama event, lokasi, dan mode tiket secara real-time.
 - **Lock Confirmation Modal (`resources/js/Components/Events/LockConfirmModal.vue`):**
   - Dialog konfirmasi sebelum pengiriman data yang merangkum nama event, slug URL, instansi, jadwal, dan mode gamifikasi, disertai peringatan kriptografis mengenai penerbitan Token Manajemen Rahasia 64-karakter.
 - **Rundown Row Builder (`resources/js/Components/Events/RundownRowBuilder.vue`):**
   - Input baris jadwal acara pembukaan yang dinamis dengan penambahan dan penghapusan baris yang rapi.
 - **Ruler-Drawn Poster Export (`resources/js/Pages/Events/PosterExport.vue`):**
-  - Lembar poster publikasi resmi dengan presisi geometris dan garis rambut 1px (`border-2 border-[#0F172A]`).
+  - Lembar poster publikasi resmi dengan presisi geometris dan garis rambut 1px beraksen Deep Navy Blue `#132952`.
   - Memuat masthead resmi Pemkab Kutai Timur, judul event berukuran besar dalam font *Space Grotesk*, rincian waktu & venue, serta **Dynamic SVG QR Code** yang mengarah ke `/e/{slug}`.
   - Fitur alih format: **A4 Cetak (Portrait)** vs **1:1 Media Sosial (Instagram Square)**.
   - Lembar gaya cetak `@media print` untuk cetak langsung ke printer atau ekspor PDF berkualitas tinggi (`window.print()`).

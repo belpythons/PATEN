@@ -1,11 +1,11 @@
-# Frontend Technical Staging Plan: STAGE 5 (Cobalt Edition)
-**Nama Tahapan:** Modul 3 – UMKM Perbup Profiling, Touchscreen Pinpad, Graphite POS Mini ($\le 3$s) & Technical Menu Sheet  
+# Frontend Technical Staging Plan: STAGE 5 (Triad Color Edition)
+**Nama Tahapan:** Modul 3 – UMKM Perbup Profiling, Touchscreen Pinpad, Deep Navy POS Mini ($\le 3$s) & Technical Menu Sheet  
 **Target Modul:** Pendaftaran Stand UMKM (`/stands/{id}/assign`), Keypad Sentuh Login Kasir (`/pos/{id}/login`), Terminal Kasir POS Mini Super Cepat ($\le 3$s) (`/pos/{id}`), dan Lembar Menu Meja Siap Cetak (`/pos/{id}/export-menu`)  
-**Standar Hallmark:** Banner Edukasi Anti-Pajak Resmi, Kartu Kasir Graphite Gelap Presisi, Target Waktu $\le 3$ Detik (BRD), dan Tombol Taktil 6px  
+**Standar Hallmark:** Banner Edukasi Anti-Pajak Resmi, Kartu Kasir Deep Navy Gelap Presisi (#132952), Target Waktu $\le 3$ Detik (BRD), dan Tombol Taktil 6px  
 
 ---
 
-## 1. Analisis Kebutuhan & Spesifikasi Desain Cobalt
+## 1. Analisis Kebutuhan & Spesifikasi Desain Triad
 
 ### A. Pendaftaran Stand & Profiling Perbup Kutim (`Pages/Stands/Assign.vue` - FR-3.1 & FR-3.2)
 Pedagang UMKM membuka link pendaftaran stand via WhatsApp:
@@ -27,8 +27,8 @@ Pedagang UMKM membuka link pendaftaran stand via WhatsApp:
   - Tombol hapus satu digit (*backspace*) dan tombol bersihkan semua.
 
 ### C. Terminal Kasir POS Mini Ultra Cepat ($\le 3$ Detik) (`Pages/Pos/Terminal.vue` - FR-3.4)
-- **Desain Kartu Grafit Gelap (Graphite Card Focus):**
-  - Mengadopsi band instrumen gelap khas Cobalt (`oklch(22% 0.016 260)`) bergaris rambut tipis, mengurangi kelelahan mata kasir di bawah terik matahari tenda bazar.
+- **Desain Kartu Deep Navy Gelap (Deep Navy Card Focus):**
+  - Mengadopsi band instrumen gelap Deep Navy (`#132952`) bergaris rambut tipis, mengurangi kelelahan mata kasir di bawah terik matahari tenda bazar.
   - **Header Shift Kasir:** Nomor Stand (`JetBrains Mono`), Nama UMKM, Total Omzet Shift berjalan, dan Frekuensi Transaksi hari ini.
   - **Dropdown & Fast-Pick Menu Cards:**
     - Dropdown menu cerdas yang otomatis mengisi harga satuan seketika.
@@ -36,7 +36,7 @@ Pedagang UMKM membuka link pendaftaran stand via WhatsApp:
   - **Stepper Kuantitas Taktil:**
     - Tombol minus (`-`), angka kuantitas, tombol plus (`+`), serta tombol pintas kilat (`+1`, `+2`, `+5`).
   - **Tombol Metode Pembayaran Kontras Tinggi:**
-    - Dua tombol besar berdampingan: **TUNAI (Cash)** beraksen Emerald dan **QRIS** beraksen Electric Cobalt.
+    - Dua tombol besar berdampingan: **TUNAI (Cash)** beraksen Emerald (`#00B262`) dan **QRIS** beraksen Deep Navy (`#132952`).
   - **Tombol Raksasa "SIMPAN TRANSAKSI":**
     - Tombol eksekusi bervolume besar dengan umpan balik multi-indera (getar ponsel `navigator.vibrate`, efek visual sukses, dan auto-reset kuantitas ke angka 1).
   - **Modal Tambah Menu Baru Kilat:**

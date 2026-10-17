@@ -1,5 +1,5 @@
 # Frontend Stage 3 Implementation Report: Modul 1 (Publik)
-**Tema Desain:** Hallmark Cobalt Edition  
+**Tema Desain:** Hallmark Triad Edition (Deep Navy Blue #132952, Vibrant Emerald Green #00B262, Warm Amber Orange #FAA21B)  
 **Target Modul:** Microsite Publik Acara (`/e/{slug}`), Registrasi Kehadiran Instan, Modal Tiket Presisi Ber-QR, dan Klasemen Awarding Stand (`/e/{slug}/leaderboard`)  
 **Status Implementasi:** 100% Complete & Verified  
 
@@ -9,12 +9,12 @@
 
 Pada **Frontend Stage 3**, antarmuka publik untuk pengunjung dan masyarakat umum pada ekosistem **PATEN Kutai Timur** telah selesai dibangun secara menyeluruh menggunakan arsitektur **Laravel 13 + Inertia v3 + Vue 3 + Tailwind CSS v4**.
 
-Implementasi ini secara ketat mematuhi filosofi desain **Hallmark Cobalt Anti-AI-Slop**:
-- **Hero Asimetris 2 Kolom:** Kolom kiri fokus pada judul acara berkarakter editorial (`Space Grotesk`) dan identitas instansi penyelenggara, sedangkan kolom kanan menghadirkan *Instrument Status Card* gelap bergaris rambut (`border-[#26334D]`) dengan penghitung waktu mundur (*live countdown timer*) reaktif serta mini-QR portal acara.
+Implementasi ini secara ketat mematuhi filosofi desain **Hallmark Triad Anti-AI-Slop**:
+- **Hero Asimetris 2 Kolom:** Kolom kiri fokus pada judul acara berkarakter editorial (`Space Grotesk`) dan identitas instansi penyelenggara, sedangkan kolom kanan menghadirkan *Instrument Status Card* gelap bergaris rambut (`border-[#26334D]`) dengan penghitung waktu mundur (*live countdown timer*) reaktif serta mini-QR portal acara beraksen Deep Navy `#132952`.
 - **Rundown Presisi Bergaris Rambut 1px:** Garis vertikal 1px (`border-l-2 border-[#CBD5E1]`) yang memandu navigasi seluruh agenda panggung dengan lencana stempel waktu monospace (`JetBrains Mono`).
 - **Formulir Kehadiran Ergonomis:** Dilengkapi daftar lengkap **18 Kecamatan Kabupaten Kutai Timur**, proteksi laju request (*rate-limiting 30 req/min*), dan umpan balik kesalahan instan.
 - **Modal E-Tiket Presisi Geometris (`TicketStubModal.vue`):** Kartu tiket digital dengan pemisah bergaris putus-putus (*dashed divider*) dan torehan notch fisik, kode kupon ber-font mono besar (`PATEN-DOOR-...`), barcode SVG QR Code tajam, serta tombol salin kode reaktif (*"Tersalin! ✓"*).
-- **Klasemen Awarding Stand Publik (`Leaderboard.vue` & `CobaltLeaderboardTable.vue`):** Visual podium 3 teratas (Emas, Perak, Perunggu) dan tabel presisi bergaris rambut 1px dengan angka tabular (`tnum`).
+- **Klasemen Awarding Stand Publik (`Leaderboard.vue` & `CobaltLeaderboardTable.vue`):** Visual podium 3 teratas berpalet Triad (Peringkat 1: Warm Amber Orange `#FAA21B`, Peringkat 2: Deep Navy Blue `#132952`, Peringkat 3: Vibrant Emerald Green `#00B262`) dan tabel presisi bergaris rambut 1px dengan angka tabular (`tnum`).
 - **Proteksi Sensor Finansial Mutlak:** Sesuai standar Perbup Kutim, data omzet rupiah, NIK, No KK, dan kontak pribadi peserta stand disensor mutlak dari kanal publik.
 
 ---
