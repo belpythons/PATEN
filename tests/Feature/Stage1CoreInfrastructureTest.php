@@ -6,8 +6,6 @@ use App\Models\Attendee;
 use App\Models\Event;
 use App\Models\EventRundown;
 use App\Models\EventStand;
-use App\Models\PosTransaction;
-use App\Models\SpkUmkmEvaluation;
 use App\Models\StandMenu;
 use App\Models\UmkmProfile;
 use Illuminate\Support\Facades\DB;
@@ -94,7 +92,7 @@ class Stage1CoreInfrastructureTest extends TestCase
      */
     public function test_eloquent_models_can_instantiate_and_relate(): void
     {
-        $testSlug = 'stage1-test-event-' . Str::lower(Str::random(8));
+        $testSlug = 'stage1-test-event-'.Str::lower(Str::random(8));
         $testToken = Str::random(64);
 
         // 1. Create Event
@@ -131,7 +129,7 @@ class Stage1CoreInfrastructureTest extends TestCase
         $this->assertEquals($event->id, $rundown->event->id);
 
         // 3. Create UmkmProfile
-        $nik = '6408' . str_pad((string) mt_rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
+        $nik = '6408'.str_pad((string) mt_rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
         $umkm = UmkmProfile::create([
             'nik' => $nik,
             'no_kk' => '6408123456789012',
@@ -177,7 +175,7 @@ class Stage1CoreInfrastructureTest extends TestCase
             'nama_lengkap' => 'Ahmad Fauzi',
             'nomor_wa' => '081298765432',
             'kecamatan' => 'Sangatta Selatan',
-            'nomor_tiket_doorprize' => 'PATEN-TEST-' . Str::upper(Str::random(6)),
+            'nomor_tiket_doorprize' => 'PATEN-TEST-'.Str::upper(Str::random(6)),
             'tipe_registrasi' => 'doorprize',
             'is_checked_in' => false,
         ]);
@@ -198,7 +196,7 @@ class Stage1CoreInfrastructureTest extends TestCase
     public function test_verify_cms_token_middleware_rejects_missing_token(): void
     {
         $event = Event::create([
-            'slug' => 'cms-token-test-' . Str::lower(Str::random(6)),
+            'slug' => 'cms-token-test-'.Str::lower(Str::random(6)),
             'nama_event' => 'CMS Token Test',
             'deskripsi' => 'Test event',
             'penyelenggara' => 'Panitia',
@@ -208,7 +206,7 @@ class Stage1CoreInfrastructureTest extends TestCase
             'secure_management_token' => Str::random(64),
         ]);
 
-        $response = $this->get('/cms/' . $event->slug);
+        $response = $this->get('/cms/'.$event->slug);
         $response->assertStatus(401);
 
         $event->delete();
@@ -220,7 +218,7 @@ class Stage1CoreInfrastructureTest extends TestCase
     public function test_verify_cms_token_middleware_rejects_invalid_token(): void
     {
         $event = Event::create([
-            'slug' => 'cms-token-test-' . Str::lower(Str::random(6)),
+            'slug' => 'cms-token-test-'.Str::lower(Str::random(6)),
             'nama_event' => 'CMS Token Test',
             'deskripsi' => 'Test event',
             'penyelenggara' => 'Panitia',
@@ -230,7 +228,7 @@ class Stage1CoreInfrastructureTest extends TestCase
             'secure_management_token' => Str::random(64),
         ]);
 
-        $response = $this->get('/cms/' . $event->slug . '?token=wrong_invalid_secret_token');
+        $response = $this->get('/cms/'.$event->slug.'?token=wrong_invalid_secret_token');
         $response->assertStatus(403);
 
         $event->delete();
@@ -243,7 +241,7 @@ class Stage1CoreInfrastructureTest extends TestCase
     {
         $token = Str::random(64);
         $event = Event::create([
-            'slug' => 'cms-token-test-' . Str::lower(Str::random(6)),
+            'slug' => 'cms-token-test-'.Str::lower(Str::random(6)),
             'nama_event' => 'CMS Token Test',
             'deskripsi' => 'Test event',
             'penyelenggara' => 'Panitia',
@@ -253,7 +251,7 @@ class Stage1CoreInfrastructureTest extends TestCase
             'secure_management_token' => $token,
         ]);
 
-        $response = $this->get('/cms/' . $event->slug . '?token=' . $token);
+        $response = $this->get('/cms/'.$event->slug.'?token='.$token);
         $response->assertStatus(200)
             ->assertJson([
                 'success' => true,
@@ -262,7 +260,7 @@ class Stage1CoreInfrastructureTest extends TestCase
 
         // Also test header auth
         $headerResponse = $this->withHeaders(['X-CMS-Token' => $token])
-            ->get('/cms/' . $event->slug);
+            ->get('/cms/'.$event->slug);
         $headerResponse->assertStatus(200);
 
         $event->delete();
@@ -274,7 +272,7 @@ class Stage1CoreInfrastructureTest extends TestCase
     public function test_verify_pos_pin_middleware_enforces_correct_pin(): void
     {
         $event = Event::create([
-            'slug' => 'pos-pin-test-' . Str::lower(Str::random(6)),
+            'slug' => 'pos-pin-test-'.Str::lower(Str::random(6)),
             'nama_event' => 'POS Pin Test',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -293,16 +291,16 @@ class Stage1CoreInfrastructureTest extends TestCase
         ]);
 
         // 1. Missing / wrong PIN returns 403
-        $respDenied = $this->get('/pos/' . $stand->id . '/test');
+        $respDenied = $this->get('/pos/'.$stand->id.'/test');
         $respDenied->assertStatus(403);
 
         $respWrong = $this->withHeaders(['X-Stand-Pin' => '000000'])
-            ->get('/pos/' . $stand->id . '/test');
+            ->get('/pos/'.$stand->id.'/test');
         $respWrong->assertStatus(403);
 
         // 2. Correct PIN in header returns 200
         $respAllowed = $this->withHeaders(['X-Stand-Pin' => '654321'])
-            ->get('/pos/' . $stand->id . '/test');
+            ->get('/pos/'.$stand->id.'/test');
         $respAllowed->assertStatus(200)
             ->assertJson([
                 'success' => true,
@@ -311,7 +309,7 @@ class Stage1CoreInfrastructureTest extends TestCase
 
         // 3. Established session returns 200
         $respSession = $this->withSession(['pos_stand_id' => $stand->id])
-            ->get('/pos/' . $stand->id . '/test');
+            ->get('/pos/'.$stand->id.'/test');
         $respSession->assertStatus(200);
 
         $stand->delete();

@@ -61,7 +61,7 @@ class PublicLeaderboardController extends Controller
                 'penyelenggara' => $event->penyelenggara,
                 'lokasi_venue' => $event->lokasi_venue,
             ],
-            'awarding_tier' => 'top_' . count($leaderboard),
+            'awarding_tier' => 'top_'.count($leaderboard),
             'leaderboard' => $leaderboard,
         ];
 

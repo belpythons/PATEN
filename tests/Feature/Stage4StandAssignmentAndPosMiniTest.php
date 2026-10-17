@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Event;
 use App\Models\EventStand;
-use App\Models\PosTransaction;
 use App\Models\StandMenu;
 use App\Models\UmkmProfile;
 use Illuminate\Support\Str;
@@ -18,7 +17,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
     public function test_umkm_assignment_validates_nik_and_kk_format(): void
     {
         $event = Event::create([
-            'slug' => 'umkm-val-' . Str::lower(Str::random(6)),
+            'slug' => 'umkm-val-'.Str::lower(Str::random(6)),
             'nama_event' => 'Paten Test Event',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -45,15 +44,15 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
             'kecamatan' => 'Sangatta Utara',
         ];
 
-        $response = $this->postJson('/stands/' . $stand->id . '/assign', $invalidPayload);
+        $response = $this->postJson('/stands/'.$stand->id.'/assign', $invalidPayload);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['nik', 'no_kk']);
 
         // Valid 16-digit payload
         $validPayload = [
-            'nik' => '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
-            'no_kk' => '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
+            'nik' => '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
+            'no_kk' => '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
             'nama_pemilik' => 'Ahmad Subandi',
             'nama_usaha' => 'Warung Barokah Sangatta',
             'nomor_wa' => '081234567890',
@@ -69,7 +68,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
             ],
         ];
 
-        $validResponse = $this->postJson('/stands/' . $stand->id . '/assign', $validPayload);
+        $validResponse = $this->postJson('/stands/'.$stand->id.'/assign', $validPayload);
 
         $validResponse->assertStatus(200)
             ->assertJson([
@@ -99,7 +98,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
     public function test_pos_pin_authentication_sets_session_or_returns_error(): void
     {
         $event = Event::create([
-            'slug' => 'pos-auth-' . Str::lower(Str::random(6)),
+            'slug' => 'pos-auth-'.Str::lower(Str::random(6)),
             'nama_event' => 'Paten Auth Event',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -118,7 +117,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
         ]);
 
         // 1. Wrong PIN -> 403
-        $wrongResp = $this->postJson('/pos/' . $stand->id . '/login-pin', [
+        $wrongResp = $this->postJson('/pos/'.$stand->id.'/login-pin', [
             'pin_pos' => '000000',
         ]);
         $wrongResp->assertStatus(403)
@@ -127,7 +126,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
             ]);
 
         // 2. Correct PIN -> 200 & session set
-        $correctResp = $this->postJson('/pos/' . $stand->id . '/login-pin', [
+        $correctResp = $this->postJson('/pos/'.$stand->id.'/login-pin', [
             'pin_pos' => '789123',
         ]);
         $correctResp->assertStatus(200)
@@ -148,7 +147,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
     public function test_stand_menu_crud_operations(): void
     {
         $event = Event::create([
-            'slug' => 'menu-crud-' . Str::lower(Str::random(6)),
+            'slug' => 'menu-crud-'.Str::lower(Str::random(6)),
             'nama_event' => 'Paten Menu Test',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -168,7 +167,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
 
         // 1. CREATE menu item
         $createResp = $this->withSession(['pos_stand_id' => $stand->id])
-            ->postJson('/pos/' . $stand->id . '/menus', [
+            ->postJson('/pos/'.$stand->id.'/menus', [
                 'nama_item' => 'Pisang Goreng Pontianak Crispy',
                 'harga' => 15000,
                 'is_available' => true,
@@ -187,7 +186,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
 
         // 2. UPDATE menu item
         $updateResp = $this->withSession(['pos_stand_id' => $stand->id])
-            ->putJson('/pos/' . $stand->id . '/menus/' . $menuId, [
+            ->putJson('/pos/'.$stand->id.'/menus/'.$menuId, [
                 'harga' => 18000,
             ]);
 
@@ -203,7 +202,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
 
         // 3. DELETE menu item
         $deleteResp = $this->withSession(['pos_stand_id' => $stand->id])
-            ->deleteJson('/pos/' . $stand->id . '/menus/' . $menuId);
+            ->deleteJson('/pos/'.$stand->id.'/menus/'.$menuId);
 
         $deleteResp->assertStatus(200)
             ->assertJson([
@@ -226,7 +225,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
     public function test_pos_transaction_atomic_execution(): void
     {
         $event = Event::create([
-            'slug' => 'pos-tx-' . Str::lower(Str::random(6)),
+            'slug' => 'pos-tx-'.Str::lower(Str::random(6)),
             'nama_event' => 'Paten POS Tx Test',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -261,7 +260,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
         ];
 
         $response = $this->withSession(['pos_stand_id' => $stand->id])
-            ->postJson('/pos/' . $stand->id . '/transactions', $txPayload);
+            ->postJson('/pos/'.$stand->id.'/transactions', $txPayload);
 
         $response->assertStatus(201)
             ->assertJson([
@@ -297,7 +296,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
     public function test_pos_transaction_prevents_unauthorized_stand_tampering(): void
     {
         $event = Event::create([
-            'slug' => 'pos-tamper-' . Str::lower(Str::random(6)),
+            'slug' => 'pos-tamper-'.Str::lower(Str::random(6)),
             'nama_event' => 'Paten Tamper Test',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -332,7 +331,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
 
         // 1. Session Stand A tries to record transaction on Stand B URL -> 403 Forbidden
         $mismatchResp = $this->withSession(['pos_stand_id' => $standA->id])
-            ->postJson('/pos/' . $standB->id . '/transactions', [
+            ->postJson('/pos/'.$standB->id.'/transactions', [
                 'menu_id' => $menuB->id,
                 'qty' => 1,
                 'metode_pembayaran' => 'cash',
@@ -341,7 +340,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
 
         // 2. Stand A tries to submit menu belonging to Stand B -> 422 Unprocessable
         $tamperedMenuResp = $this->withSession(['pos_stand_id' => $standA->id])
-            ->postJson('/pos/' . $standA->id . '/transactions', [
+            ->postJson('/pos/'.$standA->id.'/transactions', [
                 'menu_id' => $menuB->id, // Menu B belongs to Stand B, not Stand A
                 'qty' => 1,
                 'metode_pembayaran' => 'cash',
@@ -365,7 +364,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
     public function test_menu_export_includes_induk_event_colors(): void
     {
         $event = Event::create([
-            'slug' => 'export-menu-' . Str::lower(Str::random(6)),
+            'slug' => 'export-menu-'.Str::lower(Str::random(6)),
             'nama_event' => 'Pekan Budaya Sangatta',
             'deskripsi' => 'Pesta seni dan UMKM',
             'penyelenggara' => 'Disporapar',
@@ -393,7 +392,7 @@ class Stage4StandAssignmentAndPosMiniTest extends TestCase
             'is_available' => true,
         ]);
 
-        $response = $this->getJson('/pos/' . $stand->id . '/export-menu');
+        $response = $this->getJson('/pos/'.$stand->id.'/export-menu');
 
         $response->assertStatus(200)
             ->assertJson([

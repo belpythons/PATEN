@@ -66,13 +66,14 @@ class CmsStandController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => count($createdStands) . ' stand berhasil dibuat beserta PIN kasir.',
+                'message' => count($createdStands).' stand berhasil dibuat beserta PIN kasir.',
                 'stands' => $createdStands,
             ], 201);
         }
 
         $token = $request->query('token') ?: $request->header('X-CMS-Token');
-        return redirect()->to('/cms/' . $event->slug . '?token=' . $token)
-            ->with('success', count($createdStands) . ' stand berhasil dibuat beserta PIN kasir.');
+
+        return redirect()->to('/cms/'.$event->slug.'?token='.$token)
+            ->with('success', count($createdStands).' stand berhasil dibuat beserta PIN kasir.');
     }
 }

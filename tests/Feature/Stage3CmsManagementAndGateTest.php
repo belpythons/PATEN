@@ -4,8 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Attendee;
 use App\Models\Event;
-use App\Models\EventRundown;
-use App\Models\EventStand;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -18,7 +16,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
     {
         $token = Str::random(64);
         $event = Event::create([
-            'slug' => 'cms-dash-test-' . Str::lower(Str::random(6)),
+            'slug' => 'cms-dash-test-'.Str::lower(Str::random(6)),
             'nama_event' => 'Pekan Raya Sangatta',
             'deskripsi' => 'Pesta rakyat tahunan',
             'penyelenggara' => 'Pemkab Kutai Timur',
@@ -29,15 +27,15 @@ class Stage3CmsManagementAndGateTest extends TestCase
         ]);
 
         // 1. Without token -> 401
-        $noTokenResp = $this->get('/cms/' . $event->slug);
+        $noTokenResp = $this->get('/cms/'.$event->slug);
         $noTokenResp->assertStatus(401);
 
         // 2. Invalid token -> 403
-        $invalidTokenResp = $this->get('/cms/' . $event->slug . '?token=wrong_token_12345');
+        $invalidTokenResp = $this->get('/cms/'.$event->slug.'?token=wrong_token_12345');
         $invalidTokenResp->assertStatus(403);
 
         // 3. Valid token -> 200
-        $validTokenResp = $this->get('/cms/' . $event->slug . '?token=' . $token);
+        $validTokenResp = $this->get('/cms/'.$event->slug.'?token='.$token);
         $validTokenResp->assertStatus(200)
             ->assertJsonStructure([
                 'success',
@@ -59,7 +57,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
     {
         $token = Str::random(64);
         $event = Event::create([
-            'slug' => 'rundown-crud-' . Str::lower(Str::random(6)),
+            'slug' => 'rundown-crud-'.Str::lower(Str::random(6)),
             'nama_event' => 'Festival Tari Pedalaman',
             'deskripsi' => 'Festival seni tari Dayak',
             'penyelenggara' => 'Disdikbud Kutim',
@@ -78,7 +76,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
             'urutan' => 1,
         ];
 
-        $createResp = $this->postJson('/cms/' . $event->slug . '/rundowns?token=' . $token, $createPayload);
+        $createResp = $this->postJson('/cms/'.$event->slug.'/rundowns?token='.$token, $createPayload);
         $createResp->assertStatus(201)
             ->assertJson([
                 'success' => true,
@@ -99,7 +97,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
             'pengisi_acara' => 'Kepala Dinas & Sanggar Seni',
         ];
 
-        $updateResp = $this->putJson('/cms/' . $event->slug . '/rundowns/' . $rundownId . '?token=' . $token, $updatePayload);
+        $updateResp = $this->putJson('/cms/'.$event->slug.'/rundowns/'.$rundownId.'?token='.$token, $updatePayload);
         $updateResp->assertStatus(200)
             ->assertJson([
                 'success' => true,
@@ -112,7 +110,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
         ]);
 
         // 3. DELETE rundown session
-        $deleteResp = $this->deleteJson('/cms/' . $event->slug . '/rundowns/' . $rundownId . '?token=' . $token);
+        $deleteResp = $this->deleteJson('/cms/'.$event->slug.'/rundowns/'.$rundownId.'?token='.$token);
         $deleteResp->assertStatus(200)
             ->assertJson([
                 'success' => true,
@@ -134,7 +132,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
     {
         $token = Str::random(64);
         $event = Event::create([
-            'slug' => 'stand-prov-' . Str::lower(Str::random(6)),
+            'slug' => 'stand-prov-'.Str::lower(Str::random(6)),
             'nama_event' => 'Kutim Kuliner Expo 2026',
             'deskripsi' => 'Sentra kuliner nusantara',
             'penyelenggara' => 'Diskop UKM',
@@ -156,7 +154,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
             ],
         ];
 
-        $response = $this->postJson('/cms/' . $event->slug . '/stands?token=' . $token, $payload);
+        $response = $this->postJson('/cms/'.$event->slug.'/stands?token='.$token, $payload);
 
         $response->assertStatus(201)
             ->assertJson([
@@ -193,7 +191,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
     {
         $token = Str::random(64);
         $event = Event::create([
-            'slug' => 'gate-checkin-' . Str::lower(Str::random(6)),
+            'slug' => 'gate-checkin-'.Str::lower(Str::random(6)),
             'nama_event' => 'Konser Musik Kutim Hebat',
             'deskripsi' => 'Konser band lokal',
             'penyelenggara' => 'Kreatif Kutim',
@@ -203,7 +201,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
             'secure_management_token' => $token,
         ]);
 
-        $ticketNumber = 'PATEN-DOOR-' . date('Ymd') . '-TEST01';
+        $ticketNumber = 'PATEN-DOOR-'.date('Ymd').'-TEST01';
         $attendee = Attendee::create([
             'event_id' => $event->id,
             'nama_lengkap' => 'Muhammad Fajar',
@@ -218,7 +216,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
             'nomor_tiket_doorprize' => $ticketNumber,
         ];
 
-        $response = $this->postJson('/cms/' . $event->slug . '/check-in?token=' . $token, $payload);
+        $response = $this->postJson('/cms/'.$event->slug.'/check-in?token='.$token, $payload);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -245,7 +243,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
     {
         $token = Str::random(64);
         $event = Event::create([
-            'slug' => 'gate-reject-' . Str::lower(Str::random(6)),
+            'slug' => 'gate-reject-'.Str::lower(Str::random(6)),
             'nama_event' => 'Pameran Otomotif Kutim',
             'deskripsi' => 'Expo modifikasi',
             'penyelenggara' => 'Komunitas Otomotif',
@@ -256,7 +254,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
         ]);
 
         // 1. Non-existent ticket -> 404
-        $fakeResponse = $this->postJson('/cms/' . $event->slug . '/check-in?token=' . $token, [
+        $fakeResponse = $this->postJson('/cms/'.$event->slug.'/check-in?token='.$token, [
             'nomor_tiket_doorprize' => 'PATEN-FAKE-99999999-XXXX',
         ]);
         $fakeResponse->assertStatus(404)
@@ -266,7 +264,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
             ]);
 
         // 2. Already checked-in ticket -> 409
-        $ticketNumber = 'PATEN-DOOR-' . date('Ymd') . '-TEST02';
+        $ticketNumber = 'PATEN-DOOR-'.date('Ymd').'-TEST02';
         $attendee = Attendee::create([
             'event_id' => $event->id,
             'nama_lengkap' => 'Dewi Anggraini',
@@ -278,7 +276,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
             'check_in_time' => now()->subHour(),
         ]);
 
-        $duplicateResponse = $this->postJson('/cms/' . $event->slug . '/check-in?token=' . $token, [
+        $duplicateResponse = $this->postJson('/cms/'.$event->slug.'/check-in?token='.$token, [
             'nomor_tiket_doorprize' => $ticketNumber,
         ]);
         $duplicateResponse->assertStatus(409)
@@ -297,7 +295,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
     {
         $token = Str::random(64);
         $event = Event::create([
-            'slug' => 'doorprize-draw-' . Str::lower(Str::random(6)),
+            'slug' => 'doorprize-draw-'.Str::lower(Str::random(6)),
             'nama_event' => 'Gebyar Pesta Rakyat Kutim',
             'deskripsi' => 'Undian Doorprize Utama Motor & Kulkas',
             'penyelenggara' => 'Panitia HUT Kutim',
@@ -313,7 +311,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
             'nama_lengkap' => 'Peserta Hadir Satu',
             'nomor_wa' => '081111111111',
             'kecamatan' => 'Sangatta Utara',
-            'nomor_tiket_doorprize' => 'PATEN-DOOR-' . date('Ymd') . '-WIN01',
+            'nomor_tiket_doorprize' => 'PATEN-DOOR-'.date('Ymd').'-WIN01',
             'tipe_registrasi' => 'doorprize',
             'is_checked_in' => true,
             'check_in_time' => now(),
@@ -326,7 +324,7 @@ class Stage3CmsManagementAndGateTest extends TestCase
             'nama_lengkap' => 'Peserta Hadir Dua',
             'nomor_wa' => '082222222222',
             'kecamatan' => 'Teluk Pandan',
-            'nomor_tiket_doorprize' => 'PATEN-DOOR-' . date('Ymd') . '-WIN02',
+            'nomor_tiket_doorprize' => 'PATEN-DOOR-'.date('Ymd').'-WIN02',
             'tipe_registrasi' => 'doorprize',
             'is_checked_in' => true,
             'check_in_time' => now(),
@@ -339,14 +337,14 @@ class Stage3CmsManagementAndGateTest extends TestCase
             'nama_lengkap' => 'Peserta Tidak Hadir',
             'nomor_wa' => '083333333333',
             'kecamatan' => 'Muara Wahau',
-            'nomor_tiket_doorprize' => 'PATEN-DOOR-' . date('Ymd') . '-ABS01',
+            'nomor_tiket_doorprize' => 'PATEN-DOOR-'.date('Ymd').'-ABS01',
             'tipe_registrasi' => 'doorprize',
             'is_checked_in' => false,
             'is_doorprize_winner' => false,
         ]);
 
         // Draw 1 winner
-        $response = $this->postJson('/cms/' . $event->slug . '/draw-doorprize?token=' . $token, [
+        $response = $this->postJson('/cms/'.$event->slug.'/draw-doorprize?token='.$token, [
             'jumlah_pemenang' => 1,
         ]);
 

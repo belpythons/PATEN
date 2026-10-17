@@ -26,7 +26,7 @@ class CmsRundownController extends Controller
             'urutan' => 'nullable|integer',
         ]);
 
-        if (!isset($validated['urutan']) || $validated['urutan'] === null) {
+        if (! isset($validated['urutan']) || $validated['urutan'] === null) {
             $maxUrutan = (int) $event->rundowns()->max('urutan');
             $validated['urutan'] = $maxUrutan + 1;
         }
@@ -44,7 +44,8 @@ class CmsRundownController extends Controller
         }
 
         $token = $request->query('token') ?: $request->header('X-CMS-Token');
-        return redirect()->to('/cms/' . $event->slug . '?token=' . $token)
+
+        return redirect()->to('/cms/'.$event->slug.'?token='.$token)
             ->with('success', 'Sesi rundown berhasil ditambahkan.');
     }
 
@@ -77,7 +78,8 @@ class CmsRundownController extends Controller
         }
 
         $token = $request->query('token') ?: $request->header('X-CMS-Token');
-        return redirect()->to('/cms/' . $event->slug . '?token=' . $token)
+
+        return redirect()->to('/cms/'.$event->slug.'?token='.$token)
             ->with('success', 'Sesi rundown berhasil diperbarui.');
     }
 
@@ -100,7 +102,8 @@ class CmsRundownController extends Controller
         }
 
         $token = $request->query('token') ?: $request->header('X-CMS-Token');
-        return redirect()->to('/cms/' . $event->slug . '?token=' . $token)
+
+        return redirect()->to('/cms/'.$event->slug.'?token='.$token)
             ->with('success', 'Sesi rundown berhasil dihapus.');
     }
 }

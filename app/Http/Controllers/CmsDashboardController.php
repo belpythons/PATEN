@@ -47,8 +47,8 @@ class CmsDashboardController extends Controller
             'stands' => $stands,
             'recent_attendees' => $recentAttendees,
             'doorprize_winners' => $doorprizeWinners,
-            'public_url' => url('/e/' . $event->slug),
-            'cms_url' => url('/cms/' . $event->slug . '?token=' . $token),
+            'public_url' => url('/e/'.$event->slug),
+            'cms_url' => url('/cms/'.$event->slug.'?token='.$token),
         ];
 
         if ($request->wantsJson() || ($request->header('User-Agent') === 'Symfony' && ! $request->hasHeader('X-Inertia'))) {

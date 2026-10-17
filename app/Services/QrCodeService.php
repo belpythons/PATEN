@@ -23,6 +23,6 @@ class QrCodeService
     {
         $svg = $this->generateSvg($data, $size);
 
-        return 'data:image/svg+xml;base64,' . base64_encode($svg);
+        return 'data:image/svg+xml;base64,'.base64_encode($svg);
     }
 }

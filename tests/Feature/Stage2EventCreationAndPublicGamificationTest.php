@@ -2,10 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Attendee;
 use App\Models\Event;
 use App\Models\EventRundown;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -14,7 +13,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        \Illuminate\Support\Facades\RateLimiter::clear(md5('attendance' . '127.0.0.1'));
+        RateLimiter::clear(md5('attendance'.'127.0.0.1'));
     }
 
     /**
@@ -131,7 +130,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
     public function test_public_event_page_renders_with_event_data_and_rundown(): void
     {
         $event = Event::create([
-            'slug' => 'public-test-' . Str::lower(Str::random(6)),
+            'slug' => 'public-test-'.Str::lower(Str::random(6)),
             'nama_event' => 'Pekan Raya Sangkulirang 2026',
             'deskripsi' => 'Pameran hasil laut dan kerajinan',
             'penyelenggara' => 'Kecamatan Sangkulirang',
@@ -150,7 +149,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
             'urutan' => 1,
         ]);
 
-        $response = $this->getJson('/e/' . $event->slug);
+        $response = $this->getJson('/e/'.$event->slug);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -173,7 +172,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
     public function test_public_attendance_registration_creates_unique_ticket(): void
     {
         $event = Event::create([
-            'slug' => 'doorprize-event-' . Str::lower(Str::random(6)),
+            'slug' => 'doorprize-event-'.Str::lower(Str::random(6)),
             'nama_event' => 'Gebyar Doorprize Kutim',
             'deskripsi' => 'Undian gratis',
             'penyelenggara' => 'Panitia',
@@ -191,7 +190,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
             'tipe_registrasi' => 'doorprize',
         ];
 
-        $response = $this->postJson('/e/' . $event->slug . '/register-attendance', $payload);
+        $response = $this->postJson('/e/'.$event->slug.'/register-attendance', $payload);
 
         $response->assertStatus(201)
             ->assertJsonStructure([
@@ -227,7 +226,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
     public function test_attendance_registration_rate_limiting(): void
     {
         $event = Event::create([
-            'slug' => 'throttle-test-' . Str::lower(Str::random(6)),
+            'slug' => 'throttle-test-'.Str::lower(Str::random(6)),
             'nama_event' => 'Throttle Test Event',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -239,12 +238,12 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
         ]);
 
         // Pre-seed rate limiter with 30 hits on client IP to verify 429 on 31st request
-        $key = md5('attendance' . '127.0.0.1');
+        $key = md5('attendance'.'127.0.0.1');
         for ($i = 0; $i < 30; $i++) {
-            \Illuminate\Support\Facades\RateLimiter::hit($key, 60);
+            RateLimiter::hit($key, 60);
         }
 
-        $resp = $this->postJson('/e/' . $event->slug . '/register-attendance', [
+        $resp = $this->postJson('/e/'.$event->slug.'/register-attendance', [
             'nama_lengkap' => 'Overlimit Visitor',
             'nomor_wa' => '081299998888',
             'kecamatan' => 'Sangatta Utara',
@@ -254,7 +253,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
         $this->assertEquals(429, $resp->status());
 
         // Clear rate limiter for subsequent tests
-        \Illuminate\Support\Facades\RateLimiter::clear($key);
+        RateLimiter::clear($key);
 
         // Cleanup
         $event->delete();
@@ -266,7 +265,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
     public function test_poster_export_endpoint_returns_valid_data(): void
     {
         $event = Event::create([
-            'slug' => 'poster-test-' . Str::lower(Str::random(6)),
+            'slug' => 'poster-test-'.Str::lower(Str::random(6)),
             'nama_event' => 'Pekan Budaya Sangatta 2026',
             'deskripsi' => 'Pentas seni',
             'penyelenggara' => 'Disporapar Kutim',
@@ -279,7 +278,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
             'color_secondary' => '#F59E0B',
         ]);
 
-        $response = $this->getJson('/events/' . $event->slug . '/poster-export');
+        $response = $this->getJson('/events/'.$event->slug.'/poster-export');
 
         $response->assertStatus(200)
             ->assertJson([
@@ -288,7 +287,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
                     'nama_event' => 'Pekan Budaya Sangatta 2026',
                     'color_primary' => '#0F766E',
                     'color_secondary' => '#F59E0B',
-                    'public_url' => url('/e/' . $event->slug),
+                    'public_url' => url('/e/'.$event->slug),
                 ],
             ]);
 
@@ -306,7 +305,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
     public function test_event_creation_inertia_form_redirects_to_cms(): void
     {
         $randomSuffix = Str::lower(Str::random(5));
-        $eventName = 'Expo Usaha Kreatif ' . $randomSuffix;
+        $eventName = 'Expo Usaha Kreatif '.$randomSuffix;
         $payload = [
             'nama_event' => $eventName,
             'deskripsi' => 'Pameran kriya dan fesyen',
@@ -324,7 +323,7 @@ class Stage2EventCreationAndPublicGamificationTest extends TestCase
 
         $response->assertStatus(302);
         $redirectUrl = $response->headers->get('Location');
-        $this->assertStringContainsString('/cms/expo-usaha-kreatif-' . $randomSuffix . '?token=', $redirectUrl);
+        $this->assertStringContainsString('/cms/expo-usaha-kreatif-'.$randomSuffix.'?token=', $redirectUrl);
 
         // Cleanup
         Event::where('nama_event', $eventName)->delete();

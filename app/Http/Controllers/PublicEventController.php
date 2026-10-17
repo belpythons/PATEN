@@ -20,7 +20,7 @@ class PublicEventController extends Controller
             ->with(['rundowns' => fn ($q) => $q->orderBy('urutan')])
             ->firstOrFail();
 
-        $eventUrl = url('/e/' . $event->slug);
+        $eventUrl = url('/e/'.$event->slug);
         $qrCodeDataUrl = $qrCodeService->generateDataUrl($eventUrl, 160);
 
         if (request()->wantsJson()) {
@@ -55,11 +55,11 @@ class PublicEventController extends Controller
         ]);
 
         $prefix = $validated['tipe_registrasi'] === 'htm' ? 'PATEN-HTM-' : 'PATEN-DOOR-';
-        $ticketCode = $prefix . Str::upper(Str::random(8));
+        $ticketCode = $prefix.Str::upper(Str::random(8));
 
         // Ensure unique ticket number
         while (Attendee::where('nomor_tiket_doorprize', $ticketCode)->exists()) {
-            $ticketCode = $prefix . Str::upper(Str::random(8));
+            $ticketCode = $prefix.Str::upper(Str::random(8));
         }
 
         $attendee = Attendee::create([

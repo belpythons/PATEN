@@ -21,7 +21,7 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
     {
         $token = Str::random(64);
         $event = Event::create([
-            'slug' => 'spk-kk-' . Str::lower(Str::random(6)),
+            'slug' => 'spk-kk-'.Str::lower(Str::random(6)),
             'nama_event' => 'Expo Kuliner Kutim Hebat',
             'deskripsi' => 'Pameran UMKM',
             'penyelenggara' => 'Dinas Koperasi dan UKM',
@@ -31,11 +31,11 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
             'secure_management_token' => $token,
         ]);
 
-        $sameNoKk = '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT);
+        $sameNoKk = '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT);
 
         // UMKM 1: Suami (Skor Lebih Tinggi)
         $umkm1 = UmkmProfile::create([
-            'nik' => '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
+            'nik' => '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
             'no_kk' => $sameNoKk,
             'nama_pemilik' => 'Bambang Irawan',
             'nama_usaha' => 'Sate Payau Sangatta',
@@ -60,7 +60,7 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
 
         // UMKM 2: Istri (1 KK yang sama, performa lebih rendah)
         $umkm2 = UmkmProfile::create([
-            'nik' => '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
+            'nik' => '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
             'no_kk' => $sameNoKk,
             'nama_pemilik' => 'Siti Aminah',
             'nama_usaha' => 'Minuman Herbal Sangatta',
@@ -84,7 +84,7 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
         ]);
 
         // Run evaluation trigger
-        $response = $this->postJson('/cms/' . $event->slug . '/evaluate-spk?token=' . $token);
+        $response = $this->postJson('/cms/'.$event->slug.'/evaluate-spk?token='.$token);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -124,7 +124,7 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
     {
         $token = Str::random(64);
         $event = Event::create([
-            'slug' => 'spk-nib-' . Str::lower(Str::random(6)),
+            'slug' => 'spk-nib-'.Str::lower(Str::random(6)),
             'nama_event' => 'Pameran Usaha Mikro Sangatta',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -136,8 +136,8 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
 
         // UMKM with NO NIB
         $umkm = UmkmProfile::create([
-            'nik' => '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
-            'no_kk' => '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
+            'nik' => '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
+            'no_kk' => '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
             'nama_pemilik' => 'Hendro Santoso',
             'nama_usaha' => 'Gorengan Renyah Sangatta',
             'nomor_wa' => '081299990000',
@@ -159,7 +159,7 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
             'total_transaksi_terekam' => 120, // High transactions, but no NIB
         ]);
 
-        $response = $this->postJson('/cms/' . $event->slug . '/evaluate-spk?token=' . $token);
+        $response = $this->postJson('/cms/'.$event->slug.'/evaluate-spk?token='.$token);
         $response->assertStatus(200);
 
         $eval = SpkUmkmEvaluation::where('stand_id', $stand->id)->first();
@@ -181,7 +181,7 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
     public function test_saw_scoring_mathematical_accuracy(): void
     {
         $event = Event::create([
-            'slug' => 'saw-math-' . Str::lower(Str::random(6)),
+            'slug' => 'saw-math-'.Str::lower(Str::random(6)),
             'nama_event' => 'SAW Math Verification',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -192,8 +192,8 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
         ]);
 
         $umkm = UmkmProfile::create([
-            'nik' => '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
-            'no_kk' => '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
+            'nik' => '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
+            'no_kk' => '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
             'nama_pemilik' => 'Juara Bertahan',
             'nama_usaha' => 'Kopi Kutim Mandiri',
             'nomor_wa' => '081288887777',
@@ -235,7 +235,7 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
             ]);
         }
 
-        $spkService = new SpkEngineService();
+        $spkService = new SpkEngineService;
         $evaluations = $spkService->evaluate($event);
 
         $this->assertCount(1, $evaluations);
@@ -262,7 +262,7 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
     public function test_ml_sync_webhook_updates_evaluations_table(): void
     {
         $event = Event::create([
-            'slug' => 'ml-sync-' . Str::lower(Str::random(6)),
+            'slug' => 'ml-sync-'.Str::lower(Str::random(6)),
             'nama_event' => 'Paten ML Sync Event',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -273,8 +273,8 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
         ]);
 
         $umkm = UmkmProfile::create([
-            'nik' => '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
-            'no_kk' => '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
+            'nik' => '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
+            'no_kk' => '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT),
             'nama_pemilik' => 'Rudy Hartono',
             'nama_usaha' => 'Kerajinan Manik Dayak',
             'nomor_wa' => '081277778888',
@@ -334,7 +334,7 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
     public function test_public_leaderboard_masks_financial_and_identity_data(): void
     {
         $event = Event::create([
-            'slug' => 'leaderboard-' . Str::lower(Str::random(6)),
+            'slug' => 'leaderboard-'.Str::lower(Str::random(6)),
             'nama_event' => 'Pekan Raya Kutai Timur 2026',
             'deskripsi' => 'Pameran Akbar Daerah',
             'penyelenggara' => 'Pemkab Kutai Timur',
@@ -382,7 +382,7 @@ class Stage5SpkEngineAndLeaderboardTest extends TestCase
             'is_prioritas_hibah_200' => true,
         ]);
 
-        $response = $this->getJson('/e/' . $event->slug . '/leaderboard');
+        $response = $this->getJson('/e/'.$event->slug.'/leaderboard');
 
         $response->assertStatus(200)
             ->assertJsonStructure([

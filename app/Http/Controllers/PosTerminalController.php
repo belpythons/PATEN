@@ -112,7 +112,7 @@ class PosTerminalController extends Controller
             ], 201);
         }
 
-        return redirect()->to('/pos/' . $stand_id)
-            ->with('success', 'Transaksi Rp ' . number_format($result['subtotal'], 0, ',', '.') . ' berhasil direkam.');
+        return redirect()->to('/pos/'.$stand_id)
+            ->with('success', 'Transaksi Rp '.number_format($result['subtotal'], 0, ',', '.').' berhasil direkam.');
     }
 }

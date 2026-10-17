@@ -61,11 +61,11 @@ class PosAuthController extends Controller
                 'success' => true,
                 'message' => 'Autentikasi kasir berhasil.',
                 'stand_id' => $stand->id,
-                'redirect_url' => url('/pos/' . $stand->id),
+                'redirect_url' => url('/pos/'.$stand->id),
             ], 200);
         }
 
-        return redirect()->to('/pos/' . $stand->id)
-            ->with('success', 'Selamat datang di terminal kasir ' . $stand->nomor_stand . '!');
+        return redirect()->to('/pos/'.$stand->id)
+            ->with('success', 'Selamat datang di terminal kasir '.$stand->nomor_stand.'!');
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
         DB::statement('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
 
         // 1. Table: events
-        if (!Schema::hasTable('events')) {
+        if (! Schema::hasTable('events')) {
             Schema::create('events', function (Blueprint $table) {
                 $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
                 $table->string('slug', 120)->unique();
@@ -40,7 +40,7 @@ return new class extends Migration
         }
 
         // 2. Table: event_rundowns
-        if (!Schema::hasTable('event_rundowns')) {
+        if (! Schema::hasTable('event_rundowns')) {
             Schema::create('event_rundowns', function (Blueprint $table) {
                 $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
                 $table->uuid('event_id');
@@ -57,7 +57,7 @@ return new class extends Migration
         }
 
         // 3. Table: umkm_profiles
-        if (!Schema::hasTable('umkm_profiles')) {
+        if (! Schema::hasTable('umkm_profiles')) {
             Schema::create('umkm_profiles', function (Blueprint $table) {
                 $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
                 $table->string('nik', 16)->unique();
@@ -77,7 +77,7 @@ return new class extends Migration
         }
 
         // 4. Table: event_stands
-        if (!Schema::hasTable('event_stands')) {
+        if (! Schema::hasTable('event_stands')) {
             Schema::create('event_stands', function (Blueprint $table) {
                 $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
                 $table->uuid('event_id');
@@ -98,7 +98,7 @@ return new class extends Migration
         }
 
         // 5. Table: stand_menus
-        if (!Schema::hasTable('stand_menus')) {
+        if (! Schema::hasTable('stand_menus')) {
             Schema::create('stand_menus', function (Blueprint $table) {
                 $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
                 $table->uuid('stand_id');
@@ -112,7 +112,7 @@ return new class extends Migration
         }
 
         // 6. Table: pos_transactions
-        if (!Schema::hasTable('pos_transactions')) {
+        if (! Schema::hasTable('pos_transactions')) {
             Schema::create('pos_transactions', function (Blueprint $table) {
                 $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
                 $table->uuid('event_id');
@@ -130,7 +130,7 @@ return new class extends Migration
         }
 
         // 7. Table: attendees
-        if (!Schema::hasTable('attendees')) {
+        if (! Schema::hasTable('attendees')) {
             Schema::create('attendees', function (Blueprint $table) {
                 $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
                 $table->uuid('event_id');
@@ -149,7 +149,7 @@ return new class extends Migration
         }
 
         // 8. Table: spk_umkm_evaluations
-        if (!Schema::hasTable('spk_umkm_evaluations')) {
+        if (! Schema::hasTable('spk_umkm_evaluations')) {
             Schema::create('spk_umkm_evaluations', function (Blueprint $table) {
                 $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
                 $table->uuid('event_id');
