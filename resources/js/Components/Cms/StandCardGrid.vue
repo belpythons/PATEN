@@ -28,14 +28,17 @@ const copiedLinkId = ref(null);
 
 const filteredStands = computed(() => {
     return props.stands.filter((s) => {
+        const namaUsaha = s.nama_usaha || s.umkm_profile?.nama_usaha || '';
+        const namaPemilik = s.nama_pemilik || s.umkm_profile?.nama_pemilik || '';
+
         const matchesSearch = !searchQuery.value ||
             s.nomor_stand.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-            (s.nama_usaha && s.nama_usaha.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
-            (s.nama_pemilik && s.nama_pemilik.toLowerCase().includes(searchQuery.value.toLowerCase()));
+            namaUsaha.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+            namaPemilik.toLowerCase().includes(searchQuery.value.toLowerCase());
 
         const matchesCategory = !categoryFilter.value || s.kategori_jualan === categoryFilter.value;
 
-        const isAssigned = !!(s.nama_usaha || s.nama_pemilik);
+        const isAssigned = !!(namaUsaha || namaPemilik || s.umkm_id);
         const matchesStatus = !statusFilter.value ||
             (statusFilter.value === 'assigned' && isAssigned) ||
             (statusFilter.value === 'unassigned' && !isAssigned);
@@ -162,21 +165,21 @@ const getWhatsAppShareUrl = (stand) => {
                             {{ stand.nomor_stand }}
                         </span>
                         <BaseBadge
-                            :variant="stand.nama_usaha ? 'emerald' : 'navy'"
+                            :variant="(stand.nama_usaha || stand.umkm_profile?.nama_usaha) ? 'emerald' : 'navy'"
                             :dot="true"
                         >
-                            {{ stand.nama_usaha ? 'TERISI' : 'KOSONG' }}
+                            {{ (stand.nama_usaha || stand.umkm_profile?.nama_usaha) ? 'TERISI' : 'KOSONG' }}
                         </BaseBadge>
                     </div>
 
                     <!-- UMKM Info or Empty State -->
                     <div class="min-h-[50px] mb-3">
-                        <template v-if="stand.nama_usaha">
+                        <template v-if="stand.nama_usaha || stand.umkm_profile?.nama_usaha">
                             <h4 class="font-display font-semibold text-sm text-[#132952] truncate">
-                                {{ stand.nama_usaha }}
+                                {{ stand.nama_usaha || stand.umkm_profile?.nama_usaha }}
                             </h4>
                             <p class="text-xs text-[#64748B] truncate">
-                                Pemilik: {{ stand.nama_pemilik || '-' }}
+                                Pemilik: {{ stand.nama_pemilik || stand.umkm_profile?.nama_pemilik || '-' }}
                             </p>
                         </template>
                         <template v-else>

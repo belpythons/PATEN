@@ -28,7 +28,7 @@ class CmsDashboardController extends Controller
 
         // Related records
         $rundowns = $event->rundowns()->orderBy('urutan')->orderBy('waktu_mulai')->get();
-        $stands = $event->stands()->orderBy('nomor_stand')->get();
+        $stands = $event->stands()->with('umkmProfile')->orderBy('nomor_stand')->get();
         $recentAttendees = $event->attendees()->orderByDesc('created_at')->limit(50)->get();
         $doorprizeWinners = $event->attendees()->where('is_doorprize_winner', true)->orderByDesc('created_at')->get();
 
