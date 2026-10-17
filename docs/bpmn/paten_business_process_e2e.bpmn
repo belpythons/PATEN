@@ -15,23 +15,23 @@
 
   <bpmn:collaboration id="Collaboration_PATEN">
     <bpmn:participant id="Participant_PATEN"
-                      name="Ekosistem PATEN Kutai Timur (Event, POS Kasir Atomik &amp; Evaluasi Bantuan Modal UMKM)"
+                      name="Ekosistem Penyelenggaraan Bazar, Transaksi UMKM, dan Seleksi Bantuan Usaha Daerah"
                       processRef="Process_PATEN_E2E" />
     <bpmn:participant id="Participant_Colab"
-                      name="Google Colab / Python Machine Learning Pipeline (K-Means Clustering &amp; RF)" />
+                      name="Analisis Pemetaan &amp; Klasterisasi Potensi Usaha UMKM" />
     <bpmn:messageFlow id="MessageFlow_SyncOut"
-                      name="POST Payload Fitur &amp; Performa Stand"
+                      name="Pengiriman Data Rekapitulasi Kinerja Stan"
                       sourceRef="Task_KirimWebhookColab"
                       targetRef="Participant_Colab" />
     <bpmn:messageFlow id="MessageFlow_SyncIn"
-                      name="Sync Respon Klaster (Established/Fast Moving/Artisan)"
+                      name="Hasil Pengelompokan Kategori Skala Usaha"
                       sourceRef="Participant_Colab"
                       targetRef="Task_KirimWebhookColab" />
   </bpmn:collaboration>
 
-  <bpmn:process id="Process_PATEN_E2E" name="Sistem PATEN - Proses Bisnis End-to-End" isExecutable="true">
+  <bpmn:process id="Process_PATEN_E2E" name="Alur Proses Bisnis Terpadu Penyelenggaraan Event dan Evaluasi Bantuan UMKM" isExecutable="true">
     <bpmn:laneSet id="LaneSet_PATEN">
-      <bpmn:lane id="Lane_Panitia_Dinas" name="Panitia Penyelenggara &amp; Dinas Koperasi &amp; UKM Kutim">
+      <bpmn:lane id="Lane_Panitia_Dinas" name="Panitia Penyelenggara &amp; Dinas Koperasi UKM Kutim">
         <bpmn:flowNodeRef>StartEvent_InisiasiAcara</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_InputDataEvent</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_TentukanKebutuhanStand</bpmn:flowNodeRef>
@@ -43,19 +43,19 @@
         <bpmn:flowNodeRef>EndEvent_KeputusanDiterbitkan</bpmn:flowNodeRef>
       </bpmn:lane>
 
-      <bpmn:lane id="Lane_Publik" name="Pengunjung / Publik (Masyarakat &amp; Konsumen)">
+      <bpmn:lane id="Lane_Publik" name="Pengunjung / Masyarakat (Konsumen)">
         <bpmn:flowNodeRef>Task_BukaMicrositePublik</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_TerimaTiketQr</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_MenikmatiBazar</bpmn:flowNodeRef>
       </bpmn:lane>
 
-      <bpmn:lane id="Lane_UMKM_Kasir" name="Pelaku Usaha UMKM &amp; Operator Kasir Stand">
+      <bpmn:lane id="Lane_UMKM_Kasir" name="Pelaku Usaha UMKM &amp; Kasir Stan">
         <bpmn:flowNodeRef>Task_RegistrasiProfilPerbup</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_LoginKasirPin</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_InputTransaksiPos</bpmn:flowNodeRef>
       </bpmn:lane>
 
-      <bpmn:lane id="Lane_Sistem" name="Sistem PATEN Backend Engine (Laravel 13, Supabase &amp; SPK Engine)">
+      <bpmn:lane id="Lane_Sistem" name="Sistem Informasi PATEN">
         <bpmn:flowNodeRef>Task_GenerateEventToken</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_ProvisionStandsBatch</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_ForkOperasional</bpmn:flowNodeRef>
@@ -78,17 +78,17 @@
       </bpmn:lane>
     </bpmn:laneSet>
 
-    <!-- Node Definitions -->
-    <bpmn:startEvent id="StartEvent_InisiasiAcara" name="Perencanaan Acara / Bazar Dimulai">
+    <!-- Node Definitions (Fokus Murni Probis) -->
+    <bpmn:startEvent id="StartEvent_InisiasiAcara" name="Perencanaan Acara Bazar Dimulai">
       <bpmn:outgoing>Flow_01</bpmn:outgoing>
     </bpmn:startEvent>
 
-    <bpmn:userTask id="Task_InputDataEvent" name="Input Parameter Event &amp; Skema Warna (/events/create)">
+    <bpmn:userTask id="Task_InputDataEvent" name="Menyusun Rencana Acara &amp; Kuota Pengunjung">
       <bpmn:incoming>Flow_01</bpmn:incoming>
       <bpmn:outgoing>Flow_02</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:serviceTask id="Task_GenerateEventToken" name="Generate Event &amp; Secret Token 64-Karakter">
+    <bpmn:serviceTask id="Task_GenerateEventToken" name="Menerbitkan Hak Akses Pengelolaan Acara">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-event-generator" />
       </bpmn:extensionElements>
@@ -96,12 +96,12 @@
       <bpmn:outgoing>Flow_03</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:userTask id="Task_TentukanKebutuhanStand" name="Tentukan Kuota Stand &amp; Susun Rundown (/cms/{slug})">
+    <bpmn:userTask id="Task_TentukanKebutuhanStand" name="Menentukan Alokasi Stan &amp; Jadwal Kegiatan">
       <bpmn:incoming>Flow_03</bpmn:incoming>
       <bpmn:outgoing>Flow_04</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:serviceTask id="Task_ProvisionStandsBatch" name="Batch Provisioning Stand &amp; Penerbitan PIN 6-Digit">
+    <bpmn:serviceTask id="Task_ProvisionStandsBatch" name="Menerbitkan Penomoran Stan &amp; Kode Akses Kasir">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-stand-provisioner" />
       </bpmn:extensionElements>
@@ -109,19 +109,19 @@
       <bpmn:outgoing>Flow_05</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:parallelGateway id="Gateway_ForkOperasional" name="Fork Alur Pengunjung &amp; Stand UMKM">
+    <bpmn:parallelGateway id="Gateway_ForkOperasional" name="Pembagian Alur Publik &amp; Onboarding Stan">
       <bpmn:incoming>Flow_05</bpmn:incoming>
       <bpmn:outgoing>Flow_ToPublik</bpmn:outgoing>
       <bpmn:outgoing>Flow_ToUmkm</bpmn:outgoing>
     </bpmn:parallelGateway>
 
-    <!-- Branch A: Publik & Gate -->
-    <bpmn:userTask id="Task_BukaMicrositePublik" name="Buka Microsite Event (/e/{slug}) &amp; Daftar Tiket Mandiri">
+    <!-- Alur Publik & Pengunjung -->
+    <bpmn:userTask id="Task_BukaMicrositePublik" name="Mendaftar Tiket Masuk Acara">
       <bpmn:incoming>Flow_ToPublik</bpmn:incoming>
       <bpmn:outgoing>Flow_P01</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:serviceTask id="Task_IssueTiketQr" name="Validasi Rate Limit (30 req/m) &amp; Terbitkan QR SVG Tiket">
+    <bpmn:serviceTask id="Task_IssueTiketQr" name="Menerbitkan Tiket Masuk &amp; Nomor Undian Doorprize">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-ticket-issuer" />
       </bpmn:extensionElements>
@@ -129,23 +129,23 @@
       <bpmn:outgoing>Flow_P02</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:userTask id="Task_TerimaTiketQr" name="Terima Tiket Digital Unik (PATEN-DOOR / HTM)">
+    <bpmn:userTask id="Task_TerimaTiketQr" name="Menerima Tiket Masuk &amp; Kupon Doorprize">
       <bpmn:incoming>Flow_P02</bpmn:incoming>
       <bpmn:outgoing>Flow_P03</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:userTask id="Task_ScanTiketGerbang" name="Scan QR Tiket di Gate Pintu Masuk (/cms/{slug}/check-in)">
+    <bpmn:userTask id="Task_ScanTiketGerbang" name="Memeriksa Tiket Masuk di Pintu Masuk">
       <bpmn:incoming>Flow_P03</bpmn:incoming>
       <bpmn:outgoing>Flow_P04</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:exclusiveGateway id="Gateway_VerifikasiTiket" name="Validasi Status Kehadiran?" default="Flow_TiketValid">
+    <bpmn:exclusiveGateway id="Gateway_VerifikasiTiket" name="Apakah Tiket Sah &amp; Belum Digunakan?" default="Flow_TiketValid">
       <bpmn:incoming>Flow_P04</bpmn:incoming>
       <bpmn:outgoing>Flow_TiketValid</bpmn:outgoing>
       <bpmn:outgoing>Flow_TiketDuplikat</bpmn:outgoing>
     </bpmn:exclusiveGateway>
 
-    <bpmn:serviceTask id="Task_TolakAksesGate" name="Tolak Sesi &amp; Kirim HTTP 409 Conflict (Pernah Hadir)">
+    <bpmn:serviceTask id="Task_TolakAksesGate" name="Memberitahukan Tiket Tidak Sah / Sudah Dipakai">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-gate-verifier" />
       </bpmn:extensionElements>
@@ -153,11 +153,11 @@
       <bpmn:outgoing>Flow_PReject</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:endEvent id="EndEvent_AksesDitolak" name="Akses Gate Ditolak (Tiket Palsu/Duplikat)">
+    <bpmn:endEvent id="EndEvent_AksesDitolak" name="Akses Masuk Ditolak">
       <bpmn:incoming>Flow_PReject</bpmn:incoming>
     </bpmn:endEvent>
 
-    <bpmn:serviceTask id="Task_KonfirmasiKehadiran" name="Set is_checked_in = true &amp; Catat Stempel Waktu Hadir">
+    <bpmn:serviceTask id="Task_KonfirmasiKehadiran" name="Mencatat Kehadiran Fisik Pengunjung">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-gate-verifier" />
       </bpmn:extensionElements>
@@ -165,17 +165,17 @@
       <bpmn:outgoing>Flow_P05</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:userTask id="Task_MenikmatiBazar" name="Masuk ke Area Bazar &amp; Berbelanja di Stand UMKM">
+    <bpmn:userTask id="Task_MenikmatiBazar" name="Berkunjung &amp; Berbelanja di Stan UMKM">
       <bpmn:incoming>Flow_P05</bpmn:incoming>
       <bpmn:outgoing>Flow_P06</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:userTask id="Task_PicuDoorprize" name="Picu Pengundian Doorprize Acak (/cms/{slug}/draw-doorprize)">
+    <bpmn:userTask id="Task_PicuDoorprize" name="Melakukan Pengundian Doorprize">
       <bpmn:incoming>Flow_P06</bpmn:incoming>
       <bpmn:outgoing>Flow_P07</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:serviceTask id="Task_EksekusiUndianAcak" name="Filter Pengunjung Hadir Fisik &amp; Acak Pemenang">
+    <bpmn:serviceTask id="Task_EksekusiUndianAcak" name="Menentukan Pemenang Khusus dari Pengunjung yang Hadir">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-doorprize-drawer" />
       </bpmn:extensionElements>
@@ -183,18 +183,18 @@
       <bpmn:outgoing>Flow_P08</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:userTask id="Task_UmumkanPemenang" name="Umumkan Pemenang &amp; Serahkan Hadiah Doorprize">
+    <bpmn:userTask id="Task_UmumkanPemenang" name="Menyerahkan Hadiah Doorprize">
       <bpmn:incoming>Flow_P08</bpmn:incoming>
       <bpmn:outgoing>Flow_JoinPublik</bpmn:outgoing>
     </bpmn:userTask>
 
-    <!-- Branch B: UMKM & POS Mini -->
-    <bpmn:userTask id="Task_RegistrasiProfilPerbup" name="Input Profil UMKM Sesuai Perbup Kutim (/stands/{id}/assign)">
+    <!-- Alur Onboarding UMKM & Transaksi Penjualan -->
+    <bpmn:userTask id="Task_RegistrasiProfilPerbup" name="Mendaftarkan Profil Usaha &amp; Kelengkapan Izin Usaha">
       <bpmn:incoming>Flow_ToUmkm</bpmn:incoming>
       <bpmn:outgoing>Flow_U01</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:serviceTask id="Task_SimpanProfilUmkm" name="Validasi NIK/KK 16 Digit &amp; Simpan Katalog Menu Awal">
+    <bpmn:serviceTask id="Task_SimpanProfilUmkm" name="Memverifikasi Identitas Usaha &amp; Daftar Produk">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-umkm-profiler" />
       </bpmn:extensionElements>
@@ -202,28 +202,28 @@
       <bpmn:outgoing>Flow_U02</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:userTask id="Task_LoginKasirPin" name="Login Terminal Kasir Stand Menggunakan PIN 6-Digit">
+    <bpmn:userTask id="Task_LoginKasirPin" name="Membuka Layanan Kasir Stan">
       <bpmn:incoming>Flow_U02</bpmn:incoming>
       <bpmn:outgoing>Flow_U03</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:exclusiveGateway id="Gateway_ValidasiPin" name="PIN Valid &amp; Lolos Rate Limit?" default="Flow_PinValid">
+    <bpmn:exclusiveGateway id="Gateway_ValidasiPin" name="Apakah Kode Akses Stan Sesuai?" default="Flow_PinValid">
       <bpmn:incoming>Flow_U03</bpmn:incoming>
       <bpmn:outgoing>Flow_PinValid</bpmn:outgoing>
       <bpmn:outgoing>Flow_PinSalah</bpmn:outgoing>
     </bpmn:exclusiveGateway>
 
-    <bpmn:endEvent id="EndEvent_KasirTerkunci" name="Akses Kasir Terkunci (HTTP 429 Brute Force)">
+    <bpmn:endEvent id="EndEvent_KasirTerkunci" name="Akses Stan Ditolak">
       <bpmn:incoming>Flow_PinSalah</bpmn:incoming>
     </bpmn:endEvent>
 
-    <bpmn:userTask id="Task_InputTransaksiPos" name="Pilih Menu, Qty, dan Metode Bayar (Tunai/QRIS) di POS">
+    <bpmn:userTask id="Task_InputTransaksiPos" name="Melayani Pembelian Produk (Tunai / Non-Tunai)">
       <bpmn:incoming>Flow_PinValid</bpmn:incoming>
       <bpmn:incoming>Flow_LoopTransaksi</bpmn:incoming>
       <bpmn:outgoing>Flow_U04</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:serviceTask id="Task_EksekusiTransaksiAtomik" name="Kunci Baris Stan (lockForUpdate) &amp; Rekomendasi Transaksi Atomik">
+    <bpmn:serviceTask id="Task_EksekusiTransaksiAtomik" name="Mencatat Transaksi &amp; Menghitung Akumulasi Penjualan Stan">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-pos-processor" />
       </bpmn:extensionElements>
@@ -231,26 +231,25 @@
       <bpmn:outgoing>Flow_U05</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:exclusiveGateway id="Gateway_LanjutTransaksi" name="Ada Transaksi Kasir Lainnya?" default="Flow_SelesaiBazar">
+    <bpmn:exclusiveGateway id="Gateway_LanjutTransaksi" name="Apakah Ada Pembelian Berikutnya?" default="Flow_SelesaiBazar">
       <bpmn:incoming>Flow_U05</bpmn:incoming>
       <bpmn:outgoing>Flow_LoopTransaksi</bpmn:outgoing>
       <bpmn:outgoing>Flow_SelesaiBazar</bpmn:outgoing>
     </bpmn:exclusiveGateway>
 
-    <!-- Join Parallel -->
-    <bpmn:parallelGateway id="Gateway_JoinOperasional" name="Sinkronisasi Penutupan Operasional Event">
+    <!-- Penutupan Bazar & Evaluasi Kebijakan Bantuan -->
+    <bpmn:parallelGateway id="Gateway_JoinOperasional" name="Sinkronisasi Selesai Operasional Acara">
       <bpmn:incoming>Flow_JoinPublik</bpmn:incoming>
       <bpmn:incoming>Flow_SelesaiBazar</bpmn:incoming>
       <bpmn:outgoing>Flow_J01</bpmn:outgoing>
     </bpmn:parallelGateway>
 
-    <!-- SPK & Evaluasi Bantuan -->
-    <bpmn:userTask id="Task_TriggerEvaluasiSpk" name="Picu Kalkulasi Evaluasi SPK SAW (/cms/{slug}/evaluate-spk)">
+    <bpmn:userTask id="Task_TriggerEvaluasiSpk" name="Memulai Evaluasi Kelayakan Bantuan Usaha UMKM">
       <bpmn:incoming>Flow_J01</bpmn:incoming>
       <bpmn:outgoing>Flow_E01</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:serviceTask id="Task_HitungNormalisasiSaw" name="Kalkulasi Skor Normalisasi SAW (Frekuensi 30%, Omzet 20%, Jam Aktif 25%, QRIS 10%, Legalitas 15%)">
+    <bpmn:serviceTask id="Task_HitungNormalisasiSaw" name="Menilai Kinerja Penjualan, Keaktifan, Transaksi Digital &amp; Legalitas">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-spk-calculator" />
       </bpmn:extensionElements>
@@ -258,7 +257,7 @@
       <bpmn:outgoing>Flow_E02</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:businessRuleTask id="Task_GuardrailPerbupKutim" name="Terapkan Guardrail Perbup Kutim: 1 KK 1 Penerima, Syarat NIB, &amp; Eliminasi Duplikasi Hibah APBD">
+    <bpmn:businessRuleTask id="Task_GuardrailPerbupKutim" name="Memverifikasi Syarat Bantuan: 1 KK 1 Bantuan, Wajib NIB, &amp; Bebas Duplikasi Bantuan">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-perbup-guardrail" />
       </bpmn:extensionElements>
@@ -266,7 +265,7 @@
       <bpmn:outgoing>Flow_E03</bpmn:outgoing>
     </bpmn:businessRuleTask>
 
-    <bpmn:serviceTask id="Task_KirimWebhookColab" name="Sinkronisasi Webhook Machine Learning Colab (POST /api/ml/sync-evaluations)">
+    <bpmn:serviceTask id="Task_KirimWebhookColab" name="Memetakan Klaster Usaha (Usaha Berkembang, Cepat, atau Rintisan)">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-ml-syncer" />
       </bpmn:extensionElements>
@@ -274,7 +273,7 @@
       <bpmn:outgoing>Flow_E04</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:serviceTask id="Task_MaskingDataPublik" name="Masking NIK/KK &amp; Omzet Rupiah pada Leaderboard Publik (/e/{slug}/leaderboard)">
+    <bpmn:serviceTask id="Task_MaskingDataPublik" name="Menampilkan Papan Informasi Stan &amp; Menjaga Kerahasiaan Data Pribadi">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="paten-privacy-masker" />
       </bpmn:extensionElements>
@@ -282,12 +281,12 @@
       <bpmn:outgoing>Flow_E05</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:userTask id="Task_ReviewKeputusanDinas" name="Tinjau Laporan Hasil Evaluasi &amp; Tetapkan Kuota Hibah (/cms/{slug}/evaluations)">
+    <bpmn:userTask id="Task_ReviewKeputusanDinas" name="Meninjau &amp; Menetapkan Rekomendasi Program Bantuan Modal">
       <bpmn:incoming>Flow_E05</bpmn:incoming>
       <bpmn:outgoing>Flow_E06</bpmn:outgoing>
     </bpmn:userTask>
 
-    <bpmn:endEvent id="EndEvent_KeputusanDiterbitkan" name="Keputusan Rekomendasi Program Bantuan Modal UMKM Terbit">
+    <bpmn:endEvent id="EndEvent_KeputusanDiterbitkan" name="Surat Keputusan (SK) Penerima Bantuan Usaha Diterbitkan">
       <bpmn:incoming>Flow_E06</bpmn:incoming>
     </bpmn:endEvent>
 
@@ -306,10 +305,10 @@
     <bpmn:sequenceFlow id="Flow_P03" sourceRef="Task_TerimaTiketQr" targetRef="Task_ScanTiketGerbang" />
     <bpmn:sequenceFlow id="Flow_P04" sourceRef="Task_ScanTiketGerbang" targetRef="Gateway_VerifikasiTiket" />
 
-    <bpmn:sequenceFlow id="Flow_TiketDuplikat" name="Sudah Hadir" sourceRef="Gateway_VerifikasiTiket" targetRef="Task_TolakAksesGate">
+    <bpmn:sequenceFlow id="Flow_TiketDuplikat" name="Tiket Tidak Sah / Sudah Digunakan" sourceRef="Gateway_VerifikasiTiket" targetRef="Task_TolakAksesGate">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=is_checked_in = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_TiketValid" name="Valid &amp; Baru" sourceRef="Gateway_VerifikasiTiket" targetRef="Task_KonfirmasiKehadiran" />
+    <bpmn:sequenceFlow id="Flow_TiketValid" name="Tiket Sah &amp; Baru" sourceRef="Gateway_VerifikasiTiket" targetRef="Task_KonfirmasiKehadiran" />
 
     <bpmn:sequenceFlow id="Flow_PReject" sourceRef="Task_TolakAksesGate" targetRef="EndEvent_AksesDitolak" />
     <bpmn:sequenceFlow id="Flow_P05" sourceRef="Task_KonfirmasiKehadiran" targetRef="Task_MenikmatiBazar" />
@@ -322,18 +321,18 @@
     <bpmn:sequenceFlow id="Flow_U02" sourceRef="Task_SimpanProfilUmkm" targetRef="Task_LoginKasirPin" />
     <bpmn:sequenceFlow id="Flow_U03" sourceRef="Task_LoginKasirPin" targetRef="Gateway_ValidasiPin" />
 
-    <bpmn:sequenceFlow id="Flow_PinSalah" name="Brute Force (10x)" sourceRef="Gateway_ValidasiPin" targetRef="EndEvent_KasirTerkunci">
+    <bpmn:sequenceFlow id="Flow_PinSalah" name="Kode Akses Salah" sourceRef="Gateway_ValidasiPin" targetRef="EndEvent_KasirTerkunci">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=attempts &gt;= 10</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_PinValid" name="PIN Valid" sourceRef="Gateway_ValidasiPin" targetRef="Task_InputTransaksiPos" />
+    <bpmn:sequenceFlow id="Flow_PinValid" name="Kode Akses Benar" sourceRef="Gateway_ValidasiPin" targetRef="Task_InputTransaksiPos" />
 
     <bpmn:sequenceFlow id="Flow_U04" sourceRef="Task_InputTransaksiPos" targetRef="Task_EksekusiTransaksiAtomik" />
     <bpmn:sequenceFlow id="Flow_U05" sourceRef="Task_EksekusiTransaksiAtomik" targetRef="Gateway_LanjutTransaksi" />
 
-    <bpmn:sequenceFlow id="Flow_LoopTransaksi" name="Ya, Ada Pesanan" sourceRef="Gateway_LanjutTransaksi" targetRef="Task_InputTransaksiPos">
+    <bpmn:sequenceFlow id="Flow_LoopTransaksi" name="Ada Pesanan Baru" sourceRef="Gateway_LanjutTransaksi" targetRef="Task_InputTransaksiPos">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=has_next_order = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_SelesaiBazar" name="Selesai" sourceRef="Gateway_LanjutTransaksi" targetRef="Gateway_JoinOperasional" />
+    <bpmn:sequenceFlow id="Flow_SelesaiBazar" name="Bazar Berakhir" sourceRef="Gateway_LanjutTransaksi" targetRef="Gateway_JoinOperasional" />
 
     <bpmn:sequenceFlow id="Flow_J01" sourceRef="Gateway_JoinOperasional" targetRef="Task_TriggerEvaluasiSpk" />
     <bpmn:sequenceFlow id="Flow_E01" sourceRef="Task_TriggerEvaluasiSpk" targetRef="Task_HitungNormalisasiSaw" />
@@ -375,7 +374,7 @@
       <bpmndi:BPMNShape id="StartEvent_InisiasiAcara_di" bpmnElement="StartEvent_InisiasiAcara">
         <dc:Bounds x="250" y="172" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="232" y="215" width="73" height="40" />
+          <dc:Bounds x="226" y="215" width="85" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
 
@@ -433,7 +432,7 @@
       <bpmndi:BPMNShape id="EndEvent_AksesDitolak_di" bpmnElement="EndEvent_AksesDitolak">
         <dc:Bounds x="1187" y="1172" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1165" y="1215" width="81" height="40" />
+          <dc:Bounds x="1168" y="1215" width="75" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
 
@@ -473,14 +472,14 @@
       <bpmndi:BPMNShape id="Gateway_ValidasiPin_di" bpmnElement="Gateway_ValidasiPin" isMarkerVisible="true">
         <dc:Bounds x="1335" y="675" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1323" y="638" width="75" height="27" />
+          <dc:Bounds x="1320" y="638" width="81" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
 
       <bpmndi:BPMNShape id="EndEvent_KasirTerkunci_di" bpmnElement="EndEvent_KasirTerkunci">
         <dc:Bounds x="1342" y="782" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1320" y="825" width="81" height="40" />
+          <dc:Bounds x="1323" y="825" width="75" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
 
@@ -495,7 +494,7 @@
       <bpmndi:BPMNShape id="Gateway_LanjutTransaksi_di" bpmnElement="Gateway_LanjutTransaksi" isMarkerVisible="true">
         <dc:Bounds x="1625" y="945" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1608" y="1005" width="84" height="27" />
+          <dc:Bounds x="1612" y="1005" width="77" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
 
@@ -535,7 +534,7 @@
       <bpmndi:BPMNShape id="EndEvent_KeputusanDiterbitkan_di" bpmnElement="EndEvent_KeputusanDiterbitkan">
         <dc:Bounds x="2912" y="172" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2893" y="215" width="75" height="66" />
+          <dc:Bounds x="2890" y="215" width="81" height="66" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
 
@@ -601,14 +600,14 @@
         <di:waypoint x="1230" y="970" />
         <di:waypoint x="1290" y="970" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1231" y="952" width="60" height="14" />
+          <dc:Bounds x="1225" y="952" width="72" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_TiketDuplikat_di" bpmnElement="Flow_TiketDuplikat">
         <di:waypoint x="1205" y="995" />
         <di:waypoint x="1205" y="1060" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1212" y="1025" width="65" height="14" />
+          <dc:Bounds x="1210" y="1020" width="86" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PReject_di" bpmnElement="Flow_PReject">
@@ -662,14 +661,14 @@
         <di:waypoint x="1360" y="725" />
         <di:waypoint x="1360" y="782" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1368" y="743" width="85" height="14" />
+          <dc:Bounds x="1366" y="743" width="88" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PinValid_di" bpmnElement="Flow_PinValid">
         <di:waypoint x="1385" y="700" />
         <di:waypoint x="1440" y="700" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1389" y="682" width="46" height="14" />
+          <dc:Bounds x="1382" y="682" width="60" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_U04_di" bpmnElement="Flow_U04">
@@ -685,14 +684,14 @@
         <di:waypoint x="1650" y="680" />
         <di:waypoint x="1570" y="680" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1657" y="793" width="86" height="14" />
+          <dc:Bounds x="1654" y="793" width="90" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_SelesaiBazar_di" bpmnElement="Flow_SelesaiBazar">
         <di:waypoint x="1675" y="970" />
         <di:waypoint x="1835" y="970" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1738" y="952" width="37" height="14" />
+          <dc:Bounds x="1722" y="952" width="73" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
 
