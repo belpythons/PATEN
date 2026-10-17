@@ -189,20 +189,37 @@ const props = defineProps({
                             {{ ev.lokasi_venue }} &middot; {{ new Date(ev.tanggal_mulai).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) }} - {{ new Date(ev.tanggal_selesai).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) }}
                         </p>
 
-                        <!-- Stand Quick Demonstration if available -->
+                        <!-- Stand Directory Overview -->
                         <div v-if="ev.stands && ev.stands.length > 0" class="mt-4 pt-3 border-t border-[#F1F5F9]">
-                            <span class="text-[10px] font-mono uppercase tracking-wider text-[#94A3B8] block mb-1.5">
-                                Uji Coba Stand Lapangan:
-                            </span>
+                            <div class="flex items-center justify-between text-[11px] font-mono mb-2">
+                                <span class="text-[10px] uppercase tracking-wider text-[#64748B] font-semibold">
+                                    Kavling Stand Bazar:
+                                </span>
+                                <span v-if="ev.available_stands_count > 0" class="text-[10px] text-[#00B262] font-semibold">
+                                    {{ ev.available_stands_count }} Slot Terbuka
+                                </span>
+                                <span v-else class="text-[10px] text-[#64748B]">
+                                    Semua Terisi
+                                </span>
+                            </div>
                             <div class="flex flex-wrap gap-1.5">
                                 <Link
                                     v-for="st in ev.stands"
                                     :key="st.id"
-                                    :href="`/pos/${st.id}`"
-                                    class="px-2 py-1 rounded-[4px] bg-[#F8FAFC] hover:bg-[#132952] hover:text-white text-[11px] font-mono border border-[#CBD5E1] transition-colors"
-                                    :title="`Buka Terminal Kasir ${st.nomor_stand} (PIN: ${st.pin_pos})`"
+                                    :href="!st.umkm_id ? `/stands/${st.id}/assign` : `/e/${ev.slug}#stands-section`"
+                                    class="px-2 py-1 rounded-[4px] text-[11px] font-mono border transition-colors inline-flex items-center gap-1.5"
+                                    :class="!st.umkm_id
+                                        ? 'bg-[#00B262]/10 border-[#00B262]/40 text-[#00B262] hover:bg-[#00B262] hover:text-white font-semibold'
+                                        : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#5B6B8A] hover:text-[#132952] hover:border-[#132952]'"
+                                    :title="!st.umkm_id ? `Daftarkan Stand ${st.nomor_stand} (Slot Terbuka)` : `${st.nomor_stand} (${st.nama_usaha || 'Terisi'})`"
                                 >
-                                    {{ st.nomor_stand }} &rarr;
+                                    <span>{{ st.nomor_stand }}</span>
+                                    <span
+                                        v-if="!st.umkm_id"
+                                        class="text-[9px] px-1 py-0.2 rounded bg-[#00B262] text-white font-bold tracking-wider"
+                                    >
+                                        DAFTAR
+                                    </span>
                                 </Link>
                             </div>
                         </div>

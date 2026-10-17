@@ -536,7 +536,7 @@ class PatenMvpSeeder extends Seeder
             $event2->rundowns()->create($rd);
         }
 
-        // Stands for Event 2 (4 Stands)
+        // Stands for Event 2 (4 Stands — 3 Active with Transactions, 1 Open Slot for Registration)
         $standsConfig2 = [
             [
                 'umkm_index' => 4, // Bambang Sutrisno (Abon Haruan)
@@ -569,22 +569,19 @@ class PatenMvpSeeder extends Seeder
                 'target_tx' => 12,
             ],
             [
-                'umkm_index' => 9, // Muhammad Ridwan (Roti Canai)
+                'umkm_index' => null, // TERBUKA / KOSONG (Case uji pendaftaran stand UMKM)
                 'nomor_stand' => 'STAND-04',
                 'kategori_jualan' => 'kuliner',
-                'menus' => [
-                    ['nama_item' => 'Roti Canai Kari Ikan Laut', 'harga' => 25000],
-                    ['nama_item' => 'Teh Tarik Rempah Dingin', 'harga' => 15000],
-                ],
-                'target_tx' => 30,
+                'menus' => [],
+                'target_tx' => 0,
             ],
         ];
 
         foreach ($standsConfig2 as $sc) {
-            $umkm = $umkms[$sc['umkm_index']];
+            $umkm = $sc['umkm_index'] !== null ? $umkms[$sc['umkm_index']] : null;
             $stand = EventStand::create([
                 'event_id' => $event2->id,
-                'umkm_id' => $umkm->id,
+                'umkm_id' => $umkm?->id,
                 'nomor_stand' => $sc['nomor_stand'],
                 'kategori_jualan' => $sc['kategori_jualan'],
                 'daya_listrik_watt' => 900,
@@ -594,47 +591,50 @@ class PatenMvpSeeder extends Seeder
                 'total_transaksi_terekam' => 0,
             ]);
 
-            $createdMenus = [];
-            foreach ($sc['menus'] as $m) {
-                $createdMenus[] = StandMenu::create([
-                    'stand_id' => $stand->id,
-                    'nama_item' => $m['nama_item'],
-                    'harga' => $m['harga'],
-                    'is_available' => true,
+            // Only create menus & transactions if stand is associated with an active UMKM
+            if ($umkm && ! empty($sc['menus'])) {
+                $createdMenus = [];
+                foreach ($sc['menus'] as $m) {
+                    $createdMenus[] = StandMenu::create([
+                        'stand_id' => $stand->id,
+                        'nama_item' => $m['nama_item'],
+                        'harga' => $m['harga'],
+                        'is_available' => true,
+                    ]);
+                }
+
+                // Transactions only within the event's running period (started yesterday)
+                $totalOmzet = 0.00;
+                $txCount = $sc['target_tx'];
+                for ($i = 0; $i < $txCount; $i++) {
+                    $menu = $createdMenus[array_rand($createdMenus)];
+                    $qty = rand(1, 2);
+                    $subtotal = $qty * (float) $menu->harga;
+                    $isQris = (rand(1, 10) <= 7);
+                    // Constrain to event period: started 1 day ago, hours 10-21
+                    $hour = rand(10, 21);
+                    $minute = rand(0, 59);
+                    $txDay = rand(0, 1); // 0 = today, 1 = yesterday (event start)
+                    $createdAt = Carbon::now()->subDays($txDay)->setTime($hour, $minute);
+
+                    PosTransaction::create([
+                        'event_id' => $event2->id,
+                        'stand_id' => $stand->id,
+                        'menu_id' => $menu->id,
+                        'qty' => $qty,
+                        'subtotal' => $subtotal,
+                        'metode_pembayaran' => $isQris ? 'qris' : 'cash',
+                        'created_at' => $createdAt,
+                    ]);
+
+                    $totalOmzet += $subtotal;
+                }
+
+                $stand->update([
+                    'total_omzet_terekam' => $totalOmzet,
+                    'total_transaksi_terekam' => $txCount,
                 ]);
             }
-
-            // Transactions only within the event's running period (started yesterday)
-            $totalOmzet = 0.00;
-            $txCount = $sc['target_tx'];
-            for ($i = 0; $i < $txCount; $i++) {
-                $menu = $createdMenus[array_rand($createdMenus)];
-                $qty = rand(1, 2);
-                $subtotal = $qty * (float) $menu->harga;
-                $isQris = (rand(1, 10) <= 7);
-                // Constrain to event period: started 1 day ago, hours 10-21
-                $hour = rand(10, 21);
-                $minute = rand(0, 59);
-                $txDay = rand(0, 1); // 0 = today, 1 = yesterday (event start)
-                $createdAt = Carbon::now()->subDays($txDay)->setTime($hour, $minute);
-
-                PosTransaction::create([
-                    'event_id' => $event2->id,
-                    'stand_id' => $stand->id,
-                    'menu_id' => $menu->id,
-                    'qty' => $qty,
-                    'subtotal' => $subtotal,
-                    'metode_pembayaran' => $isQris ? 'qris' : 'cash',
-                    'created_at' => $createdAt,
-                ]);
-
-                $totalOmzet += $subtotal;
-            }
-
-            $stand->update([
-                'total_omzet_terekam' => $totalOmzet,
-                'total_transaksi_terekam' => $txCount,
-            ]);
         }
 
         // Attendees for Event 2 (15 Attendees)

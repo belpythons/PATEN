@@ -35,6 +35,7 @@ class SpkEngineService
     public function evaluate(Event $event): Collection
     {
         $stands = $event->stands()
+            ->whereNotNull('umkm_id')
             ->with(['umkmProfile', 'posTransactions'])
             ->get();
 
