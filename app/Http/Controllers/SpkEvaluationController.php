@@ -31,9 +31,9 @@ class SpkEvaluationController extends Controller
             ], 200);
         }
 
-        $token = $request->query('token') ?: $request->header('X-CMS-Token');
+        $token = $request->query('token') ?: $request->header('X-CMS-Token') ?: $event->secure_management_token;
 
-        return redirect()->to('/cms/'.$event->slug.'/evaluations?token='.$token)
+        return redirect()->to('/cms/'.$event->slug.'/evaluations'.($token ? '?token='.$token : ''))
             ->with('success', 'Evaluasi SPK berhasil dieksekusi untuk '.$evaluations->count().' stand UMKM.');
     }
 
@@ -45,7 +45,7 @@ class SpkEvaluationController extends Controller
         /** @var Event $event */
         $event = $request->attributes->get('event') ?? Event::where('slug', $slug)->firstOrFail();
 
-        $token = $request->query('token') ?: $request->header('X-CMS-Token');
+        $token = $request->query('token') ?: $request->header('X-CMS-Token') ?: $event->secure_management_token;
 
         $evaluations = $event->spkEvaluations()
             ->with(['stand', 'umkmProfile'])
@@ -63,7 +63,7 @@ class SpkEvaluationController extends Controller
                 'hibah_alat' => $evaluations->where('rekomendasi_program', 'hibah_alat')->count(),
                 'kredit_perbankan' => $evaluations->where('rekomendasi_program', 'kredit_perbankan')->count(),
             ],
-            'cms_url' => url('/cms/'.$event->slug.'?token='.$token),
+            'cms_url' => url('/cms/'.$event->slug.($token ? '?token='.$token : '')),
         ];
 
         if ($request->wantsJson()) {
