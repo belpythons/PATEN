@@ -64,9 +64,9 @@ class CmsGateController extends Controller
             ]);
         }
 
-        $token = $request->query('token') ?: $request->header('X-CMS-Token');
+        $token = $request->query('token') ?: $request->header('X-CMS-Token') ?: $event->secure_management_token;
 
-        return redirect()->to('/cms/'.$event->slug.'?token='.$token)
+        return redirect()->to('/cms/'.$event->slug.($token ? '?token='.$token : ''))
             ->with('success', 'Check-in berhasil untuk '.$attendee->nama_lengkap);
     }
 
@@ -115,9 +115,9 @@ class CmsGateController extends Controller
             ]);
         }
 
-        $token = $request->query('token') ?: $request->header('X-CMS-Token');
+        $token = $request->query('token') ?: $request->header('X-CMS-Token') ?: $event->secure_management_token;
 
-        return redirect()->to('/cms/'.$event->slug.'?token='.$token)
+        return redirect()->to('/cms/'.$event->slug.($token ? '?token='.$token : ''))
             ->with('success', 'Berhasil mengundi '.count($winners).' pemenang doorprize.');
     }
 }

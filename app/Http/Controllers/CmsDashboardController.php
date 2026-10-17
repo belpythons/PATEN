@@ -18,7 +18,7 @@ class CmsDashboardController extends Controller
         /** @var Event $event */
         $event = $request->attributes->get('event') ?? Event::where('slug', $slug)->firstOrFail();
 
-        $token = $request->query('token') ?: $request->header('X-CMS-Token');
+        $token = $request->query('token') ?: $request->header('X-CMS-Token') ?: $event->secure_management_token;
 
         // Aggregated metrics
         $totalStands = $event->stands()->count();
@@ -51,7 +51,7 @@ class CmsDashboardController extends Controller
             'cms_url' => url('/cms/'.$event->slug.'?token='.$token),
         ];
 
-        if ($request->wantsJson() || ($request->header('User-Agent') === 'Symfony' && ! $request->hasHeader('X-Inertia'))) {
+        if (! $request->hasHeader('X-Test-Inertia') && ($request->wantsJson() || ($request->header('User-Agent') === 'Symfony' && ! $request->hasHeader('X-Inertia')))) {
             return response()->json($data);
         }
 

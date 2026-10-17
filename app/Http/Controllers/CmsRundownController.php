@@ -43,9 +43,9 @@ class CmsRundownController extends Controller
             ], 201);
         }
 
-        $token = $request->query('token') ?: $request->header('X-CMS-Token');
+        $token = $request->query('token') ?: $request->header('X-CMS-Token') ?: $event->secure_management_token;
 
-        return redirect()->to('/cms/'.$event->slug.'?token='.$token)
+        return redirect()->to('/cms/'.$event->slug.($token ? '?token='.$token : ''))
             ->with('success', 'Sesi rundown berhasil ditambahkan.');
     }
 
@@ -77,9 +77,9 @@ class CmsRundownController extends Controller
             ]);
         }
 
-        $token = $request->query('token') ?: $request->header('X-CMS-Token');
+        $token = $request->query('token') ?: $request->header('X-CMS-Token') ?: $event->secure_management_token;
 
-        return redirect()->to('/cms/'.$event->slug.'?token='.$token)
+        return redirect()->to('/cms/'.$event->slug.($token ? '?token='.$token : ''))
             ->with('success', 'Sesi rundown berhasil diperbarui.');
     }
 
@@ -101,9 +101,9 @@ class CmsRundownController extends Controller
             ]);
         }
 
-        $token = $request->query('token') ?: $request->header('X-CMS-Token');
+        $token = $request->query('token') ?: $request->header('X-CMS-Token') ?: $event->secure_management_token;
 
-        return redirect()->to('/cms/'.$event->slug.'?token='.$token)
+        return redirect()->to('/cms/'.$event->slug.($token ? '?token='.$token : ''))
             ->with('success', 'Sesi rundown berhasil dihapus.');
     }
 }
