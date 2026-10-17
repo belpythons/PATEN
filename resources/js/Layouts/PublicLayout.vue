@@ -34,6 +34,10 @@ const logout = () => {
                         <Link href="/" class="hover:text-[#132952] transition-colors">
                             Beranda
                         </Link>
+                        <Link href="/#events-registry" class="hover:text-[#00B262] transition-colors flex items-center gap-1">
+                            <span>Daftar Stand</span>
+                            <span class="text-[10px] px-1 py-0.2 rounded bg-[#00B262]/10 text-[#00B262] border border-[#00B262]/30 font-semibold">UMKM</span>
+                        </Link>
                         <Link href="/pos" class="hover:text-[#00B262] transition-colors flex items-center gap-1 font-semibold text-[#132952]">
                             <span>Kasir POS</span>
                             <span class="text-[10px] px-1 py-0.2 rounded bg-[#00B262]/10 text-[#00B262] border border-[#00B262]/30">STAND</span>

@@ -39,8 +39,12 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::get('/', function () {
-    $events = Event::withCount(['stands', 'attendees'])
-        ->with(['stands' => fn ($q) => $q->with('umkmProfile')->limit(3)])
+    $events = Event::withCount([
+        'stands',
+        'stands as available_stands_count' => fn ($q) => $q->whereNull('umkm_id'),
+        'attendees',
+    ])
+        ->with(['stands' => fn ($q) => $q->with('umkmProfile')->orderBy('nomor_stand')])
         ->latest()
         ->take(6)
         ->get();

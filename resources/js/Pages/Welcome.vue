@@ -48,14 +48,26 @@ const props = defineProps({
                         </Link>
                         <Link href="/pos">
                             <BaseButton variant="emerald" size="lg">
-                                Gerbang Kasir POS 
+                                Gerbang Kasir POS
                             </BaseButton>
                         </Link>
                         <Link href="/dashboard" v-if="$page.props.auth?.user">
                             <BaseButton variant="secondary" size="lg">
-                                Dasbor Saya ⚙️
+                                Dasbor Saya
                             </BaseButton>
                         </Link>
+                    </div>
+
+                    <!-- Subtle, professional inline navigation prompt for UMKM -->
+                    <div class="mt-4 flex items-center gap-2 text-xs font-mono text-[#5B6B8A]">
+                        <span>Pelaku Usaha UMKM?</span>
+                        <a
+                            href="#events-registry"
+                            class="text-[#132952] font-semibold underline underline-offset-4 decoration-[#00B262] hover:text-[#00B262] transition-colors inline-flex items-center gap-1"
+                        >
+                            <span>Daftarkan profil stand bazar di sini</span>
+                            <span>&darr;</span>
+                        </a>
                     </div>
                 </div>
 
@@ -133,6 +145,21 @@ const props = defineProps({
                 </div>
             </div>
 
+            <!-- UMKM Onboarding Informational Callout (Clean, No Emojis, Standard Cobalt Border) -->
+            <div class="mb-6 px-4 py-3 rounded-[6px] bg-white border border-[#CBD5E1] border-l-4 border-l-[#00B262] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-mono uppercase font-semibold text-[11px] tracking-wider text-[#132952]">
+                            Registrasi Peserta Stand Bazar UMKM
+                        </span>
+                        <BaseBadge variant="emerald" :dot="true">Terbuka</BaseBadge>
+                    </div>
+                    <p class="text-xs text-[#5B6B8A] mt-0.5">
+                        Pilih event yang bertanda <span class="text-[#00B262] font-semibold">Slot Tersedia</span> untuk mengisi kelengkapan usaha (NIB, No. KK) dan daftar menu jualan.
+                    </p>
+                </div>
+            </div>
+
             <!-- Event Cards Grid -->
             <div v-if="events && events.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div
@@ -146,7 +173,10 @@ const props = defineProps({
                             <span class="text-[10px] font-mono uppercase tracking-wider text-[#64748B] px-2 py-0.5 rounded-[3px] bg-[#F1F5F9]">
                                 {{ ev.penyelenggara }}
                             </span>
-                            <span class="text-[11px] font-mono text-[#00B262] font-bold">
+                            <BaseBadge v-if="ev.available_stands_count > 0" variant="emerald" :dot="true">
+                                {{ ev.available_stands_count }} Stand Kosong
+                            </BaseBadge>
+                            <span v-else class="text-[11px] font-mono text-[#00B262] font-bold">
                                 {{ ev.stands_count || 0 }} Stand
                             </span>
                         </div>
@@ -180,6 +210,15 @@ const props = defineProps({
 
                     <!-- Action Link Affordances -->
                     <div class="mt-5 pt-4 border-t border-[#E2E8F0] space-y-2">
+                        <!-- Direct Daftar Stand Button if stands are available -->
+                        <Link
+                            v-if="ev.available_stands_count > 0"
+                            :href="`/e/${ev.slug}#stands-section`"
+                            class="inline-flex items-center justify-center w-full px-3 py-2 rounded-[6px] bg-[#00B262] hover:bg-[#009954] text-white text-xs font-mono font-semibold transition-colors shadow-xs"
+                        >
+                            Daftar Stand UMKM ({{ ev.available_stands_count }} Slot Tersedia) &rarr;
+                        </Link>
+
                         <div class="grid grid-cols-2 gap-2">
                             <Link
                                 :href="`/e/${ev.slug}`"
@@ -191,7 +230,7 @@ const props = defineProps({
                                 :href="`/e/${ev.slug}/leaderboard`"
                                 class="inline-flex items-center justify-center px-2.5 py-1.5 rounded-[4px] bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#132952] text-xs font-mono font-medium border border-[#CBD5E1] transition-colors text-center"
                             >
-                                Leaderboard 🏆
+                                Leaderboard ↗
                             </Link>
                         </div>
                         <a
@@ -199,7 +238,7 @@ const props = defineProps({
                             target="_blank"
                             class="inline-flex items-center justify-center w-full px-2 py-1.5 rounded-[4px] bg-white hover:bg-[#F8FAFC] text-[#5B6B8A] hover:text-[#132952] text-[11px] font-mono border border-[#E2E8F0] transition-colors text-center"
                         >
-                            Poster Cetak 
+                            Poster Cetak
                         </a>
                     </div>
                 </div>

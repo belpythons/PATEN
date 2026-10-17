@@ -33,6 +33,14 @@ const commands = [
         shortcut: 'M',
     },
     {
+        id: 'stands-register',
+        category: 'UMKM & Stand',
+        title: 'Daftar Stand Bazar UMKM',
+        subtitle: 'Pendaftaran pelaku usaha dan kavling stand bazar aktif',
+        action: () => router.visit('/#events-registry'),
+        shortcut: 'S',
+    },
+    {
         id: 'pos-gateway',
         category: 'Kasir POS',
         title: 'Gerbang Kasir POS Stand UMKM',

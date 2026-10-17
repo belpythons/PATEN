@@ -109,7 +109,7 @@ const navigateToCms = () => {
             </div>
 
             <!-- Section: Direktori Stand UMKM Lapangan -->
-            <div class="pt-8 border-t border-[#E2E8F0] space-y-4">
+            <div id="stands-section" class="pt-8 border-t border-[#E2E8F0] space-y-4 scroll-mt-20">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div>
                         <p class="text-xs font-mono uppercase tracking-[0.06em] text-[#132952] font-semibold">
