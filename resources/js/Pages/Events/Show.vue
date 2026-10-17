@@ -159,7 +159,7 @@ const navigateToCms = () => {
                                 Lihat Menu Meja ↗
                             </a>
                             <Link
-                                :href="st.umkm_profile ? `/pos/${st.id}` : `/stands/${st.id}/assign`"
+                                :href="st.umkm_profile ? `/pos/${st.id}/login` : `/stands/${st.id}/assign`"
                                 class="px-2.5 py-1 rounded-[4px] font-mono text-[11px] font-semibold transition-colors"
                                 :class="st.umkm_profile ? 'bg-[#00B262] text-white hover:bg-[#009954]' : 'bg-[#132952] text-white hover:bg-[#0D1E3D]'"
                             >
