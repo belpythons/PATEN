@@ -604,6 +604,7 @@ class PatenMvpSeeder extends Seeder
                 ]);
             }
 
+            // Transactions only within the event's running period (started yesterday)
             $totalOmzet = 0.00;
             $txCount = $sc['target_tx'];
             for ($i = 0; $i < $txCount; $i++) {
@@ -611,6 +612,11 @@ class PatenMvpSeeder extends Seeder
                 $qty = rand(1, 2);
                 $subtotal = $qty * (float) $menu->harga;
                 $isQris = (rand(1, 10) <= 7);
+                // Constrain to event period: started 1 day ago, hours 10-21
+                $hour = rand(10, 21);
+                $minute = rand(0, 59);
+                $txDay = rand(0, 1); // 0 = today, 1 = yesterday (event start)
+                $createdAt = Carbon::now()->subDays($txDay)->setTime($hour, $minute);
 
                 PosTransaction::create([
                     'event_id' => $event2->id,
@@ -619,7 +625,7 @@ class PatenMvpSeeder extends Seeder
                     'qty' => $qty,
                     'subtotal' => $subtotal,
                     'metode_pembayaran' => $isQris ? 'qris' : 'cash',
-                    'created_at' => Carbon::now()->subHours(rand(1, 24)),
+                    'created_at' => $createdAt,
                 ]);
 
                 $totalOmzet += $subtotal;
@@ -666,6 +672,7 @@ class PatenMvpSeeder extends Seeder
             'is_awarding_active' => true,
         ]);
 
+        // Event 3 is a FUTURE event — stands are registered but NO transactions yet
         $standsConfig3 = [
             ['umkm_index' => 5, 'nomor_stand' => 'STAND-01', 'kategori' => 'kuliner'],
             ['umkm_index' => 11, 'nomor_stand' => 'STAND-02', 'kategori' => 'kriya'],
@@ -686,47 +693,24 @@ class PatenMvpSeeder extends Seeder
                 'total_transaksi_terekam' => 0,
             ]);
 
-            $menu1 = StandMenu::create([
+            // Menus prepared in advance (ready for event day)
+            StandMenu::create([
                 'stand_id' => $stand->id,
                 'nama_item' => 'Produk Khas '.$umkm->nama_usaha,
                 'harga' => 25000,
                 'is_available' => true,
             ]);
-            $menu2 = StandMenu::create([
+            StandMenu::create([
                 'stand_id' => $stand->id,
                 'nama_item' => 'Paket Souvenir Etnik Bengalon',
                 'harga' => 50000,
                 'is_available' => true,
             ]);
 
-            $totalOmzet = 0.00;
-            $txCount = rand(8, 15);
-            for ($i = 0; $i < $txCount; $i++) {
-                $chosen = ($i % 2 === 0) ? $menu1 : $menu2;
-                $qty = rand(1, 2);
-                $subtotal = $qty * (float) $chosen->harga;
-                $isQris = (rand(1, 10) <= 6);
-
-                PosTransaction::create([
-                    'event_id' => $event3->id,
-                    'stand_id' => $stand->id,
-                    'menu_id' => $chosen->id,
-                    'qty' => $qty,
-                    'subtotal' => $subtotal,
-                    'metode_pembayaran' => $isQris ? 'qris' : 'cash',
-                    'created_at' => Carbon::now()->subHours(rand(1, 12)),
-                ]);
-
-                $totalOmzet += $subtotal;
-            }
-
-            $stand->update([
-                'total_omzet_terekam' => $totalOmzet,
-                'total_transaksi_terekam' => $txCount,
-            ]);
+            // No transactions — event hasn't started yet
         }
 
-        // Attendees for Event 3 (10 Attendees)
+        // Attendees for Event 3 — pre-registered only (event hasn't started)
         for ($i = 1; $i <= 10; $i++) {
             Attendee::create([
                 'event_id' => $event3->id,
@@ -735,18 +719,18 @@ class PatenMvpSeeder extends Seeder
                 'kecamatan' => 'Bengalon',
                 'nomor_tiket_doorprize' => sprintf('TKT-BGL-%03d', $i),
                 'tipe_registrasi' => 'doorprize',
-                'is_checked_in' => ($i <= 6),
-                'check_in_time' => ($i <= 6) ? Carbon::now()->subHours(rand(1, 10)) : null,
-                'is_doorprize_winner' => ($i === 3),
+                'is_checked_in' => false,
+                'check_in_time' => null,
+                'is_doorprize_winner' => false,
                 'created_at' => Carbon::now()->subDays(1),
             ]);
         }
 
-        // 7. Execute SAW SPK Engine Evaluation for All Events
+        // 7. Execute SAW SPK Engine Evaluation — only for events with actual transactions
         /** @var SpkEngineService $spkService */
         $spkService = app(SpkEngineService::class);
         $spkService->evaluate($event1);
         $spkService->evaluate($event2);
-        $spkService->evaluate($event3);
+        // Event 3 skipped — no transactions yet (future event)
     }
 }
