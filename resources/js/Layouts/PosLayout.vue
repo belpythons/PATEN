@@ -38,9 +38,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A] font-sans antialiased">
+    <div class="min-h-screen flex flex-col bg-[#F8FAFC] text-[#132952] font-sans antialiased">
         <!-- POS Top Navigation Bar -->
-        <header class="bg-[#0B0F19] text-white border-b border-[#26334D] px-4 py-2.5 sticky top-0 z-30">
+        <header class="bg-[#0C1830] text-white border-b border-[#1E3A6E] px-4 py-2.5 sticky top-0 z-30">
             <div class="max-w-4xl mx-auto flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <BrandMark :show-version="false" class="text-white" />
@@ -65,7 +65,7 @@ onUnmounted(() => {
                     <div class="flex items-center gap-1.5 text-[11px] font-mono">
                         <span
                             class="h-2 w-2 rounded-full"
-                            :class="isOnline ? 'bg-[#10B981]' : 'bg-[#EF4444] animate-ping'"
+                            :class="isOnline ? 'bg-[#00B262]' : 'bg-[#EF4444] animate-ping'"
                         ></span>
                         <span :class="isOnline ? 'text-[#94A3B8]' : 'text-[#EF4444] font-bold'">
                             {{ isOnline ? 'ONLINE' : 'OFFLINE' }}
