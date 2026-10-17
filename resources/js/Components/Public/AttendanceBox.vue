@@ -93,20 +93,20 @@ const registerAttendee = async () => {
             <div class="max-w-xl">
                 <!-- Section Header -->
                 <div class="flex items-center gap-2 mb-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#2563EB]"></span>
-                    <span class="font-mono text-xs uppercase tracking-wider text-[#2563EB] font-semibold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#132952]"></span>
+                    <span class="font-mono text-xs uppercase tracking-wider text-[#132952] font-semibold">
                         03 / REGISTRASI KEHADIRAN PENGUNJUNG
                     </span>
                 </div>
-                <h2 class="text-2xl sm:text-3xl font-display font-bold text-[#0F172A] tracking-tight">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-[#132952] tracking-tight">
                     Ambil E-Kupon & Tiket Masuk
                 </h2>
-                <p class="text-sm text-[#64748B] mt-1.5 leading-relaxed">
+                <p class="text-sm text-[#5B6B8A] mt-1.5 leading-relaxed">
                     <template v-if="event.gamifikasi_mode === 'doorprize'">
                         Daftarkan kehadiran Anda untuk memperoleh nomor kupon Doorprize digital resmi Gebyar UMKM Kutai Timur yang diundi langsung di panggung.
                     </template>
                     <template v-else-if="event.gamifikasi_mode === 'htm'">
-                        Pendaftaran Tiket Masuk (HTM): <strong class="text-[#0F172A]">Rp {{ formatRupiah(event.harga_htm) }}</strong>. Dapatkan barcode tiket resmi untuk akses gate masuk acara.
+                        Pendaftaran Tiket Masuk (HTM): <strong class="text-[#132952]">Rp {{ formatRupiah(event.harga_htm) }}</strong>. Dapatkan barcode tiket resmi untuk akses gate masuk acara.
                     </template>
                     <template v-else>
                         Registrasi kehadiran resmi pengunjung untuk verifikasi gate dan akses fasilitas pameran bazar UMKM.

@@ -38,8 +38,8 @@ class FrontendStage2EventCreationTest extends TestCase
             'tanggal_mulai' => now()->addDays(1)->format('Y-m-d H:i:s'),
             'tanggal_selesai' => now()->addDays(3)->format('Y-m-d H:i:s'),
             'color_mode' => 'duo',
-            'color_primary' => '#2563EB',
-            'color_secondary' => '#F59E0B',
+            'color_primary' => '#132952',
+            'color_secondary' => '#00B262',
             'gamifikasi_mode' => 'doorprize',
             'is_awarding_active' => true,
             'initial_rundowns' => [
@@ -59,8 +59,8 @@ class FrontendStage2EventCreationTest extends TestCase
         $response->assertStatus(302);
         $this->assertDatabaseHas('events', [
             'nama_event' => $payload['nama_event'],
-            'color_primary' => '#2563EB',
-            'color_secondary' => '#F59E0B',
+            'color_primary' => '#132952',
+            'color_secondary' => '#00B262',
         ]);
 
         $createdEvent = Event::where('nama_event', $payload['nama_event'])->first();
@@ -87,8 +87,8 @@ class FrontendStage2EventCreationTest extends TestCase
             'tanggal_selesai' => now()->addDays(3),
             'secure_management_token' => Str::random(64),
             'color_mode' => 'duo',
-            'color_primary' => '#2563EB',
-            'color_secondary' => '#F59E0B',
+            'color_primary' => '#132952',
+            'color_secondary' => '#00B262',
             'gamifikasi_mode' => 'doorprize',
         ]);
 
@@ -99,7 +99,7 @@ class FrontendStage2EventCreationTest extends TestCase
             ->component('Events/PosterExport')
             ->has('poster')
             ->where('poster.nama_event', 'Pekan Budaya Sangatta')
-            ->where('poster.color_primary', '#2563EB')
+            ->where('poster.color_primary', '#132952')
             ->has('event')
         );
 

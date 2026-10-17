@@ -4,8 +4,8 @@ import { computed } from 'vue';
 const props = defineProps({
     variant: {
         type: String,
-        default: 'cobalt',
-        validator: (value) => ['cobalt', 'emerald', 'ruby', 'amber', 'neutral', 'graphite'].includes(value),
+        default: 'navy',
+        validator: (value) => ['navy', 'cobalt', 'emerald', 'ruby', 'amber', 'neutral', 'graphite'].includes(value),
     },
     dot: {
         type: Boolean,
@@ -16,28 +16,32 @@ const props = defineProps({
 const variantClasses = computed(() => {
     switch (props.variant) {
         case 'emerald':
-            return 'bg-[#ECFDF5] text-[#059669] border-[#A7F3D0]';
+            return 'bg-[#E6F7EF] text-[#008046] border-[#A2E8C6]';
         case 'ruby':
             return 'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]';
         case 'amber':
-            return 'bg-[#FFFBEB] text-[#D97706] border-[#FDE68A]';
+            return 'bg-[#FEF6E8] text-[#C87D0E] border-[#FCDDA3]';
         case 'neutral':
-            return 'bg-[#F1F5F9] text-[#334155] border-[#CBD5E1]';
+            return 'bg-[#F1F5F9] text-[#273A60] border-[#CBD5E1]';
         case 'graphite':
-            return 'bg-[#1E293B] text-[#E2E8F0] border-[#334155]';
+            return 'bg-[#0C1830] text-[#E2E8F0] border-[#1E3A6E]';
+        case 'navy':
+        case 'cobalt':
         default:
-            return 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]';
+            return 'bg-[#EDF2F9] text-[#132952] border-[#C2D2E9]';
     }
 });
 
 const dotClasses = computed(() => {
     switch (props.variant) {
-        case 'emerald': return 'bg-[#10B981]';
+        case 'emerald': return 'bg-[#00B262]';
         case 'ruby': return 'bg-[#EF4444]';
-        case 'amber': return 'bg-[#F59E0B]';
-        case 'neutral': return 'bg-[#64748B]';
-        case 'graphite': return 'bg-[#94A3B8]';
-        default: return 'bg-[#2563EB]';
+        case 'amber': return 'bg-[#FAA21B]';
+        case 'neutral': return 'bg-[#5B6B8A]';
+        case 'graphite': return 'bg-[#5B6B8A]';
+        case 'navy':
+        case 'cobalt':
+        default: return 'bg-[#132952]';
     }
 });
 </script>

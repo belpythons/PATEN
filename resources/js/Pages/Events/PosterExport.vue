@@ -24,8 +24,8 @@ const printPoster = () => {
 
 const posterThemeStyle = computed(() => {
     return {
-        '--poster-primary': props.poster.color_primary || '#2563EB',
-        '--poster-secondary': props.poster.color_mode === 'duo' ? (props.poster.color_secondary || '#F59E0B') : (props.poster.color_primary || '#2563EB'),
+        '--poster-primary': props.poster.color_primary || '#132952',
+        '--poster-secondary': props.poster.color_mode === 'duo' ? (props.poster.color_secondary || '#00B262') : (props.poster.color_primary || '#132952'),
     };
 });
 </script>
@@ -49,7 +49,7 @@ const posterThemeStyle = computed(() => {
                         <button
                             type="button"
                             class="px-3 py-1 rounded-[4px] transition-colors cursor-pointer"
-                            :class="format === 'a4' ? 'bg-[#2563EB] text-white font-semibold' : 'text-[#64748B] hover:text-[#0F172A]'"
+                            :class="format === 'a4' ? 'bg-[#132952] text-white font-semibold' : 'text-[#64748B] hover:text-[#0F172A]'"
                             @click="format = 'a4'"
                         >
                             A4 Cetak
@@ -57,7 +57,7 @@ const posterThemeStyle = computed(() => {
                         <button
                             type="button"
                             class="px-3 py-1 rounded-[4px] transition-colors cursor-pointer"
-                            :class="format === 'square' ? 'bg-[#2563EB] text-white font-semibold' : 'text-[#64748B] hover:text-[#0F172A]'"
+                            :class="format === 'square' ? 'bg-[#132952] text-white font-semibold' : 'text-[#64748B] hover:text-[#0F172A]'"
                             @click="format = 'square'"
                         >
                             1:1 Medsos
@@ -81,7 +81,7 @@ const posterThemeStyle = computed(() => {
             </div>
         </div>
 
-        <!-- Poster Canvas (Hallmark Cobalt Ruler-Drawn Geometry) -->
+        <!-- Poster Canvas (Triad Deep Navy Blue Ruler-Drawn Geometry) -->
         <div class="max-w-4xl mx-auto px-4 flex justify-center print:p-0 print:max-w-none">
             <div
                 :style="posterThemeStyle"
@@ -135,7 +135,7 @@ const posterThemeStyle = computed(() => {
                     <div>
                         <span class="text-[10px] font-mono uppercase text-[#64748B] block">LOKASI VENUE</span>
                         <p class="text-xs sm:text-sm font-semibold text-[#0F172A] mt-0.5 flex items-center gap-1">
-                            <svg class="h-3.5 w-3.5 text-[#2563EB] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-3.5 w-3.5 text-[#132952] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
@@ -150,7 +150,7 @@ const posterThemeStyle = computed(() => {
                         <span class="text-[10px] font-mono uppercase tracking-wider text-[#64748B] block">
                             PINDAI KODE QR UNTUK INFO LENGKAP & KUPON
                         </span>
-                        <p class="text-xs font-mono font-bold text-[#2563EB] truncate">
+                        <p class="text-xs font-mono font-bold text-[#132952] truncate">
                             {{ poster.public_url }}
                         </p>
                         <div class="flex items-center gap-2 pt-1">

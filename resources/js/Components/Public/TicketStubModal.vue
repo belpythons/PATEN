@@ -60,8 +60,8 @@ const printTicket = () => {
     >
         <template #header>
             <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-[#2563EB]"></span>
-                <span class="text-xs font-mono uppercase tracking-wider text-[#64748B]">
+                <span class="w-2 h-2 rounded-full bg-[#132952]"></span>
+                <span class="text-xs font-mono uppercase tracking-wider text-[#5B6B8A]">
                     E-Tiket & Kupon Resmi
                 </span>
             </div>
@@ -70,14 +70,14 @@ const printTicket = () => {
         <div v-if="ticket" class="space-y-5">
             <!-- Event & Header Info -->
             <div class="text-center pb-2">
-                <h4 class="font-display font-bold text-lg text-[#0F172A] leading-snug">
+                <h4 class="font-display font-bold text-lg text-[#132952] leading-snug">
                     {{ event.nama_event || 'Gebyar UMKM Kutai Timur' }}
                 </h4>
-                <p class="text-xs text-[#64748B] mt-1">
+                <p class="text-xs text-[#5B6B8A] mt-1">
                     {{ event.penyelenggara || 'Dinas Koperasi & UKM Kab. Kutai Timur' }}
                 </p>
                 <div class="mt-2 flex items-center justify-center gap-2">
-                    <BaseBadge variant="cobalt" size="sm">
+                    <BaseBadge variant="navy" size="sm">
                         {{ ticket.tipe_registrasi === 'htm' ? 'Tiket Masuk (HTM)' : 'Kupon Doorprize' }}
                     </BaseBadge>
                     <BaseBadge variant="emerald" size="sm">
@@ -87,11 +87,11 @@ const printTicket = () => {
             </div>
 
             <!-- Big Monospace Ticket Code Box -->
-            <div class="bg-[#EFF6FF] border border-[#BFDBFE] rounded-[6px] p-4 text-center">
-                <div class="text-[10px] font-mono uppercase tracking-wider text-[#1D4ED8] font-semibold mb-1">
+            <div class="bg-[#EDF2F9] border border-[#C2D2E9] rounded-[6px] p-4 text-center">
+                <div class="text-[10px] font-mono uppercase tracking-wider text-[#132952] font-semibold mb-1">
                     Nomor Unik Tiket / Kupon
                 </div>
-                <div class="font-mono text-2xl font-bold tracking-widest text-[#2563EB] select-all">
+                <div class="font-mono text-2xl font-bold tracking-widest text-[#132952] select-all">
                     {{ ticket.nomor_tiket_doorprize }}
                 </div>
             </div>
@@ -99,12 +99,12 @@ const printTicket = () => {
             <!-- Visitor Details Table -->
             <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[6px] p-3 text-xs space-y-2">
                 <div class="flex justify-between items-center py-0.5 border-b border-[#E2E8F0]">
-                    <span class="text-[#64748B]">Nama Pemegang:</span>
-                    <span class="font-medium text-[#0F172A]">{{ ticket.nama_lengkap }}</span>
+                    <span class="text-[#5B6B8A]">Nama Pemegang:</span>
+                    <span class="font-medium text-[#132952]">{{ ticket.nama_lengkap }}</span>
                 </div>
                 <div class="flex justify-between items-center py-0.5 border-b border-[#E2E8F0]">
-                    <span class="text-[#64748B]">Kategori:</span>
-                    <span class="font-mono uppercase text-[#0F172A]">{{ ticket.tipe_registrasi }}</span>
+                    <span class="text-[#5B6B8A]">Kategori:</span>
+                    <span class="font-mono uppercase text-[#132952]">{{ ticket.tipe_registrasi }}</span>
                 </div>
                 <div class="flex justify-between items-center py-0.5">
                     <span class="text-[#64748B]">Status Check-In:</span>
@@ -145,7 +145,7 @@ const printTicket = () => {
                         class="w-full sm:w-auto"
                         @click="copyTicketCode"
                     >
-                        <span v-if="copySuccess" class="text-[#2563EB] font-bold">
+                        <span v-if="copySuccess" class="text-[#00B262] font-bold">
                             Tersalin! ✓
                         </span>
                         <span v-else>

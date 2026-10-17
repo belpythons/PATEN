@@ -5,7 +5,7 @@ const props = defineProps({
     variant: {
         type: String,
         default: 'primary',
-        validator: (value) => ['primary', 'secondary', 'outline', 'danger', 'ghost'].includes(value),
+        validator: (value) => ['primary', 'secondary', 'outline', 'danger', 'ghost', 'emerald', 'amber'].includes(value),
     },
     size: {
         type: String,
@@ -29,7 +29,7 @@ const props = defineProps({
 const emit = defineEmits(['click']);
 
 const classes = computed(() => {
-    const base = 'inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2563EB] disabled:opacity-50 disabled:cursor-not-allowed select-none rounded-[6px] cursor-pointer';
+    const base = 'inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#132952] disabled:opacity-50 disabled:cursor-not-allowed select-none rounded-[6px] cursor-pointer';
 
     const sizes = {
         sm: 'px-2.5 py-1 text-xs gap-1.5',
@@ -38,11 +38,13 @@ const classes = computed(() => {
     };
 
     const variants = {
-        primary: 'bg-[#2563EB] text-white hover:bg-[#1D4ED8] active:bg-[#1E40AF] border border-transparent shadow-xs',
-        secondary: 'bg-white text-[#0F172A] border border-[#CBD5E1] hover:bg-[#F8FAFC] hover:border-[#94A3B8]',
-        outline: 'bg-transparent text-[#0F172A] border border-[#E2E8F0] hover:border-[#2563EB] hover:text-[#2563EB]',
+        primary: 'bg-[#132952] text-white hover:bg-[#0D1E3D] active:bg-[#0A162C] border border-transparent shadow-xs',
+        emerald: 'bg-[#00B262] text-white hover:bg-[#009954] active:bg-[#008046] border border-transparent shadow-xs',
+        amber: 'bg-[#FAA21B] text-white hover:bg-[#E59214] active:bg-[#C87D0E] border border-transparent shadow-xs',
+        secondary: 'bg-white text-[#132952] border border-[#CBD5E1] hover:bg-[#F8FAFC] hover:border-[#94A3B8]',
+        outline: 'bg-transparent text-[#132952] border border-[#E2E8F0] hover:border-[#132952] hover:text-[#132952]',
         danger: 'bg-white text-[#EF4444] border border-[#FECACA] hover:bg-[#FEF2F2] hover:border-[#EF4444]',
-        ghost: 'bg-transparent text-[#334155] hover:bg-[#F1F5F9] hover:text-[#0F172A]',
+        ghost: 'bg-transparent text-[#273A60] hover:bg-[#F1F5F9] hover:text-[#132952]',
     };
 
     return `${base} ${sizes[props.size]} ${variants[props.variant]}`;

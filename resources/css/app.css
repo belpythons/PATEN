@@ -13,34 +13,50 @@
 
   --color-paper: #F8FAFC;
   --color-paper-muted: #F1F5F9;
-  --color-ink-primary: #0F172A;
-  --color-ink-secondary: #334155;
-  --color-ink-muted: #64748B;
-  --color-cobalt: #2563EB;
-  --color-cobalt-hover: #1D4ED8;
-  --color-cobalt-subtle: #EFF6FF;
+  --color-ink-primary: #132952;
+  --color-ink-secondary: #273A60;
+  --color-ink-muted: #5B6B8A;
+  
+  /* Triad Brand Colors */
+  --color-navy: #132952;
+  --color-navy-hover: #0D1E3D;
+  --color-navy-subtle: #EDF2F9;
+  --color-cobalt: #132952;
+  --color-cobalt-hover: #0D1E3D;
+  --color-cobalt-subtle: #EDF2F9;
+
+  --color-emerald: #00B262;
+  --color-emerald-hover: #009954;
+  --color-emerald-subtle: #E6F7EF;
+  --color-emerald-signal: #00B262;
+
+  --color-amber: #FAA21B;
+  --color-amber-hover: #E59214;
+  --color-amber-subtle: #FEF6E8;
+  --color-amber-signal: #FAA21B;
+
+  --color-ruby-signal: #EF4444;
+
   --color-rule: #E2E8F0;
   --color-rule-dark: #CBD5E1;
-  --color-graphite: #0B0F19;
-  --color-graphite-card: #151D2F;
-  --color-graphite-rule: #26334D;
-  --color-emerald-signal: #10B981;
-  --color-ruby-signal: #EF4444;
-  --color-amber-signal: #F59E0B;
+  --color-graphite: #0C1830;
+  --color-graphite-card: #132952;
+  --color-graphite-rule: #1E3A6E;
 
   --radius-control: 6px;
   --radius-surface: 10px;
 }
 
 :root {
-  --theme-primary: #2563EB;
-  --theme-secondary: #F59E0B;
+  --theme-primary: #132952;
+  --theme-secondary: #00B262;
+  --theme-accent: #FAA21B;
 }
 
-/* Hallmark Cobalt Base & Utilities */
+/* PATEN Triad Brand Theme Base & Utilities */
 html {
   background-color: #F8FAFC;
-  color: #0F172A;
+  color: #132952;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   scroll-behavior: smooth;
 }
@@ -49,7 +65,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #F8FAFC;
-  color: #0F172A;
+  color: #132952;
   min-height: 100vh;
 }
 
@@ -87,7 +103,17 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  [data-animate] {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;

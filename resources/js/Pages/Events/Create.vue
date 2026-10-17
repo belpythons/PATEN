@@ -1,24 +1,29 @@
 <script setup>
-import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { ref, computed, watch } from 'vue';
+import { useForm, usePage, Link } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import BaseInput from '@/Components/UI/BaseInput.vue';
 import BaseSelect from '@/Components/UI/BaseSelect.vue';
 import BaseTextarea from '@/Components/UI/BaseTextarea.vue';
 import BaseButton from '@/Components/UI/BaseButton.vue';
 import BaseBadge from '@/Components/UI/BaseBadge.vue';
+import BaseModal from '@/Components/UI/BaseModal.vue';
+import BaseToast from '@/Components/UI/BaseToast.vue';
 import LiveThemeCard from '@/Components/Events/LiveThemeCard.vue';
 import LockConfirmModal from '@/Components/Events/LockConfirmModal.vue';
 import RundownRowBuilder from '@/Components/Events/RundownRowBuilder.vue';
 
+const page = usePage();
+const authUser = computed(() => page.props.auth?.user);
+
 const props = defineProps({
     defaultPrimaryColor: {
         type: String,
-        default: '#2563EB',
+        default: '#132952',
     },
     defaultSecondaryColor: {
         type: String,
-        default: '#F59E0B',
+        default: '#00B262',
     },
     gamifikasiOptions: {
         type: Array,
@@ -32,13 +37,14 @@ const props = defineProps({
 });
 
 const isLockModalOpen = ref(false);
+const isAuthGateModalOpen = ref(false);
+const toastMessage = ref('');
+const toastType = ref('error');
 
 const colorPresets = [
-    { name: 'Cobalt', hex: '#2563EB' },
-    { name: 'Kutim Teal', hex: '#0F766E' },
-    { name: 'Amber Gold', hex: '#F59E0B' },
-    { name: 'Obsidian', hex: '#1E293B' },
-    { name: 'Emerald', hex: '#10B981' },
+    { name: 'Deep Navy Blue', hex: '#132952' },
+    { name: 'Vibrant Emerald Green', hex: '#00B262' },
+    { name: 'Warm Amber Orange', hex: '#FAA21B' },
 ];
 
 const form = useForm({
@@ -49,8 +55,8 @@ const form = useForm({
     tanggal_mulai: '',
     tanggal_selesai: '',
     color_mode: 'duo',
-    color_primary: props.defaultPrimaryColor || '#2563EB',
-    color_secondary: props.defaultSecondaryColor || '#F59E0B',
+    color_primary: props.defaultPrimaryColor || '#132952',
+    color_secondary: props.defaultSecondaryColor || '#00B262',
     gamifikasi_mode: 'doorprize',
     harga_htm: 0,
     is_awarding_active: true,
@@ -65,11 +71,23 @@ const form = useForm({
     ],
 });
 
+// Auto-fill rundown dates when event dates are set
+watch(() => form.tanggal_mulai, (val) => {
+    if (val && form.initial_rundowns[0] && !form.initial_rundowns[0].waktu_mulai) {
+        form.initial_rundowns[0].waktu_mulai = val;
+    }
+});
+watch(() => form.tanggal_selesai, (val) => {
+    if (val && form.initial_rundowns[0] && !form.initial_rundowns[0].waktu_selesai) {
+        form.initial_rundowns[0].waktu_selesai = val;
+    }
+});
+
 const addRundownRow = () => {
     form.initial_rundowns.push({
         judul_sesi: '',
-        waktu_mulai: '',
-        waktu_selesai: '',
+        waktu_mulai: form.tanggal_mulai || '',
+        waktu_selesai: form.tanggal_selesai || '',
         pengisi_acara: '',
         deskripsi_sesi: '',
     });
@@ -82,20 +100,49 @@ const removeRundownRow = (index) => {
 };
 
 const triggerConfirmModal = () => {
+    // Basic field validation
     if (!form.nama_event || !form.penyelenggara || !form.lokasi_venue || !form.tanggal_mulai || !form.tanggal_selesai) {
-        alert('Mohon lengkapi data wajib acara sebelum melanjutkan.');
+        toastMessage.value = 'Mohon lengkapi seluruh kolom wajib bertanda bintang (*) sebelum melanjutkan.';
+        toastType.value = 'error';
+        window.scrollTo({ top: 120, behavior: 'smooth' });
         return;
     }
+
+    // Workflow Gate: If user is not authenticated, prompt them to login first
+    if (!authUser.value) {
+        isAuthGateModalOpen.value = true;
+        return;
+    }
+
+    isLockModalOpen.value = true;
+};
+
+const proceedWithoutAuth = () => {
+    isAuthGateModalOpen.value = false;
     isLockModalOpen.value = true;
 };
 
 const submitFinalEvent = () => {
+    // Clean up empty rundown rows so they don't cause 422
+    const sanitizedRundowns = form.initial_rundowns.filter((r) => {
+        return r.judul_sesi && r.judul_sesi.trim() !== '';
+    }).map((r) => ({
+        ...r,
+        waktu_mulai: r.waktu_mulai || form.tanggal_mulai,
+        waktu_selesai: r.waktu_selesai || form.tanggal_selesai,
+    }));
+
+    form.initial_rundowns = sanitizedRundowns;
+
     form.post('/events', {
         onSuccess: () => {
             isLockModalOpen.value = false;
         },
-        onError: () => {
+        onError: (errors) => {
             isLockModalOpen.value = false;
+            const msgs = Object.values(errors).join(' ');
+            toastMessage.value = msgs || 'Gagal menerbitkan event. Silakan periksa kembali input Anda.';
+            toastType.value = 'error';
         },
     });
 };
@@ -103,29 +150,90 @@ const submitFinalEvent = () => {
 
 <template>
     <PublicLayout>
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-            <!-- Asymmetric Header -->
-            <div class="mb-8 pb-6 border-b border-[#E2E8F0]">
-                <p class="text-xs font-mono uppercase tracking-[0.06em] text-[#2563EB] font-semibold mb-2">
-                    01 / INISIALISASI INFRASTRUKTUR EVENT
-                </p>
-                <h1 class="text-2xl sm:text-4xl font-display font-bold text-[#0F172A] tracking-tight">
+        <!-- Toast Notification for feedback -->
+        <div v-if="toastMessage" class="fixed top-5 right-5 z-50 max-w-md">
+            <BaseToast
+                :message="toastMessage"
+                :type="toastType"
+                @dismiss="toastMessage = ''"
+            />
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+            <!-- Header Section with Hallmark Triad Theme -->
+            <div class="p-6 rounded-[10px] bg-gradient-to-r from-[#132952] to-[#1E3A6E] text-white shadow-md space-y-3">
+                <div class="flex items-center gap-2 text-xs font-mono text-[#00B262]">
+                    <span class="w-2 h-2 rounded-full bg-[#00B262] animate-pulse"></span>
+                    <span>MODUL INISIALISASI EVENT RESMI KUTAI TIMUR</span>
+                </div>
+                <h1 class="text-2xl sm:text-4xl font-display font-bold text-white tracking-tight">
                     Inisialisasi Event Baru & Ekosistem Niaga
                 </h1>
-                <p class="mt-2 text-sm text-[#475569] max-w-2xl">
-                    Lengkapi parameter resmi acara untuk men-generate portal microsite publik, token CMS rahasia 64-karakter, lembar poster ber-QR, dan pembagian kupon doorprize digital.
+                <p class="text-xs sm:text-sm text-[#CBD5E1] max-w-3xl leading-relaxed">
+                    Lengkapi parameter resmi acara untuk mempublikasikan portal publik warga, direktori stand bazar UMKM, kupon doorprize digital, dan menghubungkan event ke Dasbor Pengelola Anda.
                 </p>
             </div>
 
-            <!-- Two-Column Asymmetric Grid -->
+            <!-- Workflow Authentication Notice Bar -->
+            <div
+                v-if="authUser"
+                class="p-4 rounded-[8px] bg-[#00B262]/10 border border-[#00B262]/40 text-[#132952] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xs"
+            >
+                <div class="flex items-center gap-2.5">
+                    <span class="h-2.5 w-2.5 rounded-full bg-[#00B262]"></span>
+                    <div>
+                        <span class="font-mono font-semibold text-[#00B262] uppercase">Terautentikasi:</span>
+                        <strong class="ml-1 text-[#132952]">{{ authUser.name }}</strong>
+                        <span class="text-[#64748B] ml-1">({{ authUser.role === 'admin_dinas' ? 'Dinas Koperasi UKM' : 'Panitia Pelaksana' }})</span>
+                        <p class="text-[11px] text-[#5B6B8A]">Event yang Anda buat otomatis terhubung ke akun Anda di <strong>Dasbor Pengelola</strong>.</p>
+                    </div>
+                </div>
+                <Link
+                    href="/dashboard"
+                    class="px-3 py-1.5 rounded-[4px] bg-[#132952] hover:bg-[#0D1E3D] text-white font-mono text-xs transition-colors shrink-0"
+                >
+                    Lihat Dasbor Saya &rarr;
+                </Link>
+            </div>
+
+            <div
+                v-else
+                class="p-4 rounded-[8px] bg-[#FAA21B]/10 border border-[#FAA21B]/40 text-[#132952] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xs"
+            >
+                <div class="flex items-center gap-2.5">
+                    <span class="text-lg">⚠️</span>
+                    <div>
+                        <span class="font-mono font-bold text-[#FAA21B] uppercase">PERINGATAN: ANDA BELUM MASUK AKUN PANITIA</span>
+                        <p class="text-[11px] text-[#475569]">
+                            Jika membuat event tanpa login, Anda tidak dapat melihat event ini di Dasbor nanti. Disarankan masuk terlebih dahulu.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <Link
+                        href="/login"
+                        class="px-3 py-1.5 rounded-[4px] bg-[#132952] hover:bg-[#0D1E3D] text-white font-mono text-xs font-semibold transition-colors"
+                    >
+                        Masuk (Login) &rarr;
+                    </Link>
+                    <Link
+                        href="/register"
+                        class="px-3 py-1.5 rounded-[4px] bg-white hover:bg-[#F8FAFC] text-[#132952] border border-[#CBD5E1] font-mono text-xs transition-colors"
+                    >
+                        Daftar Akun
+                    </Link>
+                </div>
+            </div>
+
+            <!-- Two-Column Form Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                <!-- Left Column (Form Wizard Kontrol) -->
-                <div class="lg:col-span-7 space-y-8">
+                <!-- Left Column (Form Controls) -->
+                <div class="lg:col-span-7 space-y-6">
                     <!-- Section 01: Identitas Acara -->
                     <div class="rounded-[10px] border border-[#CBD5E1] bg-white p-5 sm:p-6 shadow-xs">
                         <div class="flex items-center gap-2 mb-4 pb-2 border-b border-[#E2E8F0]">
-                            <BaseBadge variant="cobalt">01</BaseBadge>
-                            <h2 class="font-display font-semibold text-base text-[#0F172A]">
+                            <BaseBadge variant="navy">01</BaseBadge>
+                            <h2 class="font-display font-semibold text-base text-[#132952]">
                                 Identitas Resmi Acara
                             </h2>
                         </div>
@@ -164,8 +272,8 @@ const submitFinalEvent = () => {
                     <!-- Section 02: Waktu & Lokasi Venue -->
                     <div class="rounded-[10px] border border-[#CBD5E1] bg-white p-5 sm:p-6 shadow-xs">
                         <div class="flex items-center gap-2 mb-4 pb-2 border-b border-[#E2E8F0]">
-                            <BaseBadge variant="cobalt">02</BaseBadge>
-                            <h2 class="font-display font-semibold text-base text-[#0F172A]">
+                            <BaseBadge variant="navy">02</BaseBadge>
+                            <h2 class="font-display font-semibold text-base text-[#132952]">
                                 Waktu & Lokasi Venue
                             </h2>
                         </div>
@@ -202,56 +310,53 @@ const submitFinalEvent = () => {
                         </div>
                     </div>
 
-                    <!-- Section 03: Custom Design System (Color Mode) -->
+                    <!-- Section 03: Skema Warna & Tema -->
                     <div class="rounded-[10px] border border-[#CBD5E1] bg-white p-5 sm:p-6 shadow-xs">
                         <div class="flex items-center gap-2 mb-4 pb-2 border-b border-[#E2E8F0]">
-                            <BaseBadge variant="cobalt">03</BaseBadge>
-                            <h2 class="font-display font-semibold text-base text-[#0F172A]">
-                                Skema Warna & Tema Tampilan
+                            <BaseBadge variant="navy">03</BaseBadge>
+                            <h2 class="font-display font-semibold text-base text-[#132952]">
+                                Skema Warna & Tema Visual
                             </h2>
                         </div>
 
                         <div class="space-y-4">
-                            <!-- Mono vs Duo Selector -->
+                            <!-- Color Mode Switch -->
                             <div>
-                                <label class="block text-xs font-mono uppercase tracking-wider text-[#334155] mb-2 font-medium">
-                                    Mode Palet Warna
+                                <label class="block text-xs font-mono uppercase tracking-wider text-[#273A60] mb-1.5 font-medium">
+                                    Mode Pewarnaan Halaman *
                                 </label>
                                 <div class="grid grid-cols-2 gap-3">
                                     <button
                                         type="button"
-                                        class="rounded-[6px] border p-3 text-left transition-all cursor-pointer"
-                                        :class="form.color_mode === 'mono' ? 'border-[#2563EB] bg-[#EFF6FF] text-[#2563EB]' : 'border-[#CBD5E1] bg-white hover:border-[#94A3B8]'"
+                                        class="px-3 py-2 rounded-[6px] border text-xs font-mono transition-all text-center cursor-pointer"
+                                        :class="form.color_mode === 'mono' ? 'border-[#132952] bg-[#132952] text-white font-bold' : 'border-[#CBD5E1] bg-white text-[#273A60] hover:border-[#132952]'"
                                         @click="form.color_mode = 'mono'"
                                     >
-                                        <p class="font-display font-semibold text-xs sm:text-sm">Opsi 1: Mode Mono</p>
-                                        <p class="text-[11px] text-[#64748B] mt-0.5">Satu warna primer solid dominan</p>
+                                        Mono (Satu Warna)
                                     </button>
-
                                     <button
                                         type="button"
-                                        class="rounded-[6px] border p-3 text-left transition-all cursor-pointer"
-                                        :class="form.color_mode === 'duo' ? 'border-[#2563EB] bg-[#EFF6FF] text-[#2563EB]' : 'border-[#CBD5E1] bg-white hover:border-[#94A3B8]'"
+                                        class="px-3 py-2 rounded-[6px] border text-xs font-mono transition-all text-center cursor-pointer"
+                                        :class="form.color_mode === 'duo' ? 'border-[#00B262] bg-[#00B262] text-white font-bold' : 'border-[#CBD5E1] bg-white text-[#273A60] hover:border-[#00B262]'"
                                         @click="form.color_mode = 'duo'"
                                     >
-                                        <p class="font-display font-semibold text-xs sm:text-sm">Opsi 2: Mode Duo</p>
-                                        <p class="text-[11px] text-[#64748B] mt-0.5">Kombinasi warna primer & sekunder</p>
+                                        Duo (Kombinasi Dua Warna)
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- Color Presets Swatches -->
+                            <!-- Color Presets -->
                             <div>
-                                <label class="block text-[11px] font-mono text-[#475569] mb-1.5">
-                                    Pilih Cepat Palet Warna Resmi
+                                <label class="block text-xs font-mono uppercase tracking-wider text-[#273A60] mb-1.5 font-medium">
+                                    Pilihan Warna Standar Triad PATEN
                                 </label>
                                 <div class="flex flex-wrap gap-2">
                                     <button
                                         v-for="preset in colorPresets"
                                         :key="preset.hex"
                                         type="button"
-                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] border text-xs font-mono transition-all cursor-pointer"
-                                        :class="form.color_primary === preset.hex ? 'border-[#2563EB] bg-[#EFF6FF] text-[#2563EB] font-bold' : 'border-[#CBD5E1] bg-white hover:border-[#94A3B8] text-[#334155]'"
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-[6px] border text-xs font-mono transition-all cursor-pointer"
+                                        :class="form.color_primary === preset.hex ? 'border-[#132952] bg-[#EDF2F9] text-[#132952] font-bold' : 'border-[#CBD5E1] bg-white hover:border-[#94A3B8] text-[#273A60]'"
                                         @click="form.color_primary = preset.hex"
                                     >
                                         <span class="h-3 w-3 rounded-full border border-black/10 shrink-0" :style="{ backgroundColor: preset.hex }"></span>
@@ -263,7 +368,7 @@ const submitFinalEvent = () => {
                             <!-- Manual Hex Inputs -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-xs font-mono uppercase tracking-wider text-[#334155] mb-1.5 font-medium">
+                                    <label class="block text-xs font-mono uppercase tracking-wider text-[#273A60] mb-1.5 font-medium">
                                         Warna Primer (Hex) *
                                     </label>
                                     <div class="flex items-center gap-2">
@@ -275,8 +380,8 @@ const submitFinalEvent = () => {
                                         <input
                                             v-model="form.color_primary"
                                             type="text"
-                                            placeholder="#2563EB"
-                                            class="w-full rounded-[6px] border border-[#CBD5E1] px-3 py-2 text-xs font-mono uppercase text-[#0F172A] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] focus:outline-none bg-white"
+                                            placeholder="#132952"
+                                            class="w-full rounded-[6px] border border-[#CBD5E1] px-3 py-2 text-xs font-mono uppercase text-[#132952] focus:border-[#132952] focus:ring-1 focus:ring-[#132952] focus:outline-none bg-white"
                                         />
                                     </div>
                                     <p v-if="form.errors.color_primary" class="mt-1 text-xs text-[#EF4444] font-mono">
@@ -285,7 +390,7 @@ const submitFinalEvent = () => {
                                 </div>
 
                                 <div v-if="form.color_mode === 'duo'">
-                                    <label class="block text-xs font-mono uppercase tracking-wider text-[#334155] mb-1.5 font-medium">
+                                    <label class="block text-xs font-mono uppercase tracking-wider text-[#273A60] mb-1.5 font-medium">
                                         Warna Sekunder (Hex)
                                     </label>
                                     <div class="flex items-center gap-2">
@@ -297,8 +402,8 @@ const submitFinalEvent = () => {
                                         <input
                                             v-model="form.color_secondary"
                                             type="text"
-                                            placeholder="#F59E0B"
-                                            class="w-full rounded-[6px] border border-[#CBD5E1] px-3 py-2 text-xs font-mono uppercase text-[#0F172A] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] focus:outline-none bg-white"
+                                            placeholder="#00B262"
+                                            class="w-full rounded-[6px] border border-[#CBD5E1] px-3 py-2 text-xs font-mono uppercase text-[#132952] focus:border-[#132952] focus:ring-1 focus:ring-[#132952] focus:outline-none bg-white"
                                         />
                                     </div>
                                     <p v-if="form.errors.color_secondary" class="mt-1 text-xs text-[#EF4444] font-mono">
@@ -312,8 +417,8 @@ const submitFinalEvent = () => {
                     <!-- Section 04: Gamifikasi Publik -->
                     <div class="rounded-[10px] border border-[#CBD5E1] bg-white p-5 sm:p-6 shadow-xs">
                         <div class="flex items-center gap-2 mb-4 pb-2 border-b border-[#E2E8F0]">
-                            <BaseBadge variant="cobalt">04</BaseBadge>
-                            <h2 class="font-display font-semibold text-base text-[#0F172A]">
+                            <BaseBadge variant="navy">04</BaseBadge>
+                            <h2 class="font-display font-semibold text-base text-[#132952]">
                                 Konfigurasi Gamifikasi & Tiket
                             </h2>
                         </div>
@@ -342,17 +447,17 @@ const submitFinalEvent = () => {
                             <!-- Awarding Switch -->
                             <div class="pt-2 border-t border-[#E2E8F0] flex items-center justify-between">
                                 <div>
-                                    <p class="font-medium text-xs sm:text-sm text-[#0F172A]">
+                                    <p class="font-medium text-xs sm:text-sm text-[#132952]">
                                         Klasemen Keaktifan Stand (Awarding UMKM)
                                     </p>
-                                    <p class="text-xs text-[#64748B]">
-                                        Tampilkan peringkat stan teraktif di halaman publik dengan menyembunyikan nominal rupiah omzet.
+                                    <p class="text-xs text-[#5B6B8A]">
+                                        Tampilkan peringkat stan teraktif di halaman publik dengan menyembunyikan nominal omzet.
                                     </p>
                                 </div>
                                 <input
                                     v-model="form.is_awarding_active"
                                     type="checkbox"
-                                    class="h-4 w-4 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB] cursor-pointer"
+                                    class="h-4 w-4 rounded border-[#CBD5E1] text-[#132952] focus:ring-[#132952] cursor-pointer"
                                 />
                             </div>
                         </div>
@@ -361,11 +466,15 @@ const submitFinalEvent = () => {
                     <!-- Section 05: Rundown Row Builder -->
                     <div class="rounded-[10px] border border-[#CBD5E1] bg-white p-5 sm:p-6 shadow-xs">
                         <div class="flex items-center gap-2 mb-4 pb-2 border-b border-[#E2E8F0]">
-                            <BaseBadge variant="cobalt">05</BaseBadge>
-                            <h2 class="font-display font-semibold text-base text-[#0F172A]">
-                                Rundown Jadwal Pembukaan
+                            <BaseBadge variant="navy">05</BaseBadge>
+                            <h2 class="font-display font-semibold text-base text-[#132952]">
+                                Rundown Jadwal Acara (Opsional)
                             </h2>
                         </div>
+
+                        <p class="text-xs text-[#5B6B8A] mb-4">
+                            Anda dapat menambahkan jadwal sesi sekarang atau mengelolanya nanti melalui CMS Pengelola.
+                        </p>
 
                         <RundownRowBuilder
                             :rundowns="form.initial_rundowns"
@@ -377,12 +486,13 @@ const submitFinalEvent = () => {
                     <!-- CTA Submit Button -->
                     <div class="pt-4">
                         <BaseButton
-                            variant="primary"
+                            variant="emerald"
                             size="lg"
-                            class="w-full"
+                            class="w-full justify-center py-3 text-sm font-semibold tracking-wide shadow-sm"
+                            :loading="form.processing"
                             @click="triggerConfirmModal"
                         >
-                            Lanjut ke Konfirmasi Penguncian & Penerbitan Token &rarr;
+                            Konfirmasi & Terbitkan Event Resmi &rarr;
                         </BaseButton>
                     </div>
                 </div>
@@ -401,20 +511,73 @@ const submitFinalEvent = () => {
                     />
 
                     <!-- Helper Guidelines -->
-                    <div class="rounded-[10px] border border-[#E2E8F0] bg-white p-4 text-xs space-y-2 text-[#475569]">
-                        <p class="font-mono font-semibold uppercase text-[#0F172A] text-[11px]">
-                            Standar Regulasi Sistem PATEN
+                    <div class="rounded-[10px] border border-[#E2E8F0] bg-white p-5 text-xs space-y-2.5 text-[#273A60] shadow-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-[#00B262]"></span>
+                            <p class="font-mono font-semibold uppercase text-[#132952] text-xs">
+                                Standar Regulasi PATEN Kutim
+                            </p>
+                        </div>
+                        <p class="leading-relaxed">
+                            • <strong>Portal Publik Otomatis</strong>: Halaman warga terbit di <code class="font-mono text-[#00B262]">/e/{slug}</code> untuk jadwal dan tiket doorprize.
                         </p>
-                        <p>
-                            • URL publik halaman acara akan otomatis dibuat berdasarkan nama event: <code class="font-mono text-[#2563EB]">/e/{slug}</code>.
+                        <p class="leading-relaxed">
+                            • <strong>Terhubung ke Dasbor</strong>: Event otomatis tersimpan di Dasbor akun Anda untuk mengelola stand dan hasil seleksi hibah APBD.
                         </p>
-                        <p>
-                            • Token pengelolaan CMS diterbitkan secara kriptografis 64-karakter untuk akses panitia tanpa login kata sandi.
+                        <p class="leading-relaxed">
+                            • <strong>Gerbang Kasir POS</strong>: Pedagang UMKM stand dapat langsung login dengan PIN 6-digit di <code class="font-mono text-[#132952]">/pos</code>.
                         </p>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Auth Gate Check Modal (Shown if user clicks submit without login) -->
+        <BaseModal :show="isAuthGateModalOpen" max-width="md" @close="isAuthGateModalOpen = false">
+            <template #header>
+                <div class="flex items-center gap-2 text-[#FAA21B]">
+                    <span class="text-lg">🔐</span>
+                    <h3 class="font-display font-bold text-base text-[#132952]">
+                        Masuk Akun Panitia Diperlukan
+                    </h3>
+                </div>
+            </template>
+
+            <div class="space-y-4 text-xs text-[#475569] leading-relaxed">
+                <p>
+                    Anda saat ini belum masuk ke akun Panitia. Agar event <strong>"{{ form.nama_event || 'Event Baru' }}"</strong> ini tersimpan di Dasbor dan dapat Anda kelola kembali sewaktu-waktu, silakan masuk ke akun Anda terlebih dahulu.
+                </p>
+                <div class="p-3 rounded-[6px] bg-[#00B262]/10 border border-[#00B262]/30 text-[#132952]">
+                    💡 <strong>Tips</strong>: Anda dapat menggunakan akun demo <code>panitia@kutim.go.id</code> (Kata Sandi: <code>password123</code>) atau mendaftarkan akun panitia baru.
+                </div>
+            </div>
+
+            <template #footer>
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-2 w-full">
+                    <button
+                        type="button"
+                        @click="proceedWithoutAuth"
+                        class="text-[11px] font-mono text-[#64748B] hover:text-[#132952] hover:underline"
+                    >
+                        Lanjut Tanpa Akun (Darurat)
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <Link
+                            href="/login"
+                            class="px-3 py-1.5 rounded-[4px] bg-[#132952] hover:bg-[#0D1E3D] text-white font-mono text-xs font-semibold transition-colors"
+                        >
+                            Masuk Sekarang &rarr;
+                        </Link>
+                        <Link
+                            href="/register"
+                            class="px-3 py-1.5 rounded-[4px] bg-white hover:bg-[#F8FAFC] text-[#132952] border border-[#CBD5E1] font-mono text-xs transition-colors"
+                        >
+                            Daftar Akun
+                        </Link>
+                    </div>
+                </div>
+            </template>
+        </BaseModal>
 
         <!-- Lock Confirmation Modal -->
         <LockConfirmModal

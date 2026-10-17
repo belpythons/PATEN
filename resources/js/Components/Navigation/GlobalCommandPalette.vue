@@ -25,6 +25,30 @@ const commands = [
         shortcut: 'H',
     },
     {
+        id: 'dashboard',
+        category: 'Navigasi',
+        title: 'Dasbor Pengelola (Event Saya)',
+        subtitle: 'Kelola seluruh event bazar yang terdaftar di akun Anda',
+        action: () => router.visit('/dashboard'),
+        shortcut: 'M',
+    },
+    {
+        id: 'pos-gateway',
+        category: 'Kasir POS',
+        title: 'Gerbang Kasir POS Stand UMKM',
+        subtitle: 'Buka terminal kasir stand bazar menggunakan PIN 6-digit',
+        action: () => router.visit('/pos'),
+        shortcut: 'P',
+    },
+    {
+        id: 'auth-login',
+        category: 'Autentikasi',
+        title: 'Masuk / Login Akun Panitia',
+        subtitle: 'Portal login resmi panitia pelaksana & dinas',
+        action: () => router.visit('/login'),
+        shortcut: 'L',
+    },
+    {
         id: 'create-event',
         category: 'Event',
         title: 'Buat Event Baru',
@@ -47,6 +71,23 @@ const commands = [
         subtitle: 'Aturan 1 KK 1 Penerima & Syarat Hibah Modal APBD',
         action: () => alert('Regulasi Perbup Kutim: 1 KK maksimal 1 penerima bantuan, NIB aktif >= 6 bulan, domisili Kutai Timur, dan bukan ASN/TNI/Polri.'),
         shortcut: 'R',
+    },
+    {
+        id: 'open-cms-token',
+        category: 'Akses CMS',
+        title: 'Masuk CMS Pengelola (Input Slug & Token)',
+        subtitle: 'Buka dashboard CMS event dengan slug dan token rahasia',
+        action: () => {
+            const slug = window.prompt('Masukkan Slug Event (contoh: pekan-raya-sangatta-iepe):');
+            if (!slug || !slug.trim()) return;
+            const token = window.prompt('Masukkan Token Rahasia Event:');
+            if (token && token.trim()) {
+                window.location.href = `/cms/${slug.trim()}?token=${encodeURIComponent(token.trim())}`;
+            } else {
+                window.location.href = `/cms/${slug.trim()}`;
+            }
+        },
+        shortcut: 'C',
     },
 ];
 
@@ -122,7 +163,7 @@ onUnmounted(() => {
     <div v-if="isOpen" class="relative z-50" role="dialog" aria-modal="true">
         <!-- Backdrop -->
         <div
-            class="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-xs transition-opacity"
+            class="fixed inset-0 bg-[#132952]/40 backdrop-blur-xs transition-opacity"
             @click="emit('close')"
         ></div>
 
@@ -134,7 +175,7 @@ onUnmounted(() => {
                 >
                     <!-- Search input -->
                     <div class="flex items-center border-b border-[#E2E8F0] px-4 py-3 bg-[#F8FAFC]">
-                        <svg class="h-4 w-4 text-[#64748B] mr-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="h-4 w-4 text-[#5B6B8A] mr-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                         <input
@@ -142,17 +183,17 @@ onUnmounted(() => {
                             v-model="search"
                             type="text"
                             placeholder="Ketik perintah atau navigasi cepat..."
-                            class="w-full bg-transparent text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none font-sans"
+                            class="w-full bg-transparent text-sm text-[#132952] placeholder-[#94A3B8] focus:outline-none font-sans"
                             autofocus
                         />
-                        <kbd class="text-[10px] font-mono uppercase bg-white border border-[#CBD5E1] px-1.5 py-0.5 rounded text-[#64748B]">
+                        <kbd class="text-[10px] font-mono uppercase bg-white border border-[#CBD5E1] px-1.5 py-0.5 rounded text-[#5B6B8A]">
                             ESC
                         </kbd>
                     </div>
 
                     <!-- Command list -->
                     <div class="max-h-80 overflow-y-auto p-2">
-                        <div v-if="filteredCommands.length === 0" class="py-8 text-center text-xs font-mono text-[#64748B]">
+                        <div v-if="filteredCommands.length === 0" class="py-8 text-center text-xs font-mono text-[#5B6B8A]">
                             Tidak ada perintah yang cocok dengan "{{ search }}".
                         </div>
                         <button
@@ -160,7 +201,7 @@ onUnmounted(() => {
                             :key="cmd.id"
                             type="button"
                             class="w-full flex items-center justify-between rounded-[6px] px-3 py-2.5 text-left text-sm transition-colors cursor-pointer group"
-                            :class="selectedIndex === index ? 'bg-[#EFF6FF] text-[#2563EB]' : 'text-[#0F172A] hover:bg-[#F8FAFC]'"
+                            :class="selectedIndex === index ? 'bg-[#EDF2F9] text-[#132952]' : 'text-[#132952] hover:bg-[#F8FAFC]'"
                             @mouseenter="selectedIndex = index"
                             @click="executeCommand(cmd)"
                         >

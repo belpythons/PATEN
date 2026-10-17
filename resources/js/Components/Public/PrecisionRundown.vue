@@ -17,8 +17,8 @@ const formatTimeRange = (start, end) => {
     <section id="jadwal-rundown" class="scroll-mt-20">
         <div class="mb-6">
             <div class="flex items-center gap-2 mb-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-[#2563EB]"></span>
-                <span class="font-mono text-xs uppercase tracking-wider text-[#2563EB] font-semibold">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#132952]"></span>
+                <span class="font-mono text-xs uppercase tracking-wider text-[#132952] font-semibold">
                     02 / AGENDA & JADWAL ACARA
                 </span>
             </div>
@@ -38,18 +38,18 @@ const formatTimeRange = (start, end) => {
                 class="relative group"
             >
                 <!-- Timeline bullet node -->
-                <div class="absolute -left-[31px] sm:-left-[39px] top-4 w-4 h-4 rounded-full bg-white border-2 border-[#2563EB] group-hover:scale-125 transition-transform">
-                    <div class="w-1.5 h-1.5 bg-[#2563EB] rounded-full mx-auto my-0.5"></div>
+                <div class="absolute -left-[31px] sm:-left-[39px] top-4 w-4 h-4 rounded-full bg-white border-2 border-[#132952] group-hover:scale-125 transition-transform">
+                    <div class="w-1.5 h-1.5 bg-[#132952] rounded-full mx-auto my-0.5"></div>
                 </div>
 
                 <!-- Session Card -->
-                <div class="bg-white border border-[#E2E8F0] rounded-[10px] p-5 shadow-xs hover:border-[#2563EB] transition-colors">
+                <div class="bg-white border border-[#E2E8F0] rounded-[10px] p-5 shadow-xs hover:border-[#132952] transition-colors">
                     <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
                         <div class="flex items-center gap-2">
                             <span class="font-mono text-xs font-semibold text-[#64748B]">
                                 #{{ String(item.urutan || (idx + 1)).padStart(2, '0') }}
                             </span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-[6px] bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE] font-mono text-xs font-medium">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-[6px] bg-[#EDF2F9] text-[#132952] border border-[#CBD5E1] font-mono text-xs font-medium">
                                 <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>

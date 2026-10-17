@@ -55,7 +55,7 @@ defineEmits(['update:modelValue']);
             :required="required"
             :disabled="disabled"
             class="w-full rounded-[6px] border bg-white px-3 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] transition-colors focus:outline-none disabled:bg-[#F1F5F9] disabled:cursor-not-allowed font-sans resize-y"
-            :class="error ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-1 focus:ring-[#EF4444]' : 'border-[#CBD5E1] hover:border-[#94A3B8] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]'"
+            :class="error ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-1 focus:ring-[#EF4444]' : 'border-[#CBD5E1] hover:border-[#94A3B8] focus:border-[#132952] focus:ring-1 focus:ring-[#132952]'"
             @input="$emit('update:modelValue', $event.target.value)"
         ></textarea>
         <p v-if="error" class="mt-1 text-xs text-[#EF4444] font-mono">
