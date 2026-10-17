@@ -54,7 +54,7 @@ defineEmits(['update:modelValue']);
                 :required="required"
                 :disabled="disabled"
                 class="w-full rounded-[6px] border bg-white px-3 py-2 text-sm text-[#0F172A] transition-colors focus:outline-none disabled:bg-[#F1F5F9] disabled:cursor-not-allowed font-sans appearance-none pr-8 cursor-pointer"
-                :class="error ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-1 focus:ring-[#EF4444]' : 'border-[#CBD5E1] hover:border-[#94A3B8] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]'"
+                :class="error ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-1 focus:ring-[#EF4444]' : 'border-[#CBD5E1] hover:border-[#94A3B8] focus:border-[#132952] focus:ring-1 focus:ring-[#132952]'"
                 @change="$emit('update:modelValue', $event.target.value)"
             >
                 <option v-if="placeholder" value="" disabled :selected="!modelValue">

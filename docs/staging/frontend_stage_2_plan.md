@@ -1,11 +1,11 @@
-# Frontend Technical Staging Plan: STAGE 2 (Cobalt Edition)
-**Nama Tahapan:** Modul 1 – Asymmetric Event Generator, Cobalt Theme Preview, Lock Confirmation Modal & Ruler-Drawn Poster Export  
-**Target Modul:** Pembuatan Event (`/events/create`), Pemilih Warna Presisi (FR-1.3), Dialog Penguncian (FR-1.2), dan Generator Poster Cetak Ber-QR (`/events/{slug}/poster-export`)  
-**Standar Hallmark:** Tata Letak Asimetris (Title-Left, Card-Right), Tanpa Gradien Ungu-Pink, Kontur Garis Rambut 1px, dan Tipografi Space Grotesk / JetBrains Mono  
+# Frontend Technical Staging Plan: STAGE 2 (Triad Color Edition)
+**Nama Tahapan:** Modul 1 – Asymmetric Event Generator, Triad Theme Preview, Lock Confirmation Modal & Ruler-Drawn Poster Export  
+**Target Modul:** Pembuatan Event (`/events/create`), Pemilih Warna Triad Presisi (FR-1.3), Dialog Penguncian (FR-1.2), dan Generator Poster Cetak Ber-QR (`/events/{slug}/poster-export`)  
+**Standar Hallmark:** Tata Letak Asimetris (Title-Left, Card-Right), Palet Triad (#132952, #00B262, #FAA21B), Kontur Garis Rambut 1px, dan Tipografi Space Grotesk / JetBrains Mono  
 
 ---
 
-## 1. Analisis Kebutuhan & Spesifikasi Desain Cobalt
+## 1. Analisis Kebutuhan & Spesifikasi Desain Triad
 
 ### A. Asymmetric Event Wizard (`Pages/Events/Create.vue` - FR-1.1 & FR-1.2)
 Mengikuti kaidah Hallmark: **Hindari tampilan semua serba di tengah (*Centred-everything*)**. Halaman pembuatan event mengadopsi ritme asimetris dua kolom:
@@ -18,20 +18,20 @@ Mengikuti kaidah Hallmark: **Hindari tampilan semua serba di tengah (*Centred-ev
     2. **Jadwal & Lokasi:** Venue di Kutai Timur, Kalender & Waktu Mulai–Selesai dengan batas validasi tanggal.
     3. **Skema Warna & Tema (FR-1.3):**
        - Mode Palet: Radio box 6px untuk `Mono` (1 Warna Hex) vs `Duo` (Primer & Sekunder).
-       - Palet Preset: Electric Cobalt (`#2563EB`), Kutim Deep Teal (`#0F766E`), Kutim Amber Gold (`#F59E0B`), Obsidian Slate (`#1E293B`).
+       - Palet Triad Wajib: Deep Navy Blue (`#132952`), Vibrant Emerald Green (`#00B262`), Warm Amber Orange (`#FAA21B`).
        - Color input picker manual dengan validasi format Regex Hex realtime.
     4. **Gamifikasi Publik (FR-1.4):**
        - Toggle seleksi: `doorprize` (Kupon Gratis Warga), `htm` (Tiket Masuk), `both`, atau `none`.
        - Sakelar *Awarding UMKM Teraktif* (Top 1 / Top 3 / Top 5).
     5. **Initial Rundown Builder:** Baris jadwal kegiatan pembukaan yang dinamis.
 - **Kolom Kanan (Live Instrument Preview Card):**
-  - **The Live Cobalt Card:** Kartu pratinjau mini 10px radius dengan border hairline 1px yang langsung merefleksikan perubahan warna primer & sekunder, nama event, serta simulasi tampilan badge tiket secara instan tanpa reload.
+  - **The Live Triad Card:** Kartu pratinjau mini 10px radius dengan border hairline 1px yang langsung merefleksikan perubahan warna primer & sekunder, nama event, serta simulasi tampilan badge tiket secara instan tanpa reload.
 
 ### B. Lock Confirmation Modal (FR-1.2)
 - Sebelum form dikirim ke `POST /events`, dialog modal 10px radius muncul:
   - Ringkasan data inti: Nama Event, Estimasi Slug URL publik (`/e/{slug}`), Instansi Penyelenggara, dan Gamifikasi.
   - **Pemberitahuan Kriptografis:** *"Sistem akan mengunci konfigurasi dasar dan menerbitkan Token Manajemen CMS 64-karakter unik."*
-  - Tombol aksi: "Periksa Kembali" (Outline 6px) dan "Kunci & Terbitkan Event" (Solid Cobalt 6px).
+  - Tombol aksi: "Periksa Kembali" (Outline 6px) dan "Kunci & Terbitkan Event" (Solid Navy #132952 6px).
 
 ### C. Ruler-Drawn Poster Export (`Pages/Events/PosterExport.vue` - FR-1.5)
 Halaman `/events/{slug}/poster-export` merender lembar poster publikasi resmi dengan presisi geometris:
@@ -72,7 +72,7 @@ resources/js/
 - Pada layar ponsel, kolom tersusun secara vertikal dengan tombol pintas preview mengambang (*toggle preview floating button*).
 
 ### B. Live Theme Preview Card
-- Menampilkan chip status: `MODE: DUO`, `HEX: #2563EB / #F59E0B`.
+- Menampilkan chip status: `MODE: DUO`, `HEX: #132952 / #00B262`.
 - Menampilkan mockup miniatur e-kupon dengan warna yang disuntikkan secara dinamis melalui CSS Variables (`--theme-primary`, `--theme-secondary`).
 
 ---

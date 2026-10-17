@@ -1,46 +1,46 @@
 # Master Frontend Staging Plan: Sistem PATEN Kutai Timur
-## Pemantauan Transaksi & Efektivitas Niaga — Hallmark Cobalt Theme Architecture
+## Pemantauan Transaksi & Efektivitas Niaga — Triad Color System Architecture
 
 **Standar Desain & Metodologi:**  
 - **Design Skill:** [Hallmark Anti-AI-Slop Consensus](file:///c:/Users/Crush/Downloads/PATEN/.agents/skills/hallmark/SKILL.md)  
-- **Selected Archetype & Theme:** **Cobalt** ([`themes/cobalt.md`](file:///c:/Users/Crush/Downloads/PATEN/.agents/skills/hallmark/references/themes/cobalt.md))  
+- **Selected Color Triad:**
+  1. **Deep Navy Blue:** `#132952` / `rgb(19, 41, 82)` — Primary Anchor, Ink, Headers, Primary Buttons & Focus Ring
+  2. **Vibrant Emerald Green:** `#00B262` / `rgb(0, 178, 98)` — Success, Verified Badges, QR/POS Online Signals, Cash Flow
+  3. **Warm Amber Orange:** `#FAA21B` / `rgb(250, 162, 27)` — Gamifikasi, Doorprize, Warning, Kupon Callouts
 - **Dokumen Referensi Produk:** [PRD PATEN Kutim](file:///c:/Users/Crush/Downloads/PATEN/docs/references/product_requirements_document_prd_paten_kutim.md) | [BRD PATEN Kutim](file:///c:/Users/Crush/Downloads/PATEN/docs/references/business_requirements_document_brd_paten_kutim.md)  
 - **Status Backend:** [100% PASS (44 Automated Tests)](file:///c:/Users/Crush/Downloads/PATEN/docs/CONSOLIDATED_TESTING_REPORT.md)  
 
 ---
 
-## 1. Filosofi Desain: The Hallmark Cobalt Register
+## 1. Filosofi Desain: The Triad Institutional Register
 
-Sistem **PATEN (Pemantauan Transaksi & Efektivitas Niaga)** Kabupaten Kutai Timur bukan sekadar aplikasi web biasa, melainkan **infrastruktur digital niaga & instrumen verifikasi bantuan publik**. Mengadopsi prinsip **Hallmark Anti-AI-Slop** dengan tema **Cobalt**, antarmuka PATEN dirancang dengan register *modern-minimal dev-tool & instrument panel* (terinspirasi oleh presisi GitBook, Stripe Docs, Linear, Vercel, dan Supabase):
+Sistem **PATEN (Pemantauan Transaksi & Efektivitas Niaga)** Kabupaten Kutai Timur bukan sekadar aplikasi web biasa, melainkan **infrastruktur digital niaga & instrumen verifikasi bantuan publik**. Mengadopsi prinsip **Hallmark Anti-AI-Slop** dengan palet tiga warna berwibawa: **Deep Navy Blue**, **Vibrant Emerald Green**, dan **Warm Amber Orange**, antarmuka PATEN dirancang dengan register *modern-minimal dev-tool & instrument panel* (presisi, berwibawa, dan fungsional):
 
 ```text
-[ ANTI-AI-SLOP DISCIPLINE — COBALT THEME ]
-1. NO PURPLE/PINK GRADIENTS   --> Cool engineered paper (oklch 98.5% 0.004 250) + Solid surfaces.
-2. NO GENERIC INTER-ONLY      --> Space Grotesk (Display) + Inter (Body) + JetBrains Mono (Labels/Kbd/Code).
-3. NO CENTRED-EVERYTHING      --> Left-biased asymmetric structure (Title-left, Interactive-demo right).
-4. NO ICON-TILE TEMPLATES     --> Hairline-bordered instrument cards (1px ruler-drawn borders).
-5. NO FLOATING PILL CTAS      --> Tight 6px technical radius buttons, single Electric Cobalt signal accent.
-6. NO GLASSOVERLAY BLUR-SOUP  --> Depth comes from sharp 1px borders & graphite contrast, not heavy blur.
-7. SIGNAL ACCENT RESTRICTION  --> Electric Cobalt (oklch 58% 0.20 256) strictly < 5% of viewport.
+[ ANTI-AI-SLOP DISCIPLINE — TRIAD COLOR SYSTEM ]
+1. STRICT COLOR TRIAD         --> Deep Navy Blue (#132952) + Vibrant Emerald Green (#00B262) + Warm Amber Orange (#FAA21B).
+2. NO PURPLE/PINK GRADIENTS   --> Cool engineered paper (#F8FAFC) + Solid hairline borders.
+3. NO GENERIC INTER-ONLY      --> Space Grotesk (Display) + Inter (Body) + JetBrains Mono (Labels/Kbd/Code).
+4. NO CENTRED-EVERYTHING      --> Left-biased asymmetric structure (Title-left, Interactive-demo right).
+5. NO ICON-TILE TEMPLATES     --> Hairline-bordered instrument cards (1px ruler-drawn borders).
+6. NO FLOATING PILL CTAS      --> Tight 6px technical radius buttons, distinct Navy/Emerald/Amber roles.
+7. NO GLASSOVERLAY BLUR-SOUP  --> Depth comes from sharp 1px borders & deep navy contrast, not heavy blur.
 ```
 
 ---
 
-## 2. Arsitektur Token & Palet Warna Cobalt (OKLCH Foundation)
+## 2. Arsitektur Token & Palet Warna Eksklusif (Triad System)
 
-Cobalt menggunakan kanvas sejuk terkayakan garis rambut (*hairlines*) dengan satu aksen sinyal biru elektrik yang tajam:
+Sistem styling antarmuka PATEN beroperasi secara disiplin dengan tiga warna inti:
 
-| Peran Token | Variabel CSS / OKLCH | Nilai Hex Padanan | Penerapan Antarmuka |
+| Peran Token | Variabel CSS / Hex | Nilai RGB | Penerapan Antarmuka |
 | :--- | :--- | :--- | :--- |
-| **Paper Ground** | `oklch(98.5% 0.004 250)` | `#F8FAFC` (Cool Off-white) | Latar utama aplikasi (tidak pernah `#FFFFFF` murni). |
-| **Ink Primary** | `oklch(24% 0.02 258)` | `#1E293B` (Cool Charcoal) | Judul utama, angka metrik, dan teks kontras tinggi. |
-| **Ink Secondary**| `oklch(34% 0.018 257)` | `#334155` (Slate Body) | Paragraf penjelas, deskripsi, dan label sekunder. |
-| **Muted Ink** | `oklch(55% 0.015 255)` | `#64748B` (Cool Muted) | Timestamp, placeholder, dan metadata teks. |
-| **Signal Accent** | `oklch(58% 0.20 256)` | `#2563EB` / `#1D4ED8` (Electric Cobalt)| **Sinyal tunggal (< 5%):** Tombol aksi utama, lencana aktif, focus ring, indikator 200 OK, dan underline tumbuh. |
-| **Hairline Rule**| `oklch(90% 0.01 250)` | `#E2E8F0` (1px Precision Line)| Pembatas seksi, batas sel tabel, garis navbar atas. |
-| **Graphite Card**| `oklch(22% 0.016 260)` | `#0F172A` (Dark Graphite) | Kartu terminal POS Mini kasir, pratinjau payload SPK, dan band monokromatis gelap. |
-| **Success Chip** | `oklch(62% 0.17 145)` | `#10B981` (Emerald Line) | Status tiket valid, transaksi berhasil, lolos Perbup. |
-| **Caution Chip** | `oklch(60% 0.21 28)` | `#EF4444` (Ruby Line) | Diskualifikasi Perbup, PIN salah, duplikasi KK. |
+| **Deep Navy Blue** | `--color-navy` / `#132952` | `rgb(19, 41, 82)` | **Primary Anchor:** Navbar header, judul display, tombol primer, kartu dark instrumen, focus ring, border aktif. |
+| **Vibrant Emerald Green** | `--color-emerald` / `#00B262` | `rgb(0, 178, 98)` | **Growth & Verified Signal:** Status transaksi berhasil, lencana lolos Perbup, indikator online POS, kupon terpakai, sinyal 200 OK. |
+| **Warm Amber Orange** | `--color-amber` / `#FAA21B` | `rgb(250, 162, 27)` | **Gamification & Warning:** Lencana undian doorprize, kuota terbatas, peringatan Perbup, ranking podium #1 emas, aksen callout. |
+| **Paper Ground** | `#F8FAFC` | `rgb(248, 250, 252)` | Latar utama aplikasi (tidak pernah `#FFFFFF` murni menyilaukan). |
+| **Hairline Rule**| `#E2E8F0` / `#CBD5E1` | `rgb(226, 232, 240)` | Pembatas seksi, batas sel tabel, garis navbar atas, ruler-drawn divider. |
+| **Ink Body** | `#1E293B` / `#334155` | `rgb(30, 41, 59)` | Teks isi dokumen, paragraf deskripsi, dan formulir input. |
 
 ### Font Stack Wajib:
 ```html
@@ -54,10 +54,10 @@ Cobalt menggunakan kanvas sejuk terkayakan garis rambut (*hairlines*) dengan sat
 
 ---
 
-## 3. Fitur Khas Hallmark Cobalt pada Proyek PATEN
+## 3. Fitur Khas Desain Triad pada Proyek PATEN
 
 1. **Working ⌘K Command Palette (`GlobalCommandPalette.vue`):**
-   - Affordance khas Cobalt di pojok kanan navbar: tombol border ramping `⌘K` / `Ctrl+K`.
+   - Affordance khas di pojok kanan navbar: tombol border ramping `⌘K` / `Ctrl+K`.
    - Mengaktifkan modal dialog pencarian cepat: navigasi ke CMS, ganti tab evaluasi, cari stan UMKM, buka terminal kasir, atau jalankan evaluasi SPK langsung via keyboard.
 2. **Asymmetric Rhythm (Left-Aligned Display, Right-Aligned Instrument/Demo):**
    - Halaman pembuatan event dan microsite publik tidak lagi menaruh segala teks di tengah. Judul dan lede berada di sisi kiri; kartu instrumen (preview tema / tiket live) berada di sisi kanan.
@@ -65,20 +65,20 @@ Cobalt menggunakan kanvas sejuk terkayakan garis rambut (*hairlines*) dengan sat
    - Radius kontrol (tombol, input, dropdown): `6px` (`rounded-[6px]`).
    - Radius kartu dan terminal: `10px` (`rounded-[10px]`).
    - Tidak ada tombol pil bulat menggelembung (*no pill shapes*).
-4. **Graphite Dark Band Rhythm:**
-   - Halaman kasir POS Mini (`/pos/{id}`) dan dashboard evaluasi SPK memiliki satu band instrumen gelap grafit (`oklch(22% 0.016 260)`) bergaris rambut tipis, memberikan ritme terang $\to$ gelap yang tegas.
+4. **Navy Dark Band Rhythm:**
+   - Halaman kasir POS Mini (`/pos/{id}`) dan dashboard evaluasi SPK memiliki band instrumen gelap Deep Navy (`#132952`) bergaris rambut tipis, memberikan ritme terang $\to$ gelap yang tegas.
 5. **Micro-Motion:**
    - Transisi fade + rise 10px berbasis `cubic-bezier(0.16, 1, 0.3, 1)` ~600ms dengan dukungan penuh `prefers-reduced-motion: reduce`.
-   - Garis hover cobalt underline yang tumbuh lembut, pergeseran border 1px ke cobalt saat fokus/hover.
+   - Garis hover navy/emerald underline yang tumbuh lembut, pergeseran border 1px ke navy/emerald saat fokus/hover.
 
 ---
 
-## 4. Peta Rute & Halaman Frontend Berbasis Cobalt
+## 4. Peta Rute & Halaman Frontend Berbasis Triad Color System
 
 ```mermaid
 graph TD
-    subgraph Core Design System [Stage 1: Hallmark Cobalt Tokens]
-        Tokens[OKLCH Color Palette & Space Grotesk / JetBrains Mono]
+    subgraph Core Design System [Stage 1: Triad Tokens Navy/Emerald/Amber]
+        Tokens[Color Palette #132952 / #00B262 / #FAA21B & Space Grotesk / JetBrains Mono]
         Layouts[PublicLayout.vue & CmsLayout.vue with ⌘K & PosLayout.vue]
         Components[BaseButton 6px & BaseInput & Hairline Card & StatCard]
     end
@@ -87,7 +87,7 @@ graph TD
         CreateEvent[Events/Create.vue - Asymmetric Wizard & Lock Modal]
         Poster[Events/PosterExport.vue - Ruler-drawn A4/Square with QR]
         Microsite[Events/Show.vue - Hero Instrument & E-Kupon Modal]
-        Leaderboard[Events/Leaderboard.vue - Cobalt Tier Table & Poin Masking]
+        Leaderboard[Events/Leaderboard.vue - Triad Tier Table & Poin Masking]
     end
 
     subgraph Module 2 [Stage 4: CMS Admin Console & Gate]
@@ -99,7 +99,7 @@ graph TD
     subgraph Module 3 [Stage 5: UMKM Profiling & Fast POS Mini]
         AssignStand[Stands/Assign.vue - Banner Edukasi Bantuan & Form Perbup]
         PosLogin[Pos/Login.vue - 6-Digit PIN Tactile Touchpad]
-        PosTerminal[Pos/Terminal.vue - Graphite Card POS <= 3s & Tunai/QRIS]
+        PosTerminal[Pos/Terminal.vue - Deep Navy POS <= 3s & Tunai/QRIS]
         MenuExport[Pos/ExportMenu.vue - Technical Menu Table Sheet]
     end
 
@@ -121,11 +121,11 @@ graph TD
 
 ---
 
-## 5. Roadmap Staging Frontend Terpadu (Cobalt Edition)
+## 5. Roadmap Staging Frontend Terpadu (Triad Edition)
 
-| Stage | Dokumen Rencana | Komponen & Halaman Target | Fokus Hallmark Cobalt |
+| Stage | Dokumen Rencana | Komponen & Halaman Target | Fokus Triad Color System |
 | :---: | :--- | :--- | :--- |
-| **1** | [**`frontend_stage_1_plan.md`**](file:///c:/Users/Crush/Downloads/PATEN/docs/staging/frontend_stage_1_plan.md) | `css/app.css`, `Layouts/*`, `Components/UI/*`, `GlobalCommandPalette.vue` | Injeksi token OKLCH, font Space Grotesk/Inter/JetBrains Mono, palet ⌘K, tombol radius 6px, kartu hairline 1px. |
+| **1** | [**`frontend_stage_1_plan.md`**](file:///c:/Users/Crush/Downloads/PATEN/docs/staging/frontend_stage_1_plan.md) | `css/app.css`, `Layouts/*`, `Components/UI/*`, `GlobalCommandPalette.vue` | Injeksi token Deep Navy `#132952`, Emerald `#00B262`, Amber `#FAA21B`, font Space Grotesk/Inter/JetBrains Mono, palet ⌘K, tombol radius 6px, kartu hairline 1px. |
 | **2** | [**`frontend_stage_2_plan.md`**](file:///c:/Users/Crush/Downloads/PATEN/docs/staging/frontend_stage_2_plan.md) | `Pages/Events/Create.vue`, `Pages/Events/PosterExport.vue` | Asymmetric form layout, pop-quiz theme selector dengan kartu pratinjau mini, lock confirmation dialog, poster cetak presisi A4. |
 | **3** | [**`frontend_stage_3_plan.md`**](file:///c:/Users/Crush/Downloads/PATEN/docs/staging/frontend_stage_3_plan.md) | `Pages/Events/Show.vue`, `Pages/Events/Leaderboard.vue` | Hero instrument (title-left, live-status right), rundown timeline, E-kupon gerigi ber-QR, podium klasemen dengan masking omzet. |
 | **4** | [**`frontend_stage_4_plan.md`**](file:///c:/Users/Crush/Downloads/PATEN/docs/staging/frontend_stage_4_plan.md) | `Pages/Cms/Dashboard.vue`, `GateCheckin`, `DoorprizeMachine` | Header token 64-karakter dengan 1-klik salin, 4 kartu KPI instrumen, batch slot stand, scanner tiket gate, animasi slot doorprize. |
@@ -136,7 +136,7 @@ graph TD
 ---
 
 ## 6. Kriteria Penerimaan (Definition of Done)
-1. **Cobalt Visual Identity:** Seluruh halaman menerapkan kanvas sejuk `oklch(98.5% 0.004 250)`, hairline border 1px `oklch(90% 0.01 250)`, dan aksen Electric Cobalt `oklch(58% 0.20 256)` secara disiplin tanpa gradien ungu-pink atau teks gradien.
+1. **Triad Visual Identity:** Seluruh halaman menerapkan kanvas sejuk `#F8FAFC`, hairline border 1px `#E2E8F0`/`#CBD5E1`, dan disiplin palet Triad: Deep Navy Blue `#132952`, Vibrant Emerald Green `#00B262`, dan Warm Amber Orange `#FAA21B` tanpa gradien ungu-pink atau teks gradien.
 2. **Typographic Integrity:** Judul menggunakan `Space Grotesk`, teks bacaan `Inter`, dan label teknis/kode/PIN `JetBrains Mono` dalam gaya huruf kapital (*uppercase tracking*).
 3. **Interactive ⌘K Affordance:** Fitur pencarian cepat dan navigasi keyboard berfungsi responsif di desktop/tablet.
 4. **Zero-Friction Ergonomics:** Transaksi POS Mini kasir selesai dalam waktu $\le 3$ detik dengan umpan balik visual instan.

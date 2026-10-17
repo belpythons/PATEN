@@ -20,6 +20,13 @@ class PublicEventController extends Controller
             ->with(['rundowns' => fn ($q) => $q->orderBy('urutan')])
             ->firstOrFail();
 
+        $publicStands = $event->stands()
+            ->with(['umkmProfile' => function ($q) {
+                $q->select(['id', 'nama_usaha', 'nama_pemilik', 'kecamatan', 'has_halal', 'has_pirt']);
+            }])
+            ->orderBy('nomor_stand')
+            ->get(['id', 'event_id', 'umkm_id', 'nomor_stand', 'kategori_jualan', 'daya_listrik_watt', 'fasilitas_detail']);
+
         $eventUrl = url('/e/'.$event->slug);
         $qrCodeDataUrl = $qrCodeService->generateDataUrl($eventUrl, 160);
 
@@ -28,6 +35,7 @@ class PublicEventController extends Controller
                 'success' => true,
                 'event' => $event,
                 'rundowns' => $event->rundowns,
+                'stands' => $publicStands,
                 'public_url' => $eventUrl,
                 'qr_code_data_url' => $qrCodeDataUrl,
             ]);
@@ -36,6 +44,7 @@ class PublicEventController extends Controller
         return Inertia::render('Events/Show', [
             'event' => $event,
             'rundowns' => $event->rundowns,
+            'stands' => $publicStands,
             'qrCodeUrl' => $qrCodeDataUrl,
         ]);
     }

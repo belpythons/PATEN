@@ -1,132 +1,217 @@
 <script setup>
-import { ref } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { router, Head } from '@inertiajs/vue3';
+import CmsLayout from '@/Layouts/CmsLayout.vue';
+import SpkHeaderMetrics from '@/Components/Spk/SpkHeaderMetrics.vue';
+import SpkFilterToolbar from '@/Components/Spk/SpkFilterToolbar.vue';
+import SawMatrixTable from '@/Components/Spk/SawMatrixTable.vue';
+import ExecutiveReportModal from '@/Components/Spk/ExecutiveReportModal.vue';
 
 const props = defineProps({
-    event: Object,
-    token: String,
-    evaluations: Array,
-    summary: Object,
-    cms_url: String,
+    event: {
+        type: Object,
+        required: true,
+    },
+    token: {
+        type: String,
+        default: '',
+    },
+    evaluations: {
+        type: Array,
+        default: () => [],
+    },
+    summary: {
+        type: Object,
+        default: () => ({}),
+    },
+    cms_url: {
+        type: String,
+        default: '',
+    },
 });
 
 const isEvaluating = ref(false);
+const isReportModalOpen = ref(false);
 const statusMessage = ref('');
 const errorMessage = ref('');
 
+// Filter State
+const filters = ref({
+    search: '',
+    kecamatan: '',
+    kategori: '',
+    status: '',
+    program: '',
+});
+
+const resetFilters = () => {
+    filters.value = {
+        search: '',
+        kecamatan: '',
+        kategori: '',
+        status: '',
+        program: '',
+    };
+};
+
+// Filtered Evaluations computation
+const filteredEvaluations = computed(() => {
+    return (props.evaluations || []).filter((item) => {
+        // Search text filter
+        if (filters.value.search) {
+            const query = filters.value.search.toLowerCase();
+            const standNo = item.stand?.nomor_stand?.toLowerCase() || '';
+            const namaUsaha = item.umkm_profile?.nama_usaha?.toLowerCase() || '';
+            const namaPemilik = item.umkm_profile?.nama_pemilik?.toLowerCase() || '';
+            const noKk = item.umkm_profile?.no_kk?.toLowerCase() || '';
+            const nik = item.umkm_profile?.nik?.toLowerCase() || '';
+
+            if (
+                !standNo.includes(query) &&
+                !namaUsaha.includes(query) &&
+                !namaPemilik.includes(query) &&
+                !noKk.includes(query) &&
+                !nik.includes(query)
+            ) {
+                return false;
+            }
+        }
+
+        // Kecamatan filter
+        if (filters.value.kecamatan) {
+            if (item.umkm_profile?.kecamatan !== filters.value.kecamatan) {
+                return false;
+            }
+        }
+
+        // Kategori filter
+        if (filters.value.kategori) {
+            if (item.stand?.kategori_jualan !== filters.value.kategori) {
+                return false;
+            }
+        }
+
+        // Status filter
+        if (filters.value.status) {
+            if (filters.value.status === 'prioritas') {
+                if (!item.is_prioritas_hibah_200) return false;
+            } else if (filters.value.status === 'lolos') {
+                if (item.catatan_dinas && item.catatan_dinas.toLowerCase().includes('diskualifikasi')) return false;
+            } else if (filters.value.status === 'diskualifikasi') {
+                if (!item.catatan_dinas || !item.catatan_dinas.toLowerCase().includes('diskualifikasi')) return false;
+            }
+        }
+
+        // Program filter
+        if (filters.value.program) {
+            if (item.rekomendasi_program !== filters.value.program) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+});
+
+// Trigger SPK & Perbup Guardrail calculation
 const runEvaluation = () => {
     isEvaluating.value = true;
     statusMessage.value = '';
     errorMessage.value = '';
 
-    router.post(`/cms/${props.event.slug}/evaluate-spk?token=${props.token}`, {}, {
-        onSuccess: () => {
-            statusMessage.value = 'Evaluasi SPK dan verifikasi Guardrail Perbup berhasil dieksekusi!';
-            isEvaluating.value = false;
-        },
-        onError: (errs) => {
-            errorMessage.value = 'Gagal mengeksekusi evaluasi: ' + Object.values(errs).join(', ');
-            isEvaluating.value = false;
-        },
-    });
+    const url = props.token
+        ? `/cms/${props.event.slug}/evaluate-spk?token=${props.token}`
+        : `/cms/${props.event.slug}/evaluate-spk`;
+
+    router.post(
+        url,
+        {},
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                statusMessage.value = 'Kalkulasi SAW SPK dan verifikasi Guardrail Perbup Kutim berhasil dieksekusi!';
+                isEvaluating.value = false;
+                setTimeout(() => {
+                    if (statusMessage.value) statusMessage.value = '';
+                }, 4000);
+            },
+            onError: (errs) => {
+                errorMessage.value = 'Gagal mengeksekusi evaluasi: ' + Object.values(errs).join(', ');
+                isEvaluating.value = false;
+            },
+        }
+    );
 };
 </script>
 
 <template>
-    <div>
-        <h1>Laporan Evaluasi SPK & Rekomendasi Bantuan UMKM</h1>
-        <p><strong>Nama Event:</strong> {{ event.nama_event }}</p>
-        <p><strong>Penyelenggara:</strong> {{ event.penyelenggara }} | <strong>Lokasi:</strong> {{ event.lokasi_venue }}</p>
-        <p>
-            <a :href="`/cms/${event.slug}?token=${token}`">[Kembali ke Dashboard Utama CMS]</a>
-            &nbsp;|&nbsp;
-            <a :href="`/e/${event.slug}/leaderboard`" target="_blank">[Buka Klasemen Leaderboard Publik]</a>
-        </p>
+    <CmsLayout :event="event" :token="token" active-tab="evaluations">
+        <Head :title="`Evaluasi SPK & Rekomendasi Bantuan — ${event.nama_event}`" />
 
-        <hr />
+        <div class="space-y-6">
+            <!-- Flash Message Feedback -->
+            <transition
+                enter-active-class="transition duration-150 ease-out"
+                enter-from-class="transform -translate-y-2 opacity-0"
+                enter-to-class="transform translate-y-0 opacity-100"
+                leave-active-class="transition duration-100 ease-in"
+                leave-from-class="opacity-100"
+                leave-to-class="opacity-0"
+            >
+                <div
+                    v-if="statusMessage"
+                    class="p-3.5 rounded-[8px] bg-[#00B262] text-white flex items-center justify-between shadow-md"
+                >
+                    <div class="flex items-center gap-2 text-xs font-semibold">
+                        <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        <span>{{ statusMessage }}</span>
+                    </div>
+                    <button
+                        type="button"
+                        class="text-white hover:text-[#E2E8F0] p-1 cursor-pointer"
+                        @click="statusMessage = ''"
+                    >
+                        ✕
+                    </button>
+                </div>
+            </transition>
 
-        <div v-if="statusMessage">
-            <p><strong>[STATUS SUKSES]:</strong> {{ statusMessage }}</p>
+            <div
+                v-if="errorMessage"
+                class="p-3.5 rounded-[8px] bg-[#FEF2F2] border border-[#FCA5A5] text-[#991B1B] text-xs font-mono"
+            >
+                {{ errorMessage }}
+            </div>
+
+            <!-- Workbench Header & Summary KPIs -->
+            <SpkHeaderMetrics
+                :summary="summary"
+                :is-evaluating="isEvaluating"
+                @run-evaluation="runEvaluation"
+                @open-report="isReportModalOpen = true"
+            />
+
+            <!-- Filter Toolbar -->
+            <SpkFilterToolbar
+                v-model="filters"
+                :total-count="evaluations.length"
+                :filtered-count="filteredEvaluations.length"
+                @reset="resetFilters"
+            />
+
+            <!-- 5-Criteria SAW Matrix Data Table -->
+            <SawMatrixTable :evaluations="filteredEvaluations" />
         </div>
-        <div v-if="errorMessage">
-            <p><strong>[STATUS ERROR]:</strong> {{ errorMessage }}</p>
-        </div>
 
-        <p>
-            <button type="button" @click="runEvaluation" :disabled="isEvaluating">
-                {{ isEvaluating ? 'Sedang Memproses Algoritma SPK...' : 'Jalankan Evaluasi SPK & Guardrail Perbup' }}
-            </button>
-        </p>
-
-        <hr />
-
-        <h2>Ringkasan Distribusi Program Bantuan Pemkab Kutim</h2>
-        <table border="1" cellpadding="6" cellspacing="0" v-if="summary">
-            <thead>
-                <tr>
-                    <th>Total Stand Dievaluasi</th>
-                    <th>Prioritas Hibah Modal APBD (Kuota 200)</th>
-                    <th>Fasilitasi Legalitas (NIB/Halal)</th>
-                    <th>Hibah Alat Produksi</th>
-                    <th>Fasilitasi Kredit Perbankan</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ summary.total_evaluated }} Stand</td>
-                    <td><strong>{{ summary.prioritas_hibah_200 }} Pelaku Usaha</strong></td>
-                    <td>{{ summary.fasilitasi_legalitas }} Pelaku Usaha</td>
-                    <td>{{ summary.hibah_alat }} Pelaku Usaha</td>
-                    <td>{{ summary.kredit_perbankan }} Pelaku Usaha</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <hr />
-
-        <h2>Rekapitulasi Lengkap Nilai SPK & Guardrail Regulasi (Internal Dinas)</h2>
-        <table border="1" cellpadding="6" cellspacing="0" v-if="evaluations && evaluations.length">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Stand</th>
-                    <th>Nama Usaha</th>
-                    <th>Nama Pemilik</th>
-                    <th>Nomor KK</th>
-                    <th>Skor Konsistensi</th>
-                    <th>Skor QRIS</th>
-                    <th>Skor Legalitas</th>
-                    <th>Skor Akhir SAW</th>
-                    <th>Klaster ML</th>
-                    <th>Rekomendasi Bantuan</th>
-                    <th>Prioritas APBD</th>
-                    <th>Catatan Dinas / Alasan Regulasi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(ev, idx) in evaluations" :key="ev.id">
-                    <td>{{ idx + 1 }}</td>
-                    <td><strong>{{ ev.stand ? ev.stand.nomor_stand : '-' }}</strong></td>
-                    <td>{{ ev.stand && ev.stand.umkm_profile ? ev.stand.umkm_profile.nama_usaha : '-' }}</td>
-                    <td>{{ ev.stand && ev.stand.umkm_profile ? ev.stand.umkm_profile.nama_pemilik : '-' }}</td>
-                    <td><code>{{ ev.stand && ev.stand.umkm_profile ? ev.stand.umkm_profile.no_kk : '-' }}</code></td>
-                    <td>{{ ev.score_konsistensi_transaksi }}</td>
-                    <td>{{ (ev.score_digitalisasi_qris * 100).toFixed(1) }}%</td>
-                    <td>{{ ev.score_kepatuhan_regulasi }}</td>
-                    <td><strong>{{ ev.skor_akhir_spk }}</strong></td>
-                    <td>{{ ev.cluster_kategori || '-' }}</td>
-                    <td>
-                        <strong>{{ ev.rekomendasi_program.toUpperCase().replace(/_/g, ' ') }}</strong>
-                    </td>
-                    <td>
-                        {{ ev.is_prioritas_hibah_200 ? 'PRIORITAS (LOLOS)' : 'TIDAK' }}
-                    </td>
-                    <td>{{ ev.catatan_dinas || '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <p v-else>
-            <em>Belum ada data evaluasi. Silakan klik tombol "Jalankan Evaluasi SPK & Guardrail Perbup" di atas.</em>
-        </p>
-    </div>
+        <!-- Executive Report Print Modal -->
+        <ExecutiveReportModal
+            :show="isReportModalOpen"
+            :event="event"
+            :evaluations="evaluations"
+            :summary="summary"
+            @close="isReportModalOpen = false"
+        />
+    </CmsLayout>
 </template>

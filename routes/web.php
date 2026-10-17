@@ -1,12 +1,16 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CmsDashboardController;
 use App\Http\Controllers\CmsGateController;
 use App\Http\Controllers\CmsRundownController;
 use App\Http\Controllers\CmsStandController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\PosAuthController;
+use App\Http\Controllers\PosGatewayController;
 use App\Http\Controllers\PosterGeneratorController;
 use App\Http\Controllers\PosTerminalController;
 use App\Http\Controllers\PublicEventController;
@@ -14,13 +18,37 @@ use App\Http\Controllers\PublicLeaderboardController;
 use App\Http\Controllers\SpkEvaluationController;
 use App\Http\Controllers\StandAssignmentController;
 use App\Http\Controllers\StandMenuController;
+use App\Models\Event;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+// Authentication Routes
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+    Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+    Route::post('/register', [RegisteredUserController::class, 'store']);
+});
+
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware('auth')
+    ->name('dashboard');
+
 Route::get('/', function () {
+    $events = Event::withCount(['stands', 'attendees'])
+        ->with(['stands' => fn ($q) => $q->with('umkmProfile')->limit(3)])
+        ->latest()
+        ->take(6)
+        ->get();
+
     return Inertia::render('Welcome', [
         'status' => 'Sistem PATEN Siap',
         'version' => '1.0.0',
+        'events' => $events,
     ]);
 });
 
@@ -56,6 +84,12 @@ Route::get('/e/{slug}/leaderboard', [PublicLeaderboardController::class, 'index'
 // Stage 4: Stand Assignment & UMKM Profiling
 Route::get('/stands/{stand_id}/assign', [StandAssignmentController::class, 'create'])->name('stands.assign.create');
 Route::post('/stands/{stand_id}/assign', [StandAssignmentController::class, 'assign'])->name('stands.assign.store');
+
+// Centralized POS Gateway for Merchants
+Route::get('/pos', [PosGatewayController::class, 'index'])->name('pos.gateway');
+Route::post('/pos/authenticate', [PosGatewayController::class, 'authenticate'])
+    ->middleware('throttle:15,1')
+    ->name('pos.gateway.authenticate');
 
 // Stage 4: POS Auth & Menu Export
 Route::get('/pos/{stand_id}/login', [PosAuthController::class, 'showLogin'])->name('pos.login');

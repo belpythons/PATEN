@@ -97,6 +97,9 @@ return [
             'prefix_indexes' => true,
             'search_path' => env('DB_SEARCH_PATH', 'public,extensions'),
             'sslmode' => env('DB_SSLMODE', 'prefer'),
+            'options' => [
+                PDO::ATTR_EMULATE_PREPARES => true,
+            ],
         ],
 
         'sqlsrv' => [

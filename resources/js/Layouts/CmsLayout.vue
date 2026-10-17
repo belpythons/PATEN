@@ -13,7 +13,7 @@ const props = defineProps({
     },
     token: {
         type: String,
-        required: true,
+        default: '',
     },
     activeTab: {
         type: String,
@@ -34,7 +34,9 @@ const closePalette = () => {
 };
 
 const copySecretUrl = () => {
-    const url = window.location.href;
+    const url = props.token
+        ? `${window.location.origin}/cms/${props.event.slug}?token=${props.token}`
+        : window.location.href;
     navigator.clipboard.writeText(url).then(() => {
         toastType.value = 'success';
         toastMessage.value = 'Link CMS Rahasia berhasil disalin ke clipboard!';
@@ -46,28 +48,31 @@ const copySecretUrl = () => {
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A] font-sans antialiased">
+    <div class="min-h-screen flex flex-col bg-[#F8FAFC] text-[#132952] font-sans antialiased">
         <!-- Toast container -->
         <div v-if="toastMessage" class="fixed top-4 right-4 z-50 max-w-sm">
             <BaseToast :message="toastMessage" :type="toastType" @dismiss="toastMessage = ''" />
         </div>
 
         <!-- Secret Token Alert Bar -->
-        <div class="bg-[#0B0F19] text-white border-b border-[#26334D] px-4 py-2 text-xs">
+        <div class="bg-[#0C1830] text-white border-b border-[#1E3A6E] px-4 py-2 text-xs">
             <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
-                    <span class="inline-block h-2 w-2 rounded-full bg-[#10B981] animate-pulse"></span>
+                    <span class="inline-block h-2 w-2 rounded-full bg-[#00B262] animate-pulse"></span>
                     <span class="font-mono text-[11px] text-[#94A3B8]">
                         ENCRYPTED SESSION // TOKEN:
                     </span>
-                    <code class="font-mono text-[#F8FAFC] text-[11px] tracking-wider">
+                    <code v-if="token" class="font-mono text-[#F8FAFC] text-[11px] tracking-wider">
                         {{ token.substring(0, 12) }}...{{ token.substring(token.length - 8) }}
+                    </code>
+                    <code v-else class="font-mono text-[#00B262] text-[11px] tracking-wider font-semibold">
+                        SESI LOGIN TERAUTENTIKASI (PANITIA)
                     </code>
                 </div>
                 <div class="flex items-center gap-2">
                     <button
                         type="button"
-                        class="inline-flex items-center gap-1.5 px-2 py-1 rounded-[4px] bg-[#1E293B] hover:bg-[#2563EB] text-[#E2E8F0] hover:text-white text-[11px] font-mono transition-colors border border-[#334155] cursor-pointer"
+                        class="inline-flex items-center gap-1.5 px-2 py-1 rounded-[4px] bg-[#132952] hover:bg-[#0D1E3D] text-[#E2E8F0] hover:text-white text-[11px] font-mono transition-colors border border-[#1E3A6E] cursor-pointer"
                         @click="copySecretUrl"
                     >
                         <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -94,22 +99,28 @@ const copySecretUrl = () => {
             <div class="max-w-6xl mx-auto px-4 sm:px-6">
                 <div class="h-14 flex items-center justify-between">
                     <div class="flex items-center gap-4">
-                        <BrandMark :href="`/cms/${event.slug}?token=${token}`" />
+                        <BrandMark :href="token ? `/cms/${event.slug}?token=${token}` : `/cms/${event.slug}`" />
                         <span class="text-[#CBD5E1] font-mono">/</span>
                         <div class="flex items-center gap-2">
-                            <h1 class="font-display font-semibold text-sm text-[#0F172A] truncate max-w-xs sm:max-w-md">
+                            <h1 class="font-display font-semibold text-sm text-[#132952] truncate max-w-xs sm:max-w-md">
                                 {{ event.nama_event }}
                             </h1>
-                            <BaseBadge variant="cobalt" :dot="true">
+                            <BaseBadge variant="navy" :dot="true">
                                 CMS Admin
                             </BaseBadge>
                         </div>
                     </div>
 
                     <div class="flex items-center gap-2">
+                        <Link
+                            href="/dashboard"
+                            class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-[6px] border border-[#CBD5E1] bg-white text-xs font-mono text-[#132952] hover:bg-[#F8FAFC] hover:border-[#132952] transition-colors"
+                        >
+                            <span>&larr; Konsol</span>
+                        </Link>
                         <button
                             type="button"
-                            class="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-[6px] border border-[#CBD5E1] bg-[#F8FAFC] text-xs text-[#64748B] hover:border-[#2563EB] hover:text-[#0F172A] transition-colors cursor-pointer"
+                            class="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-[6px] border border-[#CBD5E1] bg-[#F8FAFC] text-xs text-[#5B6B8A] hover:border-[#132952] hover:text-[#132952] transition-colors cursor-pointer"
                             @click="openPalette"
                         >
                             <span class="hidden sm:inline">Perintah</span>
@@ -123,23 +134,23 @@ const copySecretUrl = () => {
                 <!-- Navigation Tabs -->
                 <nav class="flex space-x-6 -mb-px text-xs font-mono uppercase tracking-wider overflow-x-auto">
                     <Link
-                        :href="`/cms/${event.slug}?token=${token}`"
+                        :href="token ? `/cms/${event.slug}?token=${token}` : `/cms/${event.slug}`"
                         class="py-3 border-b-2 font-medium transition-colors whitespace-nowrap"
-                        :class="activeTab === 'dashboard' ? 'border-[#2563EB] text-[#2563EB]' : 'border-transparent text-[#64748B] hover:text-[#0F172A] hover:border-[#CBD5E1]'"
+                        :class="activeTab === 'dashboard' ? 'border-[#132952] text-[#132952]' : 'border-transparent text-[#5B6B8A] hover:text-[#132952] hover:border-[#CBD5E1]'"
                     >
                         01 / Dashboard Utama
                     </Link>
                     <Link
-                        :href="`/cms/${event.slug}/evaluations?token=${token}`"
+                        :href="token ? `/cms/${event.slug}/evaluations?token=${token}` : `/cms/${event.slug}/evaluations`"
                         class="py-3 border-b-2 font-medium transition-colors whitespace-nowrap"
-                        :class="activeTab === 'evaluations' ? 'border-[#2563EB] text-[#2563EB]' : 'border-transparent text-[#64748B] hover:text-[#0F172A] hover:border-[#CBD5E1]'"
+                        :class="activeTab === 'evaluations' ? 'border-[#132952] text-[#132952]' : 'border-transparent text-[#5B6B8A] hover:text-[#132952] hover:border-[#CBD5E1]'"
                     >
                         02 / Evaluasi SPK & ML
                     </Link>
                     <a
                         :href="`/e/${event.slug}/leaderboard`"
                         target="_blank"
-                        class="py-3 border-b-2 border-transparent text-[#64748B] hover:text-[#0F172A] font-medium transition-colors whitespace-nowrap"
+                        class="py-3 border-b-2 border-transparent text-[#5B6B8A] hover:text-[#132952] font-medium transition-colors whitespace-nowrap"
                     >
                         03 / Klasemen Publik ↗
                     </a>

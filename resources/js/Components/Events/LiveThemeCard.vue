@@ -21,11 +21,11 @@ const props = defineProps({
     },
     colorPrimary: {
         type: String,
-        default: '#2563EB',
+        default: '#132952',
     },
     colorSecondary: {
         type: String,
-        default: '#F59E0B',
+        default: '#00B262',
     },
     gamifikasiMode: {
         type: String,
@@ -48,8 +48,8 @@ const gamifikasiLabel = computed(() => {
 
 const cardStyle = computed(() => {
     return {
-        '--preview-primary': props.colorPrimary || '#2563EB',
-        '--preview-secondary': props.colorMode === 'duo' ? (props.colorSecondary || '#F59E0B') : (props.colorPrimary || '#2563EB'),
+        '--preview-primary': props.colorPrimary || '#132952',
+        '--preview-secondary': props.colorMode === 'duo' ? (props.colorSecondary || '#00B262') : (props.colorPrimary || '#132952'),
     };
 });
 </script>
@@ -67,10 +67,10 @@ const cardStyle = computed(() => {
 
         <!-- Header status -->
         <div class="flex items-center justify-between pb-3 mb-4 border-b border-[#E2E8F0] pt-1">
-            <span class="text-[10px] font-mono uppercase tracking-[0.06em] text-[#64748B]">
+            <span class="text-[10px] font-mono uppercase tracking-[0.06em] text-[#5B6B8A]">
                 PRATINJAU LANGSUNG KARTU TEMA
             </span>
-            <BaseBadge variant="cobalt">
+            <BaseBadge variant="navy">
                 {{ colorMode.toUpperCase() }} MODE
             </BaseBadge>
         </div>
@@ -82,12 +82,12 @@ const cardStyle = computed(() => {
                     class="h-2.5 w-2.5 rounded-full shrink-0"
                     :style="{ backgroundColor: colorPrimary }"
                 ></span>
-                <span class="text-[11px] font-mono text-[#64748B] uppercase truncate">
+                <span class="text-[11px] font-mono text-[#5B6B8A] uppercase truncate">
                     {{ penyelenggara || 'Pemerintah Kabupaten Kutai Timur' }}
                 </span>
             </div>
 
-            <h4 class="font-display font-bold text-base sm:text-lg text-[#0F172A] leading-snug line-clamp-2">
+            <h4 class="font-display font-bold text-base sm:text-lg text-[#132952] leading-snug line-clamp-2">
                 {{ namaEvent || 'Nama Event Anda' }}
             </h4>
 

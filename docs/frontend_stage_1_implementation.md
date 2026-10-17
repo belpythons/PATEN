@@ -1,36 +1,36 @@
 # Laporan Implementasi Teknis: FRONTEND STAGE 1
-**Nama Tahapan:** Core Design System, Hallmark Cobalt Tokens, Master Layouts & Working ⌘K Command Palette  
+**Nama Tahapan:** Core Design System, Triad Palette Tokens, Master Layouts & Working ⌘K Command Palette  
 **Status Eksekusi:** SELESAI (100% PASS)  
 **Tanggal Verifikasi:** 17 Oktober 2026  
-**Standar Desain:** [Hallmark Anti-AI-Slop Consensus](file:///c:/Users/Crush/Downloads/PATEN/.agents/skills/hallmark/SKILL.md) — [Tema Cobalt](file:///c:/Users/Crush/Downloads/PATEN/.agents/skills/hallmark/references/themes/cobalt.md)  
+**Standar Desain:** [Hallmark Anti-AI-Slop Consensus](file:///c:/Users/Crush/Downloads/PATEN/.agents/skills/hallmark/SKILL.md) — Triad Color System: Deep Navy Blue (`#132952`), Vibrant Emerald Green (`#00B262`), Warm Amber Orange (`#FAA21B`)  
 
 ---
 
 ## 1. Ringkasan Eksekusi Frontend Stage 1
 
-Pada Stage 1, fondasi arsitektur desain antarmuka sistem PATEN telah berhasil diimplementasikan secara utuh mengikuti kaidah resmi **Hallmark Anti-AI-Slop** dengan tema **Cobalt**:
+Pada Stage 1, fondasi arsitektur desain antarmuka sistem PATEN telah berhasil diimplementasikan secara utuh mengikuti kaidah resmi **Hallmark Anti-AI-Slop** dengan palet tiga warna berwibawa (**Triad Color System**):
 - **Integrasi Font Stack 3-Lapis:** Font resmi *Space Grotesk* (Display), *Inter* (Body), dan *JetBrains Mono* (Code/Labels/Numbers) telah terpasang di `resources/views/app.blade.php`.
-- **Konfigurasi Token Desain OKLCH Cobalt:** Terpasang di `resources/css/app.css` dengan Tailwind CSS v4 `@theme`, mencakup *cool engineered paper* (`#F8FAFC`), garis rambut 1px (`#E2E8F0`), *Electric Cobalt signal* (`#2563EB`), serta *graphite card* (`#0B0F19`) untuk terminal/kode.
+- **Konfigurasi Token Desain Triad:** Terpasang di `resources/css/app.css` dengan Tailwind CSS v4 `@theme`, mencakup *cool paper* (`#F8FAFC`), garis rambut 1px (`#E2E8F0`), *Deep Navy Blue* (`#132952`) sebagai jangkar utama, *Vibrant Emerald Green* (`#00B262`) untuk sinyal keberhasilan & kasir, serta *Warm Amber Orange* (`#FAA21B`) untuk gamifikasi & peringatan.
 - **3 Master Layouts:**
   - `PublicLayout.vue`: Header bergaris rambut dengan logo `/paten`, tombol pemicu `⌘K`, kontainer asimetris, dan Colophon footer resmi Diskop-UKM & Pemkab Kutai Timur.
-  - `CmsLayout.vue`: Header instrumen dengan bilah token 64-karakter terenkripsi, 1-klik salin link CMS rahasia, tab navigasi modul, dan integrasi `⌘K`.
-  - `PosLayout.vue`: Tata letak kasir mobile/tablet layar penuh yang ergonomis dengan indikator jaringan Online/Offline dan identitas stan.
+  - `CmsLayout.vue`: Header instrumen dengan bilah token 64-karakter terenkripsi, 1-klik salin link CMS rahasia, tab navigasi modul beraksen Navy `#132952`, dan integrasi `⌘K`.
+  - `PosLayout.vue`: Tata letak kasir mobile/tablet layar penuh yang ergonomis dengan indikator jaringan Online/Offline Vibrant Emerald `#00B262` dan identitas stan.
 - **Pustaka Komponen UI Terstandar (`resources/js/Components/UI/`):**
-  - `BaseButton.vue`: Tombol presisi 6px radius (varian: `primary`, `secondary`, `outline`, `danger`, `ghost`) dengan animasi spinner loading dan status disabled.
+  - `BaseButton.vue`: Tombol presisi 6px radius (varian: `primary` #132952, `emerald` #00B262, `amber` #FAA21B, `secondary`, `outline`, `danger`, `ghost`) dengan animasi spinner loading dan status disabled.
   - `BaseInput.vue`: Kontrol input 6px radius dengan border 1px hairline dan penanganan error reaktif.
   - `BaseSelect.vue`: Dropdown pilihan bersudut 6px presisi dengan chevron SVG rapi.
   - `BaseTextarea.vue`: Area teks 6px radius.
   - `BaseCard.vue`: Kartu kontainer 10px radius (varian: `paper`, `graphite`, `muted`) dengan slot header dan footer.
   - `BaseModal.vue`: Dialog pop-up 10px radius dengan penutup keyboard `Escape`, klik backdrop, dan pengunci scroll body.
-  - `BaseBadge.vue`: Lencana teks monospace kapital (`JetBrains Mono`, uppercase, 0.06em tracking) dengan indikator titik sinyal.
+  - `BaseBadge.vue`: Lencana teks monospace kapital (`JetBrains Mono`, uppercase, 0.06em tracking) dengan varian warna Triad `navy`, `emerald`, `amber`, dan indikator titik sinyal.
   - `BaseToast.vue`: Notifikasi mengambang dengan auto-dismiss.
-  - `StatCard.vue`: Kartu metrik KPI berangka tabular (`tnum`) tebal dalam font Space Grotesk.
-- **Komponen Khas Hallmark Cobalt (`resources/js/Components/Navigation/`):**
-  - `BrandMark.vue`: Teks logo ramping `/paten` dengan aksen garis miring Electric Cobalt.
+  - `StatCard.vue`: Kartu metrik KPI berangka tabular (`tnum`) tebal dalam font Space Grotesk dengan aksen varian Triad.
+- **Komponen Khas Hallmark (`resources/js/Components/Navigation/`):**
+  - `BrandMark.vue`: Teks logo ramping `/paten` dengan aksen garis miring Vibrant Emerald Green `#00B262` dan teks Deep Navy `#132952`.
   - `GlobalCommandPalette.vue`: Modal **Working ⌘K Command Palette** aktif melalui shortcut keyboard `⌘K` / `Ctrl+K` atau klik tombol navigasi, dilengkapi navigasi panah keyboard dan pencarian instan.
 - **Showcase Halaman Beranda (`resources/js/Pages/Welcome.vue`):**
-  - Tampilan hero asimetris (kiri: display lede & tombol CTA, kanan: kartu instrumen grafit gelap dengan status database Supabase dan lencana `200 OK`).
-  - Grid 4 pilar modul PATEN bergaris rambut 1px.
+  - Tampilan hero asimetris (kiri: display lede & tombol CTA, kanan: kartu instrumen beraksen Triad dengan status database Supabase dan lencana `200 OK`).
+  - Grid 4 pilar modul PATEN bergaris rambut 1px dengan palet Triad.
 
 ---
 

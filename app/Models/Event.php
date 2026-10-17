@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Event extends Model
@@ -14,6 +15,7 @@ class Event extends Model
     protected $table = 'events';
 
     protected $fillable = [
+        'user_id',
         'slug',
         'nama_event',
         'deskripsi',
@@ -66,5 +68,10 @@ class Event extends Model
     public function spkEvaluations(): HasMany
     {
         return $this->hasMany(SpkUmkmEvaluation::class, 'event_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

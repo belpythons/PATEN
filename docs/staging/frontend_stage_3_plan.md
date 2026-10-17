@@ -1,11 +1,11 @@
-# Frontend Technical Staging Plan: STAGE 3 (Cobalt Edition)
-**Nama Tahapan:** Modul 1 (Publik) – Asymmetric Event Microsite, Precision Ticket Stub & Cobalt Awarding Leaderboard  
+# Frontend Technical Staging Plan: STAGE 3 (Triad Color Edition)
+**Nama Tahapan:** Modul 1 (Publik) – Asymmetric Event Microsite, Precision Ticket Stub & Triad Awarding Leaderboard  
 **Target Modul:** Microsite Publik Acara (`/e/{slug}`), Registrasi Kehadiran Instan, Modal Tiket Presisi Ber-QR, dan Klasemen Awarding Stand (`/e/{slug}/leaderboard`)  
-**Standar Hallmark:** Hero Asimetris Berkarakter Instrumen, Tiket Digital Geometris 10px, Tabulasi Presisi Bergaris Rambut 1px, dan Proteksi Mutlak Sensor Omzet Rupiah  
+**Standar Hallmark:** Hero Asimetris Berkarakter Instrumen, Tiket Digital Geometris 10px, Tabulasi Presisi Bergaris Rambut 1px, Palet Triad (#132952, #00B262, #FAA21B), dan Proteksi Mutlak Sensor Omzet Rupiah  
 
 ---
 
-## 1. Analisis Kebutuhan & Spesifikasi Desain Cobalt
+## 1. Analisis Kebutuhan & Spesifikasi Desain Triad
 
 ### A. Microsite Publik Acara (`Pages/Events/Show.vue` - FR-1.4)
 Pengunjung bazar mengakses halaman publik `/e/{slug}` lewat scan QR Code poster di lapangan:
@@ -31,7 +31,10 @@ Halaman `/e/{slug}/leaderboard` menyajikan data kompetisi keaktifan UMKM bazar:
   - Judul: *"Klasemen Keaktifan Stand UMKM"* dalam `Space Grotesk`.
   - Subteks: *"Penghargaan keaktifan dihitung berdasarkan konsistensi pelayanan dan pencatatan transaksi kasir digital selama event berlangsung."*
 - **Podium & Tabulasi Peringkat Presisi:**
-  - Baris Peringkat 1, 2, dan 3 disorot dengan lencana kontras bergaris rambut (Emas, Perak, Perunggu).
+  - Baris Peringkat 1, 2, dan 3 disorot dengan lencana kontras bergaris rambut Triad:
+    - Peringkat 1: Warm Amber Orange (`#FAA21B`) — Emas
+    - Peringkat 2: Deep Navy Blue (`#132952`) — Perak
+    - Peringkat 3: Vibrant Emerald Green (`#00B262`) — Perunggu
   - Tabel terstruktur: Kolom Peringkat, Kolom Nomor Stand (`JetBrains Mono`), Kolom Nama Usaha UMKM, Kolom Poin Keaktifan (`tnum` tabular numbers).
   - **ATURAN PRIVASI MUTLAK (Masking Finansial):**
     - Nominal omzet rupiah sama sekali **TIDAK DITAMPILKAN** ke publik.
@@ -49,11 +52,11 @@ resources/js/
 │       └── Leaderboard.vue        <-- Halaman Klasemen Stand Bergaris Rambut 1px
 ├── Components/
 │   └── Public/
-│       ├── AsymmetricHeroShow.vue <-- Hero Section Dua Kolom Khas Cobalt
+│       ├── AsymmetricHeroShow.vue <-- Hero Section Dua Kolom Khas Triad
 │       ├── PrecisionRundown.vue   <-- Timeline Rundown Presisi Bergaris Rambut
 │       ├── AttendanceBox.vue      <-- Box Formulir Kehadiran Doorprize / HTM
 │       ├── TicketStubModal.vue    <-- Modal E-Kupon Tiket Geometris Ber-QR
-│       └── CobaltLeaderboardTable.vue <-- Tabel Klasemen dengan Sensor Omzet
+│       └── CobaltLeaderboardTable.vue <-- Tabel Klasemen Triad dengan Sensor Omzet
 ```
 
 ---
@@ -62,12 +65,12 @@ resources/js/
 
 ### A. `TicketStubModal.vue`
 - Kartu modal 10px radius dengan aksen garis putus-putus (*dashed divider*) yang memisahkan bagian identitas pengunjung dan area kode QR.
-- Umpan balik visual saat tombol "Salin Kode" ditekan: teks berubah instan menjadi *"Tersalin!"* dengan warna Electric Cobalt.
+- Umpan balik visual saat tombol "Salin Kode" ditekan: teks berubah instan menjadi *"Tersalin!"* dengan warna Deep Navy Blue (`#132952`).
 
 ### B. `CobaltLeaderboardTable.vue`
 - Tabel dengan garis batas sel 1px `var(--color-rule)`.
 - Menggunakan angka tabular (*tabular nums*) untuk poin keaktifan agar angka rata secara vertikal dan nyaman dipindai.
-- Indikator penyegaran data otomatis (*auto-refresh indicator*) dengan titik sinyal berkedip halus.
+- Indikator penyegaran data otomatis (*auto-refresh indicator*) dengan titik sinyal berkedip halus Vibrant Emerald Green (`#00B262`).
 
 ---
 
@@ -80,7 +83,7 @@ resources/js/
 ---
 
 ## 5. Kriteria Penerimaan (Acceptance Criteria)
-- [ ] Halaman `/e/{slug}` menerapkan tata letak asimetris kiri-kanan dengan palet warna Cobalt.
+- [ ] Halaman `/e/{slug}` menerapkan tata letak asimetris kiri-kanan dengan palet Triad (`#132952`, `#00B262`, `#FAA21B`).
 - [ ] Pendaftaran pengunjung memunculkan modal tiket stub ber-QR code tajam.
 - [ ] Klasemen leaderboard publik menampilkan nomor stand, nama usaha, dan poin keaktifan tanpa kebocoran nominal rupiah omzet.
 - [ ] Tampilan responsif sempurna pada layar ponsel smartphone (375px - 414px).

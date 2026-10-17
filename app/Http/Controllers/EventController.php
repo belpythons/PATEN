@@ -18,8 +18,8 @@ class EventController extends Controller
     public function create(): Response
     {
         return Inertia::render('Events/Create', [
-            'defaultPrimaryColor' => '#0F766E',
-            'defaultSecondaryColor' => '#F59E0B',
+            'defaultPrimaryColor' => '#132952',
+            'defaultSecondaryColor' => '#00B262',
             'gamifikasiOptions' => [
                 ['value' => 'none', 'label' => 'Tanpa Tiket & Doorprize'],
                 ['value' => 'htm', 'label' => 'Mode A: Tiket HTM Berbayar'],
@@ -34,6 +34,14 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        // Filter out empty initial rundown rows so blank rows do not trigger validation failure
+        if ($request->has('initial_rundowns') && is_array($request->input('initial_rundowns'))) {
+            $cleanedRundowns = array_filter($request->input('initial_rundowns'), function ($item) {
+                return ! empty($item['judul_sesi']) && ! empty($item['waktu_mulai']) && ! empty($item['waktu_selesai']);
+            });
+            $request->merge(['initial_rundowns' => array_values($cleanedRundowns)]);
+        }
+
         $validated = $request->validate([
             'nama_event' => 'required|string|max:255',
             'deskripsi' => 'required|string',
@@ -67,6 +75,7 @@ class EventController extends Controller
 
         $event = DB::transaction(function () use ($validated, $slug, $secureToken) {
             $event = Event::create([
+                'user_id' => auth()->id(),
                 'slug' => $slug,
                 'nama_event' => $validated['nama_event'],
                 'deskripsi' => $validated['deskripsi'],

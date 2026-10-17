@@ -1,7 +1,8 @@
 <script setup>
+import { computed, useAttrs } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
-defineProps({
+const props = defineProps({
     href: {
         type: String,
         default: '/',
@@ -10,17 +11,51 @@ defineProps({
         type: Boolean,
         default: false,
     },
+    variant: {
+        type: String,
+        default: 'auto',
+    },
+    imgClass: {
+        type: String,
+        default: 'h-8 w-auto',
+    },
+});
+
+const attrs = useAttrs();
+
+const isDark = computed(() => {
+    if (props.variant === 'white' || props.variant === 'dark') {
+        return true;
+    }
+    if (props.variant === 'light') {
+        return false;
+    }
+    const cls = String(attrs.class || '');
+    return cls.includes('text-white') || cls.includes('dark');
+});
+
+const logoSrc = computed(() => {
+    return isDark.value
+        ? '/images/logo-horizontal-white.png'
+        : '/images/logo-horizontal.png';
 });
 </script>
 
 <template>
-    <Link :href="href" class="inline-flex items-center gap-1.5 group select-none">
-        <span class="font-display font-bold text-lg tracking-tight text-[#0F172A] flex items-center">
-            <span class="text-[#2563EB] font-mono mr-0.5 text-xl font-semibold">/</span>
-            <span>paten</span>
-        </span>
-        <span v-if="showVersion" class="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded-[4px] bg-[#F1F5F9] text-[#64748B] border border-[#CBD5E1]">
+    <Link :href="href" class="inline-flex items-center gap-2 group select-none">
+        <img
+            :src="logoSrc"
+            alt="PATEN — Pemantauan Transaksi & Efektivitas Niaga"
+            :class="[imgClass, 'object-contain transition-opacity duration-150 group-hover:opacity-90']"
+            loading="eager"
+        />
+        <span
+            v-if="showVersion"
+            class="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded-[4px] border"
+            :class="isDark ? 'bg-white/10 text-white/90 border-white/20' : 'bg-[#EDF2F9] text-[#132952] border-[#C2D2E9]'"
+        >
             kutim
         </span>
     </Link>
 </template>
+

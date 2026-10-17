@@ -48,7 +48,7 @@ const emit = defineEmits(['add', 'remove']);
                         type="text"
                         placeholder="Contoh: Pembukaan & Sambutan Bupati Kutim"
                         required
-                        class="w-full rounded-[6px] border border-[#CBD5E1] bg-white px-3 py-1.5 text-xs text-[#0F172A] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] focus:outline-none"
+                        class="w-full rounded-[6px] border border-[#CBD5E1] bg-white px-3 py-1.5 text-xs text-[#0F172A] focus:border-[#132952] focus:ring-1 focus:ring-[#132952] focus:outline-none"
                     />
                 </div>
 
@@ -58,7 +58,7 @@ const emit = defineEmits(['add', 'remove']);
                         v-model="item.waktu_mulai"
                         type="datetime-local"
                         required
-                        class="w-full rounded-[6px] border border-[#CBD5E1] bg-white px-2.5 py-1.5 text-xs font-mono text-[#0F172A] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] focus:outline-none"
+                        class="w-full rounded-[6px] border border-[#CBD5E1] bg-white px-2.5 py-1.5 text-xs font-mono text-[#0F172A] focus:border-[#132952] focus:ring-1 focus:ring-[#132952] focus:outline-none"
                     />
                 </div>
 
@@ -68,7 +68,7 @@ const emit = defineEmits(['add', 'remove']);
                         v-model="item.waktu_selesai"
                         type="datetime-local"
                         required
-                        class="w-full rounded-[6px] border border-[#CBD5E1] bg-white px-2.5 py-1.5 text-xs font-mono text-[#0F172A] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] focus:outline-none"
+                        class="w-full rounded-[6px] border border-[#CBD5E1] bg-white px-2.5 py-1.5 text-xs font-mono text-[#0F172A] focus:border-[#132952] focus:ring-1 focus:ring-[#132952] focus:outline-none"
                     />
                 </div>
 
@@ -78,7 +78,7 @@ const emit = defineEmits(['add', 'remove']);
                         v-model="item.pengisi_acara"
                         type="text"
                         placeholder="Contoh: Bupati Kutai Timur / Dinas Koperasi & UKM"
-                        class="w-full rounded-[6px] border border-[#CBD5E1] bg-white px-3 py-1.5 text-xs text-[#0F172A] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] focus:outline-none"
+                        class="w-full rounded-[6px] border border-[#CBD5E1] bg-white px-3 py-1.5 text-xs text-[#0F172A] focus:border-[#132952] focus:ring-1 focus:ring-[#132952] focus:outline-none"
                     />
                 </div>
             </div>
