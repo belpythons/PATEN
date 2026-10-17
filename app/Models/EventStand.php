@@ -37,6 +37,21 @@ class EventStand extends Model
         'created_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'nama_usaha',
+        'nama_pemilik',
+    ];
+
+    public function getNamaUsahaAttribute(): ?string
+    {
+        return $this->umkmProfile?->nama_usaha;
+    }
+
+    public function getNamaPemilikAttribute(): ?string
+    {
+        return $this->umkmProfile?->nama_pemilik;
+    }
+
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class, 'event_id');
