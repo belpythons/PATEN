@@ -1,20 +1,27 @@
 {
-  "mcpServers": {
-    "supabase-postgres": {
-      "command": "npx.cmd",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-postgres",
-        "postgresql://postgres.hyxsvpftbfthtfzyutbj:2jlgEHzRqCa7cx71@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres"
-      ]
-    },
-    "filesystem": {
-      "command": "npx.cmd",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "d:/KOD ING/PATEN"
-      ]
+    "mcpServers": {
+        "supabase-postgres": {
+            "command": "npx.cmd",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-postgres",
+                "postgresql://postgres.hyxsvpftbfthtfzyutbj:2jlgEHzRqCa7cx71@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres"
+            ]
+        },
+        "filesystem": {
+            "command": "npx.cmd",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-filesystem",
+                "d:/KOD ING/PATEN"
+            ]
+        },
+        "laravel-boost": {
+            "command": "php",
+            "args": [
+                "artisan",
+                "boost:mcp"
+            ]
+        }
     }
-  }
 }

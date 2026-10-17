@@ -2,8 +2,100 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../js/**/*.vue';
+@source '../js/**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --color-paper: #F8FAFC;
+  --color-paper-muted: #F1F5F9;
+  --color-ink-primary: #0F172A;
+  --color-ink-secondary: #334155;
+  --color-ink-muted: #64748B;
+  --color-cobalt: #2563EB;
+  --color-cobalt-hover: #1D4ED8;
+  --color-cobalt-subtle: #EFF6FF;
+  --color-rule: #E2E8F0;
+  --color-rule-dark: #CBD5E1;
+  --color-graphite: #0B0F19;
+  --color-graphite-card: #151D2F;
+  --color-graphite-rule: #26334D;
+  --color-emerald-signal: #10B981;
+  --color-ruby-signal: #EF4444;
+  --color-amber-signal: #F59E0B;
+
+  --radius-control: 6px;
+  --radius-surface: 10px;
+}
+
+:root {
+  --theme-primary: #2563EB;
+  --theme-secondary: #F59E0B;
+}
+
+/* Hallmark Cobalt Base & Utilities */
+html {
+  background-color: #F8FAFC;
+  color: #0F172A;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #F8FAFC;
+  color: #0F172A;
+  min-height: 100vh;
+}
+
+/* Hairline borders */
+.border-hairline {
+  border-width: 1px;
+  border-color: #E2E8F0;
+}
+
+.border-hairline-dark {
+  border-width: 1px;
+  border-color: #26334D;
+}
+
+/* Technical radii */
+.rounded-control {
+  border-radius: 6px;
+}
+
+.rounded-surface {
+  border-radius: 10px;
+}
+
+/* Micro-motion: reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Tabular numbers for data metrics */
+.tnum {
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
 }

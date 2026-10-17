@@ -35,13 +35,13 @@ class StandMenuController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Menu ' . $menu->nama_item . ' berhasil ditambahkan.',
+                'message' => 'Menu '.$menu->nama_item.' berhasil ditambahkan.',
                 'menu' => $menu,
             ], 201);
         }
 
-        return redirect()->to('/pos/' . $stand->id)
-            ->with('success', 'Menu ' . $menu->nama_item . ' berhasil ditambahkan.');
+        return redirect()->to('/pos/'.$stand->id)
+            ->with('success', 'Menu '.$menu->nama_item.' berhasil ditambahkan.');
     }
 
     /**
@@ -64,12 +64,12 @@ class StandMenuController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Menu ' . $menu->nama_item . ' berhasil diperbarui.',
+                'message' => 'Menu '.$menu->nama_item.' berhasil diperbarui.',
                 'menu' => $menu,
             ], 200);
         }
 
-        return redirect()->to('/pos/' . $stand_id)
+        return redirect()->to('/pos/'.$stand_id)
             ->with('success', 'Menu berhasil diperbarui.');
     }
 
@@ -97,7 +97,7 @@ class StandMenuController extends Controller
             ], 200);
         }
 
-        return redirect()->to('/pos/' . $stand_id)
+        return redirect()->to('/pos/'.$stand_id)
             ->with('success', $message);
     }
 

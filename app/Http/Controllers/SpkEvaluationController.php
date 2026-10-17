@@ -32,8 +32,9 @@ class SpkEvaluationController extends Controller
         }
 
         $token = $request->query('token') ?: $request->header('X-CMS-Token');
-        return redirect()->to('/cms/' . $event->slug . '/evaluations?token=' . $token)
-            ->with('success', 'Evaluasi SPK berhasil dieksekusi untuk ' . $evaluations->count() . ' stand UMKM.');
+
+        return redirect()->to('/cms/'.$event->slug.'/evaluations?token='.$token)
+            ->with('success', 'Evaluasi SPK berhasil dieksekusi untuk '.$evaluations->count().' stand UMKM.');
     }
 
     /**
@@ -62,7 +63,7 @@ class SpkEvaluationController extends Controller
                 'hibah_alat' => $evaluations->where('rekomendasi_program', 'hibah_alat')->count(),
                 'kredit_perbankan' => $evaluations->where('rekomendasi_program', 'kredit_perbankan')->count(),
             ],
-            'cms_url' => url('/cms/' . $event->slug . '?token=' . $token),
+            'cms_url' => url('/cms/'.$event->slug.'?token='.$token),
         ];
 
         if ($request->wantsJson()) {

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Event;
-use App\Models\EventStand;
 use App\Models\SpkUmkmEvaluation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -19,15 +18,18 @@ class SpkEngineService
      * - Legality / Regulatory Compliance (0.15)
      */
     public const WEIGHT_FREQ = 0.30;
+
     public const WEIGHT_OMZET = 0.20;
+
     public const WEIGHT_KONSISTENSI = 0.25;
+
     public const WEIGHT_QRIS = 0.10;
+
     public const WEIGHT_LEGALITAS = 0.15;
 
     /**
      * Execute comprehensive SAW evaluation with deterministic Perbup guardrails.
      *
-     * @param Event $event
      * @return Collection<int, SpkUmkmEvaluation>
      */
     public function evaluate(Event $event): Collection
@@ -78,7 +80,7 @@ class SpkEngineService
             // Legality score (NIB: 0.50, Halal: 0.25, P-IRT: 0.25)
             $legalitasScore = 0.0;
             if ($umkm) {
-                if (!empty($umkm->nib)) {
+                if (! empty($umkm->nib)) {
                     $legalitasScore += 0.50;
                 }
                 if ($umkm->has_halal) {
@@ -118,7 +120,7 @@ class SpkEngineService
             }
 
             // Perbup Guardrail 1: Missing NIB
-            if (!$umkm || empty($umkm->nib)) {
+            if (! $umkm || empty($umkm->nib)) {
                 $rekomendasi = 'fasilitasi_legalitas';
                 $isPrioritas = false;
                 $catatan = 'Dialihkan ke program fasilitasi legalitas karena belum memiliki NIB.';
@@ -128,8 +130,8 @@ class SpkEngineService
             if ($umkm && $umkm->pernah_terima_hibah) {
                 $rekomendasi = 'kredit_perbankan';
                 $isPrioritas = false;
-                $tahun = $umkm->tahun_terima_hibah ? ' tahun ' . $umkm->tahun_terima_hibah : '';
-                $catatan = 'Pernah menerima hibah' . $tahun . ', dialihkan ke fasilitasi kredit perbankan.';
+                $tahun = $umkm->tahun_terima_hibah ? ' tahun '.$umkm->tahun_terima_hibah : '';
+                $catatan = 'Pernah menerima hibah'.$tahun.', dialihkan ke fasilitasi kredit perbankan.';
             }
 
             $computedEvaluations[] = [
@@ -170,7 +172,7 @@ class SpkEngineService
                         if ($eval['rekomendasi_program'] === 'hibah_modal_apbd') {
                             $eval['rekomendasi_program'] = 'kredit_perbankan';
                             $eval['is_prioritas_hibah_200'] = false;
-                            $eval['catatan_dinas'] = 'Diskualifikasi hibah modal APBD: Terdeteksi kesamaan No KK dengan penerima prioritas lebih tinggi (' . $highestScoreItem['nama_pemilik'] . '). Dialihkan ke kredit perbankan.';
+                            $eval['catatan_dinas'] = 'Diskualifikasi hibah modal APBD: Terdeteksi kesamaan No KK dengan penerima prioritas lebih tinggi ('.$highestScoreItem['nama_pemilik'].'). Dialihkan ke kredit perbankan.';
                         }
                     }
                 }
@@ -183,7 +185,7 @@ class SpkEngineService
             $saved = collect();
 
             foreach ($computedEvaluations as $data) {
-                if (!$data['umkm_id']) {
+                if (! $data['umkm_id']) {
                     continue; // Skip stands without registered UMKM
                 }
 

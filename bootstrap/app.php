@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\VerifyCmsTokenMiddleware;
+use App\Http\Middleware\VerifyPosPinMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,13 +18,13 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
-            \App\Http\Middleware\HandleInertiaRequests::class,
+            HandleInertiaRequests::class,
         ]);
 
         $middleware->alias([
-            'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-            'cms.token' => \App\Http\Middleware\VerifyCmsTokenMiddleware::class,
-            'pos.pin' => \App\Http\Middleware\VerifyPosPinMiddleware::class,
+            'throttle' => ThrottleRequests::class,
+            'cms.token' => VerifyCmsTokenMiddleware::class,
+            'pos.pin' => VerifyPosPinMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -86,7 +86,7 @@ class StandAssignmentController extends Controller
                 'umkm_id' => $profile->id,
             ]);
 
-            if (!empty($validated['initial_menus'])) {
+            if (! empty($validated['initial_menus'])) {
                 foreach ($validated['initial_menus'] as $menuItem) {
                     StandMenu::create([
                         'stand_id' => $stand->id,
@@ -103,13 +103,13 @@ class StandAssignmentController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Profil UMKM berhasil didaftarkan dan dihubungkan ke ' . $stand->nomor_stand . '.',
+                'message' => 'Profil UMKM berhasil didaftarkan dan dihubungkan ke '.$stand->nomor_stand.'.',
                 'umkm' => $umkm,
                 'stand' => $stand->fresh(['umkmProfile', 'menus']),
             ], 200);
         }
 
-        return redirect()->to('/pos/' . $stand->id . '/login')
+        return redirect()->to('/pos/'.$stand->id.'/login')
             ->with('success', 'Registrasi UMKM berhasil! Silakan login kasir menggunakan PIN stand.');
     }
 }

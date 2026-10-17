@@ -40,7 +40,7 @@ class CmsGateController extends Controller
         if ($attendee->is_checked_in) {
             return response()->json([
                 'success' => false,
-                'message' => 'Tiket ini sudah melakukan check-in sebelumnya pada ' . $attendee->check_in_time . '.',
+                'message' => 'Tiket ini sudah melakukan check-in sebelumnya pada '.$attendee->check_in_time.'.',
                 'attendee' => $attendee,
             ], 409);
         }
@@ -53,7 +53,7 @@ class CmsGateController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Check-in berhasil. Selamat datang di ' . $event->nama_event . '!',
+                'message' => 'Check-in berhasil. Selamat datang di '.$event->nama_event.'!',
                 'attendee' => [
                     'id' => $attendee->id,
                     'nomor_tiket_doorprize' => $attendee->nomor_tiket_doorprize,
@@ -65,8 +65,9 @@ class CmsGateController extends Controller
         }
 
         $token = $request->query('token') ?: $request->header('X-CMS-Token');
-        return redirect()->to('/cms/' . $event->slug . '?token=' . $token)
-            ->with('success', 'Check-in berhasil untuk ' . $attendee->nama_lengkap);
+
+        return redirect()->to('/cms/'.$event->slug.'?token='.$token)
+            ->with('success', 'Check-in berhasil untuk '.$attendee->nama_lengkap);
     }
 
     /**
@@ -109,13 +110,14 @@ class CmsGateController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Berhasil mengundi ' . count($winners) . ' pemenang doorprize.',
+                'message' => 'Berhasil mengundi '.count($winners).' pemenang doorprize.',
                 'winners' => $winners,
             ]);
         }
 
         $token = $request->query('token') ?: $request->header('X-CMS-Token');
-        return redirect()->to('/cms/' . $event->slug . '?token=' . $token)
-            ->with('success', 'Berhasil mengundi ' . count($winners) . ' pemenang doorprize.');
+
+        return redirect()->to('/cms/'.$event->slug.'?token='.$token)
+            ->with('success', 'Berhasil mengundi '.count($winners).' pemenang doorprize.');
     }
 }

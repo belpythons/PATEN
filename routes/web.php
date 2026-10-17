@@ -6,8 +6,14 @@ use App\Http\Controllers\CmsRundownController;
 use App\Http\Controllers\CmsStandController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthCheckController;
+use App\Http\Controllers\PosAuthController;
 use App\Http\Controllers\PosterGeneratorController;
+use App\Http\Controllers\PosTerminalController;
 use App\Http\Controllers\PublicEventController;
+use App\Http\Controllers\PublicLeaderboardController;
+use App\Http\Controllers\SpkEvaluationController;
+use App\Http\Controllers\StandAssignmentController;
+use App\Http\Controllers\StandMenuController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -40,17 +46,12 @@ Route::middleware('cms.token')->group(function () {
     Route::post('/cms/{slug}/stands', [CmsStandController::class, 'provision'])->name('cms.stands.provision');
     Route::post('/cms/{slug}/check-in', [CmsGateController::class, 'checkIn'])->name('cms.gate.checkin');
     Route::post('/cms/{slug}/draw-doorprize', [CmsGateController::class, 'drawDoorprize'])->name('cms.gate.doorprize');
-    Route::post('/cms/{slug}/evaluate-spk', [\App\Http\Controllers\SpkEvaluationController::class, 'evaluate'])->name('cms.spk.evaluate');
-    Route::get('/cms/{slug}/evaluations', [\App\Http\Controllers\SpkEvaluationController::class, 'index'])->name('cms.spk.evaluations');
+    Route::post('/cms/{slug}/evaluate-spk', [SpkEvaluationController::class, 'evaluate'])->name('cms.spk.evaluate');
+    Route::get('/cms/{slug}/evaluations', [SpkEvaluationController::class, 'index'])->name('cms.spk.evaluations');
 });
 
 // Stage 5: Public Leaderboard (Strict Financial Data Masking)
-Route::get('/e/{slug}/leaderboard', [\App\Http\Controllers\PublicLeaderboardController::class, 'index'])->name('events.public.leaderboard');
-
-use App\Http\Controllers\PosAuthController;
-use App\Http\Controllers\PosTerminalController;
-use App\Http\Controllers\StandAssignmentController;
-use App\Http\Controllers\StandMenuController;
+Route::get('/e/{slug}/leaderboard', [PublicLeaderboardController::class, 'index'])->name('events.public.leaderboard');
 
 // Stage 4: Stand Assignment & UMKM Profiling
 Route::get('/stands/{stand_id}/assign', [StandAssignmentController::class, 'create'])->name('stands.assign.create');
@@ -82,4 +83,3 @@ Route::middleware('pos.pin')->group(function () {
         ]);
     });
 });
-

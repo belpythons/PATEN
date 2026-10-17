@@ -59,7 +59,7 @@ class EventController extends Controller
         $baseSlug = Str::slug($validated['nama_event']);
         $slug = $baseSlug;
         if (Event::where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . Str::lower(Str::random(5));
+            $slug = $baseSlug.'-'.Str::lower(Str::random(5));
         }
 
         // Generate 64-char cryptographic token
@@ -102,8 +102,8 @@ class EventController extends Controller
             return $event;
         });
 
-        $publicUrl = url('/e/' . $event->slug);
-        $cmsManageUrl = url('/cms/' . $event->slug . '?token=' . $event->secure_management_token);
+        $publicUrl = url('/e/'.$event->slug);
+        $cmsManageUrl = url('/cms/'.$event->slug.'?token='.$event->secure_management_token);
 
         // Hybrid response: JSON for API / Testing, Inertia redirect for web form
         if ($request->wantsJson() || ! $request->header('X-Inertia')) {

@@ -72,8 +72,8 @@ class Stage6EndToEndAndSecurityAuditTest extends TestCase
         $stand1Pin = $stands[0]['pin_pos'];
 
         // 3. Tenant registers UMKM & initial menu
-        $nikTenant = '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT);
-        $kkTenant = '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT);
+        $nikTenant = '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT);
+        $kkTenant = '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT);
         $assignResp = $this->postJson("/stands/{$stand1Id}/assign", [
             'nik' => $nikTenant,
             'no_kk' => $kkTenant,
@@ -199,7 +199,7 @@ class Stage6EndToEndAndSecurityAuditTest extends TestCase
     public function test_concurrent_pos_transactions_atomic_integrity(): void
     {
         $event = Event::create([
-            'slug' => 'conc-pos-' . Str::lower(Str::random(6)),
+            'slug' => 'conc-pos-'.Str::lower(Str::random(6)),
             'nama_event' => 'Concurrency Benchmark Event',
             'deskripsi' => 'Benchmark',
             'penyelenggara' => 'Diskop UKM',
@@ -265,7 +265,7 @@ class Stage6EndToEndAndSecurityAuditTest extends TestCase
     {
         $token = Str::random(64);
         $event = Event::create([
-            'slug' => 'sec-audit-' . Str::lower(Str::random(6)),
+            'slug' => 'sec-audit-'.Str::lower(Str::random(6)),
             'nama_event' => 'Pekan Wisata Danau Redan',
             'deskripsi' => 'Pameran Pariwisata dan Kriya',
             'penyelenggara' => 'Dinas Pariwisata Kutim',
@@ -275,9 +275,9 @@ class Stage6EndToEndAndSecurityAuditTest extends TestCase
             'secure_management_token' => $token,
         ]);
 
-        $sensitiveNik = '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT);
-        $sensitiveKk = '640804' . str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT);
-        $sensitiveWa = '0812' . str_pad((string) random_int(1, 99999999), 8, '0', STR_PAD_LEFT);
+        $sensitiveNik = '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT);
+        $sensitiveKk = '640804'.str_pad((string) random_int(1, 9999999999), 10, '0', STR_PAD_LEFT);
+        $sensitiveWa = '0812'.str_pad((string) random_int(1, 99999999), 8, '0', STR_PAD_LEFT);
 
         try {
             $umkm = UmkmProfile::create([
@@ -361,7 +361,7 @@ class Stage6EndToEndAndSecurityAuditTest extends TestCase
     public function test_brute_force_pos_pin_rate_limiting(): void
     {
         $event = Event::create([
-            'slug' => 'brute-pin-' . Str::lower(Str::random(6)),
+            'slug' => 'brute-pin-'.Str::lower(Str::random(6)),
             'nama_event' => 'Brute Force Test Event',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -405,7 +405,7 @@ class Stage6EndToEndAndSecurityAuditTest extends TestCase
     {
         $token = Str::random(64);
         $event = Event::create([
-            'slug' => 'tamper-cms-' . Str::lower(Str::random(6)),
+            'slug' => 'tamper-cms-'.Str::lower(Str::random(6)),
             'nama_event' => 'Token Tampering Immunity Event',
             'deskripsi' => 'Test',
             'penyelenggara' => 'Panitia',
@@ -420,11 +420,11 @@ class Stage6EndToEndAndSecurityAuditTest extends TestCase
         $missingResp->assertStatus(401);
 
         // 2. Falsified / tampered token -> 403
-        $tamperedResp = $this->getJson("/cms/{$event->slug}?token=" . Str::random(64));
+        $tamperedResp = $this->getJson("/cms/{$event->slug}?token=".Str::random(64));
         $tamperedResp->assertStatus(403);
 
         // 3. One character off -> 403
-        $oneCharOff = substr($token, 0, 63) . ($token[63] === 'a' ? 'b' : 'a');
+        $oneCharOff = substr($token, 0, 63).($token[63] === 'a' ? 'b' : 'a');
         $offResp = $this->getJson("/cms/{$event->slug}?token={$oneCharOff}");
         $offResp->assertStatus(403);
 
